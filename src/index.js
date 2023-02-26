@@ -1,12 +1,14 @@
+/******************************************************************************
+ * IMPORTS
+ *****************************************************************************/
 import _ from 'lodash';
+import './css/styles.css';
+import { Page } from './Page';
 
-function component() {
-    const element = document.createElement('div');
-  
-    // Lodash, currently included via a script, is required for this line to work
-    element.innerHTML = _.join(['Hello', 'webpack'], ' ');
-  
-    return element;
-  }
-  
-  document.body.appendChild(component());
+/**
+ * Main entry point for weather app.
+ * @author Chad Chapman
+ */
+
+const page = new Page();
+page.initializeComponents();
