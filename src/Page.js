@@ -1,8 +1,7 @@
 /******************************************************************************
  * IMPORTS
  *****************************************************************************/
-
-import { API } from "./api";
+import { Weather } from "./Weather";
 
 /**
  * @class Class that is responsible for rendering website components.
@@ -14,24 +13,22 @@ export class Page {
      */
     constructor() {
         this.container = document.querySelector('#content');
-        this.apiKeys = new API();
-        let city = '4776024';
-        fetch(`https://api.openweathermap.org/data/2.5/weather?id=${city}&appid=${this.apiKeys.getWeatherKey()}`)
-            .then(function(resp) {
-                return resp.json();
-            })
-            .then(function(data) {
-                console.log(data);
-            })
-            .catch(function(err) {
-                console.log(err);
-            });
+        this.weather = new Weather();
     }
 
     initializeComponents() {
         this.renderHeader();
-
-
+        document.addEventListener("DOMContentLoaded", async() => {
+            let localityInfo = await this.weather.getCityInfo();
+            console.log(localityInfo);
+            let cityData = await this.weather.getCityData(localityInfo);
+            console.log(cityData);
+            let descriptiveWeatherData = await this.weather.getWeatherData(
+                this.weather.getLatitude(), 
+                this.weather.getLongitude());
+            console.log(descriptiveWeatherData);
+        });
+        
     }
 
 
