@@ -2,3 +2,25 @@
     margin: 0;
     padding: 0;
 }
+
+.logo-icon {
+    height: 40px;
+    margin-left: 10px;
+}
+header {
+    height: 70px;
+    background-color: grey;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.title-logo {
+    display: flex;
+    flex-direction: row;
+}
+@media only screen and (min-width: 700px) {
+    header {
+        flex-direction: row;
+    }
+}
