@@ -47,10 +47,10 @@ export class Page {
         header.classList.add('weather');
         
         header.appendChild(this.renderTitleLogoContainer());
-
-
+        header.appendChild(this.renderSearchBar());
 
         this.container.appendChild(header);
+        this.submitButtonListener();
     }
 
     renderMainContent() {
@@ -60,6 +60,35 @@ export class Page {
         this.container.appendChild(mainContent);
     }
 
+    renderSearchBar() {
+        // Setup form
+        const searchBarForm = document.createElement('form');
+        searchBarForm.setAttribute('id', 'search-form');
+        searchBarForm.setAttribute('method', 'GET');
+        searchBarForm.setAttribute('action', '#');
+
+        // Setup search bar
+        const searchBar = document.createElement('input');
+        searchBar.setAttribute('id', 'search');
+        searchBar.setAttribute('name', 'search');
+        searchBar.setAttribute('placeholder', 'Enter a city');
+        searchBar.classList.add('search-bar');
+        searchBarForm.appendChild(searchBar);
+
+        const searchButton = document.createElement('button');
+        searchButton.setAttribute('id', 'submit-search');
+        searchButton.setAttribute('type', 'submit');
+        searchButton.classList.add('submit-search');
+        searchButton.textContent = 'Search';
+        searchBarForm.appendChild(searchButton);
+
+        return searchBarForm;
+    }
+    
+    /**
+     * Renders the title and logo.
+     * @returns HTMLDivElement that contains title and logo for this page.
+     */
     renderTitleLogoContainer() {
         // Setup parent
         const titleLogoContainer = document.createElement('div');
@@ -76,7 +105,17 @@ export class Page {
         logoIcon.classList.add('logo-icon');
         logoIcon.src = WeatherIcon;
         titleLogoContainer.appendChild(logoIcon);
-        
+
         return titleLogoContainer;
+    }
+
+    submitButtonListener() {
+        const searchBarForm = document.querySelector('#search-form');
+        searchBarForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const searchQuery = document.getElementById('search').value;
+            alert(searchQuery);
+            document.forms[0].reset();
+        });
     }
 }
