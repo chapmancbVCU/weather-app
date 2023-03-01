@@ -5,8 +5,10 @@ export class Weather{
         this.apiKeys = new API();
         let geoLocationInfo = this.getLocationInformation();
         this.city = this.getLocalityInfo(geoLocationInfo);
+        this.countryName = this.getCountryInfo(geoLocationInfo);
         this.latitude = 0;
         this.longitude = 0;
+        this.units = '';
     }
 
     /**
@@ -30,6 +32,20 @@ export class Weather{
      */
     getCityInfo() {
         return this.city;
+    }
+
+    async getCountryInfo(geoLocationInfo) {
+        try {
+            const response = await fetch(geoLocationInfo);
+            const data = await response.json();
+            return data.countryName;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    getCountryName() {
+        return this.countryName;
     }
 
     getLatitude() {
@@ -72,10 +88,6 @@ export class Weather{
         return bdcApi;
     }
 
-    
-
-    
-
     async getWeatherData(latitude, longitude) {
         try {
             const response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${this.apiKeys.getWeatherKey()}`);
@@ -86,11 +98,23 @@ export class Weather{
         }
     }
 
+    getUnits() {
+        return this.units;
+    }
+
     setLatitude(latitude) {
         this.latitude = latitude;
     } 
 
     setLongitude(longitude) {
         this.longitude = longitude;
+    }
+
+    setUnits(countryName) {
+        if (countryName.includes('United States of America')) {
+            this.units = 'IMPERIAL'
+        } else {
+            this.units = 'METRIC';
+        }
     }
 }
