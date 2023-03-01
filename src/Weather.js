@@ -9,6 +9,11 @@ export class Weather{
         this.longitude = 0;
     }
 
+    /**
+     * Returns the limited weather data using api call based on city name.
+     * @param {String} city The locality whose weather we want to retrieve.
+     * @returns The limited local weather data.
+     */
     async getCityData(city) {
         try {
             const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${this.apiKeys.getWeatherKey()}`);
@@ -18,6 +23,11 @@ export class Weather{
         }
     }
 
+    /**
+     * Get the name of city that is detected using geolocation based on 
+     * localhost's location.
+     * @returns The name of the city when using geolocation to detect location.
+     */
     getCityInfo() {
         return this.city;
     }
@@ -40,6 +50,10 @@ export class Weather{
         }
     }
 
+    /**
+     * Detect location of localhost so we can get local weather on page load.
+     * @returns The JSON representation of locality information.
+     */
     getLocationInformation() {
         let _this = this;
         let bdcApi = "https://api.bigdatacloud.net/data/reverse-geocode-client";
