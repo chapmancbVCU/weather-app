@@ -2,7 +2,7 @@
  * IMPORTS
  *****************************************************************************/
 import { Weather } from "./Weather";
-
+import WeatherIcon from "./icons/weather-cloudy-custom.png";
 /**
  * @class Class that is responsible for rendering website components.
  * @author Chad Chapman
@@ -40,20 +40,43 @@ export class Page {
         const mainContent = document.getElementById('main');
         mainContent.remove();
     }
-    
+
     renderHeader() {
         const header = document.createElement('header');
         header.setAttribute('id', 'header');
-        header.textContent = 'weather';
+        header.classList.add('weather');
+        
+        header.appendChild(this.renderTitleLogoContainer());
+
+
+
         this.container.appendChild(header);
     }
 
     renderMainContent() {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
-        this.count++;
-        mainContent.textContent = `${this.count}`;
 
         this.container.appendChild(mainContent);
+    }
+
+    renderTitleLogoContainer() {
+        // Setup parent
+        const titleLogoContainer = document.createElement('div');
+        titleLogoContainer.classList.add('title-logo');
+        
+        // Setup page title
+        const title = document.createElement('h1');
+        title.classList.add('title');
+        title.textContent = 'My Weather';
+        titleLogoContainer.appendChild(title);
+
+        // Setup logo icon
+        const logoIcon = new Image();
+        logoIcon.classList.add('logo-icon');
+        logoIcon.src = WeatherIcon;
+        titleLogoContainer.appendChild(logoIcon);
+        
+        return titleLogoContainer;
     }
 }
