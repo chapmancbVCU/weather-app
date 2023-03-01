@@ -18,7 +18,8 @@ export class Page {
 
     initializeComponents() {
         this.renderHeader();
-        document.addEventListener("DOMContentLoaded", async() => {
+        this.renderMainContent();
+        /*document.addEventListener("DOMContentLoaded", async() => {
             let localityInfo = await this.weather.getCityInfo();
             console.log(localityInfo);
             let cityData = await this.weather.getCityData(localityInfo);
@@ -27,14 +28,32 @@ export class Page {
                 this.weather.getLatitude(), 
                 this.weather.getLongitude());
             console.log(descriptiveWeatherData);
-        });
+        });*/
         
     }
 
-
+    /**
+     * Removes weather content from DOM after a search for weather from 
+     * another city.
+     */
+    removeMainContentFromDOM() {
+        const mainContent = document.getElementById('main');
+        mainContent.remove();
+    }
+    
     renderHeader() {
         const header = document.createElement('header');
+        header.setAttribute('id', 'header');
         header.textContent = 'weather';
         this.container.appendChild(header);
+    }
+
+    renderMainContent() {
+        const mainContent = document.createElement('main');
+        mainContent.setAttribute('id', 'main');
+        this.count++;
+        mainContent.textContent = `${this.count}`;
+
+        this.container.appendChild(mainContent);
     }
 }
