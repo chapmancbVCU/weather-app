@@ -3,6 +3,8 @@
  *****************************************************************************/
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
+
+
 /**
  * @class Class that is responsible for rendering website components.
  * @author Chad Chapman
@@ -16,6 +18,9 @@ export class Page {
         this.weather = new Weather();
     }
 
+    /**
+     * Initialize page components when user first visits page.
+     */
     initializeComponents() {
         this.renderHeader();
         this.renderMainContent();
@@ -43,6 +48,9 @@ export class Page {
         
     }
 
+    /**
+     * Remove header from DOM.
+     */
     removeHeaderFromDOM() {
         const header = document.getElementById('header');
         header.remove();
@@ -56,6 +64,9 @@ export class Page {
         mainContent.remove();
     }
 
+    /**
+     * Renders header and its components.
+     */
     renderHeader() {
         const header = document.createElement('header');
         header.setAttribute('id', 'header');
@@ -70,6 +81,9 @@ export class Page {
         this.toggleButtonListener();
     }
 
+    /**
+     * Renders content for main section of page.
+     */
     renderMainContent() {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
@@ -77,6 +91,11 @@ export class Page {
         this.container.appendChild(mainContent);
     }
 
+    /**
+     * Renders search form and submit button for submitting search for 
+     * weather forecast.
+     * @returns HTMLDivElement for search bar.
+     */
     renderSearchBar() {
         // Setup parent container
         const searchBarContainer = document.createElement('div');
@@ -131,6 +150,10 @@ export class Page {
         return titleLogoContainer;
     }
 
+    /**
+     * Renders the toggle units button.
+     * @returns HTMDivElement for toggle button and its parent container.
+     */
     renderUnitsToggleButton() {
         const toggleButtonContainer = document.createElement('div');
         const toggleButton = document.createElement('button');
@@ -140,21 +163,31 @@ export class Page {
         return toggleButtonContainer;
     }
 
+    /**
+     * Sets to text for the toggle button based on selected units.
+     */
     setToggleButtonText(units) {
         return units == 'IMPERIAL' ? "F"
             : "C";
     }
 
+    /**
+     * The event listener for the submit button.
+     */
     submitButtonListener() {
         const searchBarForm = document.querySelector('#search-form');
         searchBarForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const searchQuery = document.getElementById('search').value;
-            alert(searchQuery);
+            const test = document.querySelector('#main');
+            test.textContent = searchQuery;
             document.forms[0].reset();
         });
     }
 
+    /**
+     * The event listener for the toggle units button.
+     */
     toggleButtonListener() {
         const toggleButton = document.querySelector('#toggle-button');
         toggleButton.addEventListener('click', (event) => {
