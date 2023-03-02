@@ -117,4 +117,12 @@ export class Weather{
             this.units = 'METRIC';
         }
     }
+
+    toggleUnits() {
+        if(this.units === 'IMPERIAL') {
+            this.units = 'METRIC';
+        } else {
+            this.units = 'IMPERIAL';
+        }
+    }
 }
