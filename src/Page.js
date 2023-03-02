@@ -39,11 +39,13 @@ export class Page {
             // Get weather information.
             let cityData = await this.weather.getCityData(localityInfo);
             console.log(cityData);
-            let descriptiveWeatherData = await this.weather.getWeatherData(
+            /*let descriptiveWeatherData = await this.weather.getWeatherData(
                 this.weather.getLatitude(), 
                 this.weather.getLongitude());
-            console.log(descriptiveWeatherData);
-            
+            console.log(descriptiveWeatherData);*/
+            const mainContent = document.querySelector('#main');
+            //mainContent.textContent = cityData.name;
+            this.updateContent(cityData);
         });
         
     }
@@ -87,7 +89,22 @@ export class Page {
     renderMainContent() {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
-        mainContent.textContent = 'test';
+        
+        const city = document.createElement('div');
+        city.setAttribute('id', 'city');
+        mainContent.appendChild(city);
+
+        // Current conditions
+        const currentConditions = document.createElement('div');
+        const description = document.createElement('div');
+        description.setAttribute('id', 'description');
+        currentConditions.appendChild(description);
+
+
+
+
+        mainContent.appendChild(currentConditions);
+
         this.container.appendChild(mainContent);
     }
 
@@ -179,8 +196,7 @@ export class Page {
         searchBarForm.addEventListener('submit', (event) => {
             event.preventDefault();
             const searchQuery = document.getElementById('search').value;
-            const test = document.querySelector('#main');
-            test.textContent = searchQuery;
+
             document.forms[0].reset();
         });
     }
@@ -200,5 +216,12 @@ export class Page {
             toggle.textContent = `\xB0${this.setToggleButtonText(
                 this.weather.getUnits())}`;
         });
+    }
+
+    updateContent(cityData) {
+        const city = document.querySelector('#city');
+        city.textContent = `Current conditions in ${cityData.name}`;
+        const description = document.querySelector('#description');
+        description.textContent = cityData.weather[0].description;
     }
 }
