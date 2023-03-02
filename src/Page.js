@@ -19,16 +19,27 @@ export class Page {
     initializeComponents() {
         this.renderHeader();
         this.renderMainContent();
-        /*document.addEventListener("DOMContentLoaded", async() => {
+        document.addEventListener("DOMContentLoaded", async() => {
+            // Get locality info on page load
             let localityInfo = await this.weather.getCityInfo();
             console.log(localityInfo);
+
+            // Setup content of toggle units button
+            let countryName = await this.weather.getCountryName();
+            this.weather.setUnits(countryName);
+            const toggle = document.querySelector('#toggle-button');
+            toggle.textContent = `\xB0${this.setToggleButtonText(
+                this.weather.getUnits())}`;
+            
+            // Get weather information.
             let cityData = await this.weather.getCityData(localityInfo);
             console.log(cityData);
             let descriptiveWeatherData = await this.weather.getWeatherData(
                 this.weather.getLatitude(), 
                 this.weather.getLongitude());
             console.log(descriptiveWeatherData);
-        });*/
+            
+        });
         
     }
 
@@ -48,7 +59,8 @@ export class Page {
         
         header.appendChild(this.renderTitleLogoContainer());
         header.appendChild(this.renderSearchBar());
-
+        header.appendChild(this.renderUnitsToggleButton());
+        
         this.container.appendChild(header);
         this.submitButtonListener();
     }
@@ -61,6 +73,10 @@ export class Page {
     }
 
     renderSearchBar() {
+        // Setup parent container
+        const searchBarContainer = document.createElement('div');
+        searchBarContainer.classList.add('search-bar-container');
+
         // Setup form
         const searchBarForm = document.createElement('form');
         searchBarForm.setAttribute('id', 'search-form');
@@ -82,7 +98,8 @@ export class Page {
         searchButton.textContent = 'Search';
         searchBarForm.appendChild(searchButton);
 
-        return searchBarForm;
+        searchBarContainer.appendChild(searchBarForm);
+        return searchBarContainer;
     }
     
     /**
@@ -107,6 +124,20 @@ export class Page {
         titleLogoContainer.appendChild(logoIcon);
 
         return titleLogoContainer;
+    }
+
+    renderUnitsToggleButton() {
+        const toggleButtonContainer = document.createElement('div');
+        const toggleButton = document.createElement('button');
+        toggleButton.setAttribute('id', 'toggle-button');
+        toggleButton.classList.add('toggle-button');
+        toggleButtonContainer.appendChild(toggleButton);
+        return toggleButtonContainer;
+    }
+
+    setToggleButtonText(units) {
+        return "IMPERIAL" ? "F"
+            : "C";
     }
 
     submitButtonListener() {
