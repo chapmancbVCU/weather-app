@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Page.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Page.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/******************************************************************************
+ * IMPORTS
+ *****************************************************************************/
+import { Weather } from "./Weather";
+import WeatherIcon from "./icons/weather-cloudy-custom.png";
+
+
+/**
+ * @class Class that is responsible for rendering website components.
+ * @author Chad Chapman
+ */
+export class Page {
+    /**
+     * Default Constructor
+     */
+    constructor() {
+        this.container = document.querySelector('#content');
+        this.weather = new Weather();
+    }
+
+    /**
+     * Initialize page components when user first visits page.
+     */
+    initializeComponents() {
+        this.renderHeader();
+        this.renderMainContent();
+        document.addEventListener("DOMContentLoaded", async() => {
+            // Get locality info on page load
+            let localityInfo = await this.weather.getCityInfo();
+            console.log(localityInfo);
+
+            // Setup content of toggle units button
+            let countryName = await this.weather.getCountryName();
+            this.weather.setUnits(countryName);
+            const toggle = document.querySelector('#toggle-button');
+            toggle.textContent = `\xB0${this.setToggleButtonText(
+                this.weather.getUnits())}`;
+            
+            // Get weather information.
+            let cityData = await this.weather.getCityData(localityInfo);
+            console.log(cityData);
+            let descriptiveWeatherData = await this.weather.getWeatherData(
+                this.weather.getLatitude(), 
+                this.weather.getLongitude());
+            console.log(descriptiveWeatherData);
+            
+        });
+        
+    }
+
+    /**
+     * Remove header from DOM.
+     */
+    removeHeaderFromDOM() {
+        const header = document.getElementById('header');
+        header.remove();
+    }
+    /**
+     * Removes weather content from DOM after a search for weather from 
+     * another city.
+     */
+    removeMainContentFromDOM() {
+        const mainContent = document.getElementById('main');
+        mainContent.remove();
+    }
+
+    /**
+     * Renders header and its components.
+     */
+    renderHeader() {
+        const header = document.createElement('header');
+        header.setAttribute('id', 'header');
+        header.classList.add('weather');
+        
+        header.appendChild(this.renderTitleLogoContainer());
+        header.appendChild(this.renderSearchBar());
+        header.appendChild(this.renderUnitsToggleButton());
+        
+        this.container.appendChild(header);
+        this.submitButtonListener();
+        this.toggleButtonListener();
+    }
+
+    /**
+     * Renders content for main section of page.
+     */
+    renderMainContent() {
+        const mainContent = document.createElement('main');
+        mainContent.setAttribute('id', 'main');
+        mainContent.textContent = 'test';
+        this.container.appendChild(mainContent);
+    }
+
+    /**
+     * Renders search form and submit button for submitting search for 
+     * weather forecast.
+     * @returns HTMLDivElement for search bar.
+     */
+    renderSearchBar() {
+        // Setup parent container
+        const searchBarContainer = document.createElement('div');
+        searchBarContainer.classList.add('search-bar-container');
+
+        // Setup form
+        const searchBarForm = document.createElement('form');
+        searchBarForm.setAttribute('id', 'search-form');
+        searchBarForm.setAttribute('method', 'GET');
+        searchBarForm.setAttribute('action', '#');
+
+        // Setup search bar
+        const searchBar = document.createElement('input');
+        searchBar.setAttribute('id', 'search');
+        searchBar.setAttribute('name', 'search');
+        searchBar.setAttribute('placeholder', 'Enter a city');
+        searchBar.classList.add('search-bar');
+        searchBarForm.appendChild(searchBar);
+
+        const searchButton = document.createElement('button');
+        searchButton.setAttribute('id', 'submit-search');
+        searchButton.setAttribute('type', 'submit');
+        searchButton.classList.add('submit-search');
+        searchButton.textContent = 'Search';
+        searchBarForm.appendChild(searchButton);
+
+        searchBarContainer.appendChild(searchBarForm);
+        return searchBarContainer;
+    }
+    
+    /**
+     * Renders the title and logo.
+     * @returns HTMLDivElement that contains title and logo for this page.
+     */
+    renderTitleLogoContainer() {
+        // Setup parent
+        const titleLogoContainer = document.createElement('div');
+        titleLogoContainer.classList.add('title-logo');
+        
+        // Setup page title
+        const title = document.createElement('h1');
+        title.classList.add('title');
+        title.textContent = 'My Weather';
+        titleLogoContainer.appendChild(title);
+
+        // Setup logo icon
+        const logoIcon = new Image();
+        logoIcon.classList.add('logo-icon');
+        logoIcon.src = WeatherIcon;
+        titleLogoContainer.appendChild(logoIcon);
+
+        return titleLogoContainer;
+    }
+
+    /**
+     * Renders the toggle units button.
+     * @returns HTMDivElement for toggle button and its parent container.
+     */
+    renderUnitsToggleButton() {
+        const toggleButtonContainer = document.createElement('div');
+        const toggleButton = document.createElement('button');
+        toggleButton.setAttribute('id', 'toggle-button');
+        toggleButton.classList.add('toggle-button');
+        toggleButtonContainer.appendChild(toggleButton);
+        return toggleButtonContainer;
+    }
+
+    /**
+     * Sets to text for the toggle button based on selected units.
+     */
+    setToggleButtonText(units) {
+        return units == 'IMPERIAL' ? "F"
+            : "C";
+    }
+
+    /**
+     * The event listener for the submit button.
+     */
+    submitButtonListener() {
+        const searchBarForm = document.querySelector('#search-form');
+        searchBarForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const searchQuery = document.getElementById('search').value;
+            const test = document.querySelector('#main');
+            test.textContent = searchQuery;
+            document.forms[0].reset();
+        });
+    }
+
+    /**
+     * The event listener for the toggle units button.
+     */
+    toggleButtonListener() {
+        const toggleButton = document.querySelector('#toggle-button');
+        toggleButton.addEventListener('click', (event) => {
+            this.weather.toggleUnits();
+            //this.removeHeaderFromDOM();
+            this.removeMainContentFromDOM();
+            //this.renderHeader();
+            this.renderMainContent();
+            const toggle = document.querySelector('#toggle-button');
+            toggle.textContent = `\xB0${this.setToggleButtonText(
+                this.weather.getUnits())}`;
+        });
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="API.html">API</a></li><li><a href="Page.html">Page</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#page">page</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Mar 01 2023 20:52:48 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
