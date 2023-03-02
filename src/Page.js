@@ -43,6 +43,10 @@ export class Page {
         
     }
 
+    removeHeaderFromDOM() {
+        const header = document.getElementById('header');
+        header.remove();
+    }
     /**
      * Removes weather content from DOM after a search for weather from 
      * another city.
@@ -63,12 +67,13 @@ export class Page {
         
         this.container.appendChild(header);
         this.submitButtonListener();
+        this.toggleButtonListener();
     }
 
     renderMainContent() {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
-
+        mainContent.textContent = 'test';
         this.container.appendChild(mainContent);
     }
 
@@ -136,7 +141,7 @@ export class Page {
     }
 
     setToggleButtonText(units) {
-        return "IMPERIAL" ? "F"
+        return units == 'IMPERIAL' ? "F"
             : "C";
     }
 
@@ -147,6 +152,20 @@ export class Page {
             const searchQuery = document.getElementById('search').value;
             alert(searchQuery);
             document.forms[0].reset();
+        });
+    }
+
+    toggleButtonListener() {
+        const toggleButton = document.querySelector('#toggle-button');
+        toggleButton.addEventListener('click', (event) => {
+            this.weather.toggleUnits();
+            //this.removeHeaderFromDOM();
+            this.removeMainContentFromDOM();
+            //this.renderHeader();
+            this.renderMainContent();
+            const toggle = document.querySelector('#toggle-button');
+            toggle.textContent = `\xB0${this.setToggleButtonText(
+                this.weather.getUnits())}`;
         });
     }
 }
