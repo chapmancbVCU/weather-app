@@ -147,7 +147,7 @@ export class Page {
         mainContent.appendChild(city);
         mainContent.appendChild(this.getDateInfo());
         mainContent.appendChild(this.getTimeInfo());
-        
+
         // Parent container for weather info.
         const currentConditions = document.createElement('div');
 
@@ -297,7 +297,8 @@ export class Page {
         descriptionIcon.src = ` http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
-        temperature.textContent = this.convertTemperatureFromKelvin(
-            cityData.main.temp);
+        temperature.textContent = `${this.convertTemperatureFromKelvin(
+            cityData.main.temp)} \xB0${this.setToggleButtonText(
+                this.weather.getUnits())}`;
     }
 }
