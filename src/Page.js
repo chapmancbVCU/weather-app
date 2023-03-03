@@ -19,6 +19,21 @@ export class Page {
     }
 
     /**
+     * Converts temperature to Celcius or Farenheit depending on which unit of 
+     * measurement is selected.
+     * @param {Number} temperature The temperate we want to convert from 
+     * Kelvin. 
+     * @returns The converted temperature in either Celcius or Farenheit.
+     */
+    convertTemperatureFromKelvin(temperature) {
+        if(this.weather.getUnits() === 'IMPERIAL') {
+            return ((temperature - 273.15) * 9/5 + 32).toFixed(0);
+        } else {
+            return (temperature - 273.15).toFixed(0);
+        }
+    }
+
+    /**
      * Initialize page components when user first visits page.
      */
     initializeComponents() {
@@ -44,7 +59,6 @@ export class Page {
                 this.weather.getLongitude());
             console.log(descriptiveWeatherData);*/
             const mainContent = document.querySelector('#main');
-            //mainContent.textContent = cityData.name;
             this.updateContent(cityData);
         });
         
@@ -90,7 +104,7 @@ export class Page {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
         
-        const city = document.createElement('div');
+        const city = document.createElement('h3');
         city.setAttribute('id', 'city');
         mainContent.appendChild(city);
 
@@ -100,8 +114,9 @@ export class Page {
         description.setAttribute('id', 'description');
         currentConditions.appendChild(description);
 
-
-
+        const temperature = document.createElement('div');
+        temperature.setAttribute('id', 'temperature');
+        currentConditions.appendChild(temperature);
 
         mainContent.appendChild(currentConditions);
 
@@ -218,10 +233,20 @@ export class Page {
         });
     }
 
+    /**
+     * Sets and updates weather information in main content section of page.
+     * @param {object} cityData JSON string containing weather data for locality.
+     */
     updateContent(cityData) {
+        
         const city = document.querySelector('#city');
         city.textContent = `Current conditions in ${cityData.name}`;
+
         const description = document.querySelector('#description');
         description.textContent = cityData.weather[0].description;
+
+        const temperature = document.querySelector('#temperature');
+        temperature.textContent = this.convertTemperatureFromKelvin(
+            cityData.main.temp);
     }
 }
