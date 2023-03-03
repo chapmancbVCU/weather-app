@@ -43,15 +43,32 @@ export class Page {
         let monthName = month[date.getMonth()];
         let dayOfMonth = date.getDay();
         let year = date.getFullYear();
-        console.log(dayOfWeek);
-        console.log(monthName);
-        console.log(dayOfMonth);
-        console.log(year);
 
         const dateInfo = document.createElement('div');
         dateInfo.textContent = dayOfWeek + ', ' + monthName + ' ' + dayOfMonth +
             ', ' + year;
         return dateInfo;
+    }
+
+    getTimeInfo() {
+        let date = new Date();
+        let hours = date.getHours();
+        let timePeriod = '';
+        let minutes = date.getMinutes();
+
+        if(hours >= 12) {
+            timePeriod = 'PM';
+        } else {
+            timePeriod = 'AM';
+        }
+
+        if(hours > 12) {
+            hours = hours - 12;
+        }
+        
+        const currentTime = document.createElement('div');
+        currentTime.textContent = hours + ':' + minutes + ' ' + timePeriod;
+        return currentTime;
     }
 
     /**
@@ -129,7 +146,8 @@ export class Page {
         city.setAttribute('id', 'city');
         mainContent.appendChild(city);
         mainContent.appendChild(this.getDateInfo());
-
+        mainContent.appendChild(this.getTimeInfo());
+        
         // Parent container for weather info.
         const currentConditions = document.createElement('div');
 
