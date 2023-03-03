@@ -13,6 +13,7 @@ export class Weather{
     constructor() {
         this.apiKeys = new API();
         let geoLocationInfo = this.getLocationInformation();
+        //console.log(geoLocationInfo);
         this.city = this.getLocalityInfo(geoLocationInfo);
         this.countryName = this.getCountryInfo(geoLocationInfo);
         this.latitude = 0;
@@ -93,7 +94,12 @@ export class Weather{
         try {
             const response = await fetch(geoLocationInfo);
             const data = await response.json();
-            return data.locality + ", " + data.principalSubdivision;
+            const country = data.countryName;
+            if(country.includes('United States of America')) {
+                return data.locality + ", " + data.principalSubdivision;
+            } else {
+                return data.city + ", " + data.countryName;
+            }
         } catch (error) {
             console.log(error);
         }
