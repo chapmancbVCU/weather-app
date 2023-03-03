@@ -33,6 +33,27 @@ export class Page {
         }
     }
 
+    getDateInfo() {
+        let date = new Date();
+        let dayOfWeek = date.toLocaleString(
+            window.navigator.language, {weekday: 'long'});
+
+        const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep",
+            "Oct","Nov","Dec"];
+        let monthName = month[date.getMonth()];
+        let dayOfMonth = date.getDay();
+        let year = date.getFullYear();
+        console.log(dayOfWeek);
+        console.log(monthName);
+        console.log(dayOfMonth);
+        console.log(year);
+
+        const dateInfo = document.createElement('div');
+        dateInfo.textContent = dayOfWeek + ', ' + monthName + ' ' + dayOfMonth +
+            ', ' + year;
+        return dateInfo;
+    }
+
     /**
      * Initialize page components when user first visits page.
      */
@@ -107,17 +128,26 @@ export class Page {
         const city = document.createElement('h3');
         city.setAttribute('id', 'city');
         mainContent.appendChild(city);
+        mainContent.appendChild(this.getDateInfo());
 
-        // Current conditions
+        // Parent container for weather info.
         const currentConditions = document.createElement('div');
-        const description = document.createElement('div');
-        description.setAttribute('id', 'description');
-        currentConditions.appendChild(description);
 
+        // Current conditions left side        
+        const currentConditionsLeft = document.createElement('div');
         const temperature = document.createElement('div');
         temperature.setAttribute('id', 'temperature');
-        currentConditions.appendChild(temperature);
+        currentConditionsLeft.appendChild(temperature);
 
+        const description = document.createElement('div');
+        description.setAttribute('id', 'description');
+        currentConditionsLeft.appendChild(description);
+
+        const descriptionIcon = new Image();
+        descriptionIcon.setAttribute('id', 'description-icon');
+        currentConditionsLeft.appendChild(descriptionIcon);
+
+        currentConditions.appendChild(currentConditionsLeft);
         mainContent.appendChild(currentConditions);
 
         this.container.appendChild(mainContent);
@@ -244,6 +274,9 @@ export class Page {
 
         const description = document.querySelector('#description');
         description.textContent = cityData.weather[0].description;
+
+        const descriptionIcon = document.querySelector('#description-icon');
+        descriptionIcon.src = ` http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
         temperature.textContent = this.convertTemperatureFromKelvin(
