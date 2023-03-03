@@ -131,8 +131,14 @@ export class Weather{
      * @returns Detailed weather data. 
      */
     async getWeatherData(latitude, longitude) {
+        let units = '';
+        if(this.Weather.getUnits() === 'IMPERIAL') {
+            units = 'imperial';
+        } else {
+            units = 'metric';
+        }        
         try {
-            const response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${this.apiKeys.getWeatherKey()}`);
+            const response = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&units=${units}&appid=${this.apiKeys.getWeatherKey()}`);
             const weatherData = await response.json();
             return weatherData;
         } catch (error) {
