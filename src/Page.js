@@ -149,10 +149,12 @@ export class Page {
             
             // Get weather information.
             let cityData = await this.weather.getCityData(localityInfo);
+            this.weather.setJSONCityData(cityData);
             console.log(cityData);
             let descriptiveWeatherData = await this.weather.getWeatherData(
                 this.weather.getLatitude(), 
                 this.weather.getLongitude());
+            this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
             console.log(descriptiveWeatherData);
             const mainContent = document.querySelector('#main');
             this.updateContent(cityData, descriptiveWeatherData);
@@ -509,11 +511,12 @@ export class Page {
         const toggleButton = document.querySelector('#toggle-button');
         toggleButton.addEventListener('click', (event) => {
             this.weather.toggleUnits();
-            //this.removeHeaderFromDOM();
-            this.removeMainContentFromDOM();
-            //this.renderHeader();
-            this.renderMainContent();
             const toggle = document.querySelector('#toggle-button');
+            
+            this.updateContent(
+                this.weather.getJSONCityData(), 
+                this.weather.getJSONDescriptiveWeatherData());
+
             toggle.textContent = `\xB0${this.setToggleButtonText(
                 this.weather.getUnits())}`;
         });
