@@ -137,6 +137,7 @@ header {
 @media only screen and (min-width: 900px) {
     .current-conditions-container {
         flex-direction: row;
+        align-items: flex-start;
         margin-left: 25px;
         margin-right: 25px;
     }
