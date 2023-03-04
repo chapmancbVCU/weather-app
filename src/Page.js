@@ -123,6 +123,7 @@ export class Page {
         const header = document.getElementById('header');
         header.remove();
     }
+    
     /**
      * Removes weather content from DOM after a search for weather from 
      * another city.
@@ -167,9 +168,7 @@ export class Page {
 
         // Current conditions left side        
         const currentConditionsLeft = document.createElement('div');
-        const temperature = document.createElement('div');
-        temperature.setAttribute('id', 'temperature');
-        currentConditionsLeft.appendChild(temperature);
+        currentConditionsLeft.appendChild(this.renderTemperatureInfo());
 
         const description = document.createElement('div');
         description.setAttribute('id', 'description');
@@ -220,6 +219,11 @@ export class Page {
         return searchBarContainer;
     }
     
+    renderTemperatureInfo() {
+        const temperature = document.createElement('div');
+        temperature.setAttribute('id', 'temperature');
+        return temperature;
+    }
     /**
      * Renders the title and logo.
      * @returns HTMLDivElement that contains title and logo for this page.
