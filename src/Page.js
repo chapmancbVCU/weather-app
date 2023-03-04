@@ -382,6 +382,7 @@ export class Page {
         const searchBar = document.createElement('input');
         searchBar.setAttribute('id', 'search');
         searchBar.setAttribute('name', 'search');
+        searchBar.setAttribute('required', '');
         searchBar.setAttribute('placeholder', 'Enter a city');
         searchBar.classList.add('search-bar');
         searchBarForm.appendChild(searchBar);
@@ -493,14 +494,21 @@ export class Page {
         searchBarForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             console.log('--------------------------------------------------');
+            
             let searchQuery = document.getElementById('search').value;
-            let cityData = await this.weather.getCityData(searchQuery);
-            console.log(cityData);  
-            let descriptiveWeatherData = await this.weather.getWeatherData(
-                cityData.coord.lat, cityData.coord.lon);
-            console.log(descriptiveWeatherData);
-            this.updateContent(cityData, descriptiveWeatherData);
-            document.forms[0].reset();
+            if(searchQuery == '' || searchQuery == null) {
+                searchQuery.setCustomValidity();
+            } else {
+                let cityData = await this.weather.getCityData(searchQuery);
+                console.log(cityData);  
+                let descriptiveWeatherData = await this.weather.getWeatherData(
+                    cityData.coord.lat, cityData.coord.lon);
+                console.log(descriptiveWeatherData);
+                this.updateContent(cityData, descriptiveWeatherData);
+                document.forms[0].reset();
+            }
+
+            
         });
     }
 
@@ -512,7 +520,7 @@ export class Page {
         toggleButton.addEventListener('click', (event) => {
             this.weather.toggleUnits();
             const toggle = document.querySelector('#toggle-button');
-            
+
             this.updateContent(
                 this.weather.getJSONCityData(), 
                 this.weather.getJSONDescriptiveWeatherData());
