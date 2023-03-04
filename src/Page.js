@@ -178,6 +178,20 @@ export class Page {
         this.toggleButtonListener();
     }
 
+    renderHighTemperature() {
+        const highTemperature = document.createElement('div');
+        highTemperature.setAttribute('id', 'today-high-temperature');
+        highTemperature.classList.add('today-high-low-temperature');
+        return highTemperature;
+    }
+
+    renderLowTemperature() {
+        const lowTemperature = document.createElement('div');
+        lowTemperature.setAttribute('id', 'today-low-temperature');
+        lowTemperature.classList.add('today-high-low-temperature');
+        return lowTemperature;
+    }
+
     /**
      * Renders content for main section of page.
      */
@@ -196,6 +210,8 @@ export class Page {
         currentConditionsLeft.appendChild(this.getDateInfo());
         currentConditionsLeft.appendChild(this.getTimeInfo());
         currentConditionsLeft.appendChild(this.renderTemperatureInfo());
+        currentConditionsLeft.appendChild(this.renderHighTemperature());
+        currentConditionsLeft.appendChild(this.renderLowTemperature());
         currentConditionsLeft.appendChild(
             this.renderCurrentConditionsDescription());
         
@@ -342,6 +358,20 @@ export class Page {
         const temperature = document.querySelector('#temperature');
         temperature.textContent = `${this.convertTemperatureFromKelvin(
             cityData.main.temp)} \xB0${this.setToggleButtonText(
+            this.weather.getUnits())}`;
+
+        const todayHighTemperature = document.querySelector(
+            '#today-high-temperature');
+        todayHighTemperature.textContent = `Today's High: 
+            ${this.convertTemperatureFromKelvin(
+            cityData.main.temp_max)} \xB0${this.setToggleButtonText(
+            this.weather.getUnits())}`;
+
+        const todayLowTemperature = document.querySelector(
+            '#today-low-temperature');
+        todayLowTemperature.textContent = `Today's Low: 
+            ${this.convertTemperatureFromKelvin(
+            cityData.main.temp_min)} \xB0${this.setToggleButtonText(
             this.weather.getUnits())}`;
     }
 }
