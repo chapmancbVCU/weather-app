@@ -147,6 +147,11 @@ export class Page {
         return city;
     }
 
+    /**
+     * Renders text and icon that describes the current conditions.
+     * @returns HTMLDivElement that contains a text and icon reflecting 
+     * current conditions.
+     */
     renderCurrentConditionsDescription() {
         // Create parent container
         const descriptionContainer = document.createElement('div');
@@ -163,6 +168,10 @@ export class Page {
         return descriptionContainer;
     }
 
+    /**
+     * Renders a feels like icon and the feels like temperature.
+     * @returns HTMLDivElement that describes feels like temperature.
+     */
     renderFeelsLikeInfo() {
         const feelsLikeContainer = document.createElement('div');
         feelsLikeContainer.classList.add('current-conditions-info');
@@ -177,6 +186,7 @@ export class Page {
         const feelsLikeTemperature = document.createElement('div');
         feelsLikeTemperature.setAttribute('id', 'feels-like-temperature');
         feelsLikeInfo.appendChild(feelsLikeTemperature);
+
         feelsLikeContainer.appendChild(feelsLikeInfo);
         return feelsLikeContainer;
     }
@@ -198,6 +208,10 @@ export class Page {
         this.toggleButtonListener();
     }
 
+    /**
+     * Renders information about today's high temperature.
+     * @returns HTMLDivElement that displays today's high.
+     */
     renderHighTemperature() {
         const highTemperature = document.createElement('div');
         highTemperature.setAttribute('id', 'today-high-temperature');
@@ -205,6 +219,10 @@ export class Page {
         return highTemperature;
     }
 
+    /**
+     * Renders information about today's low temperature.
+     * @returns HTMLDivElement that displays today's low.
+     */
     renderLowTemperature() {
         const lowTemperature = document.createElement('div');
         lowTemperature.setAttribute('id', 'today-low-temperature');
@@ -281,6 +299,10 @@ export class Page {
         return searchBarContainer;
     }
     
+    /**
+     * Renders the current temperature.
+     * @returns HTMLDivElement that contains current temperature.
+     */
     renderTemperatureInfo() {
         const temperature = document.createElement('div');
         temperature.setAttribute('id', 'temperature');
