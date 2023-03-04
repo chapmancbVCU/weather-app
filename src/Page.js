@@ -133,6 +133,17 @@ export class Page {
         mainContent.remove();
     }
 
+    /**
+     * Renders the name of the city whose forecast we are viewing.
+     * @returns HTMLHeadingElement that contains name of city. 
+     */
+    renderCityInfo() {
+        const city = document.createElement('h2');
+        city.setAttribute('id', 'city');
+        city.classList.add('city-name');
+        return city;
+    }
+
     renderCurrentConditionsDescription() {
         // Create parent container
         const descriptionContainer = document.createElement('div');
@@ -171,19 +182,17 @@ export class Page {
     renderMainContent() {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
-        
-        const city = document.createElement('h2');
-        city.setAttribute('id', 'city');
-        city.classList.add('city-name');
-        mainContent.appendChild(city);
-        mainContent.appendChild(this.getDateInfo());
-        mainContent.appendChild(this.getTimeInfo());
+        mainContent.appendChild(this.renderCityInfo());
 
         // Parent container for weather info.
         const currentConditions = document.createElement('div');
+        currentConditions.classList.add('current-conditions-container');
 
         // Current conditions left side        
         const currentConditionsLeft = document.createElement('div');
+        currentConditionsLeft.classList.add('current-conditions-left-container');
+        currentConditionsLeft.appendChild(this.getDateInfo());
+        currentConditionsLeft.appendChild(this.getTimeInfo());
         currentConditionsLeft.appendChild(this.renderTemperatureInfo());
         currentConditionsLeft.appendChild(
             this.renderCurrentConditionsDescription());
@@ -233,6 +242,7 @@ export class Page {
     renderTemperatureInfo() {
         const temperature = document.createElement('div');
         temperature.setAttribute('id', 'temperature');
+        temperature.classList.add('current-temperature');
         return temperature;
     }
     /**
