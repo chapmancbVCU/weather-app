@@ -138,7 +138,7 @@ export class Weather{
      */
     async getWeatherData(latitude, longitude) {
         let units = '';
-        if(this.Weather.getUnits() === 'IMPERIAL') {
+        if(this.getUnits() === 'IMPERIAL') {
             units = 'imperial';
         } else {
             units = 'metric';
