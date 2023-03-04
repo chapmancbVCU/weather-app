@@ -2,6 +2,8 @@
  * IMPORTS
  *****************************************************************************/
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
+import HumidityIcon from "./icons/humidity.png";
+import PrecipitationChanceIcon from './icons/weather-pouring.png';
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 
@@ -181,6 +183,7 @@ export class Page {
         feelsLikeContainer.appendChild(feelsLikeIcon);
 
         const feelsLikeInfo = document.createElement('div');
+        feelsLikeInfo.classList.add('current-conditions-info-description');
         feelsLikeInfo.textContent = 'Feels Like';
 
         const feelsLikeTemperature = document.createElement('div');
@@ -217,6 +220,27 @@ export class Page {
         highTemperature.setAttribute('id', 'today-high-temperature');
         highTemperature.classList.add('today-high-low-temperature');
         return highTemperature;
+    }
+
+    renderHumidity() {
+        const currentHumidityContainer = document.createElement('div');
+        currentHumidityContainer.classList.add('current-conditions-info');
+
+        const humidityIcon = new Image();
+        humidityIcon.classList.add('conditions-icon');
+        humidityIcon.src = HumidityIcon;
+        currentHumidityContainer.appendChild(humidityIcon);
+
+        const humidityInfo = document.createElement('div');
+        humidityInfo.classList.add('current-conditions-info-description');
+        humidityInfo.textContent = 'Humidity';
+
+        const currentHumidity = document.createElement('div');
+        currentHumidity.setAttribute('id', 'current-humidity');
+        humidityInfo.appendChild(currentHumidity);
+
+        currentHumidityContainer.appendChild(humidityInfo);
+        return currentHumidityContainer;
     }
 
     /**
@@ -258,9 +282,11 @@ export class Page {
         const currentConditionsRight = document.createElement('div');
         currentConditionsRight.classList.add('current-conditions-right-container');
         currentConditionsRight.appendChild(this.renderFeelsLikeInfo());
-        currentConditions.appendChild(currentConditionsRight);
-        mainContent.appendChild(currentConditions);
+        currentConditionsRight.appendChild(this.renderHumidity());
 
+        currentConditions.appendChild(currentConditionsRight);
+        
+        mainContent.appendChild(currentConditions);
         this.container.appendChild(mainContent);
     }
 
@@ -426,5 +452,8 @@ export class Page {
             `${this.convertTemperatureFromKelvin(
             cityData.main.feels_like)} \xB0${this.setToggleButtonText(
             this.weather.getUnits())}`;
+
+        const currentHumidity = document.querySelector('#current-humidity');
+        currentHumidity.textContent = `${cityData.main.humidity}`;
     }
 }
