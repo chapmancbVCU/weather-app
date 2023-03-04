@@ -13,9 +13,10 @@ export class Weather{
     constructor() {
         this.apiKeys = new API();
         let geoLocationInfo = this.getLocationInformation();
-        //console.log(geoLocationInfo);
         this.city = this.getLocalityInfo(geoLocationInfo);
         this.countryName = this.getCountryInfo(geoLocationInfo);
+        this.JSONCityData = '';
+        this.JSONDescriptiveWeatherData = '';
         this.latitude = 0;
         this.longitude = 0;
         this.units = '';
@@ -68,20 +69,20 @@ export class Weather{
         return this.countryName;
     }
 
+    getJSONCityData() {
+        return this.JSONCityData;
+    }
+
+    getJSONDescriptiveWeatherData() {
+        return this.JSONDescriptiveWeatherData;
+    }
+    
     /**
      * Getter function for the latitude.
      * @returns The latitude of the user or search query
      */
     getLatitude() {
         return this.latitude;
-    }
-
-    /**
-     * Getter function for the longitude.
-     * @returns The longitude of the user or search query
-     */
-    getLongitude() {
-        return this.longitude;
     }
 
     /**
@@ -128,6 +129,14 @@ export class Weather{
     }
 
     /**
+     * Getter function for the longitude.
+     * @returns The longitude of the user or search query
+     */
+    getLongitude() {
+        return this.longitude;
+    }
+
+    /**
      * Returns the detailed weather data of the user's location or search 
      * query.
      * @param {Number} latitude The latitude of user's location or search 
@@ -160,6 +169,14 @@ export class Weather{
      */
     getUnits() {
         return this.units;
+    }
+
+    setJSONCityData(cityData) {
+        this.JSONCityData = cityData;
+    }
+
+    setJSONDescriptiveWeatherData(descriptiveWeatherData) {
+        this.JSONDescriptiveWeatherData = descriptiveWeatherData;
     }
 
     /**
