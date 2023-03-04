@@ -111,10 +111,10 @@ export class Page {
             // Get weather information.
             let cityData = await this.weather.getCityData(localityInfo);
             console.log(cityData);
-            /*let descriptiveWeatherData = await this.weather.getWeatherData(
+            let descriptiveWeatherData = await this.weather.getWeatherData(
                 this.weather.getLatitude(), 
                 this.weather.getLongitude());
-            console.log(descriptiveWeatherData);*/
+            console.log(descriptiveWeatherData);
             const mainContent = document.querySelector('#main');
             this.updateContent(cityData);
         });
@@ -283,11 +283,33 @@ export class Page {
         currentConditionsRight.classList.add('current-conditions-right-container');
         currentConditionsRight.appendChild(this.renderFeelsLikeInfo());
         currentConditionsRight.appendChild(this.renderHumidity());
-
+        currentConditionsRight.appendChild(this.renderPrecipitationChance());
         currentConditions.appendChild(currentConditionsRight);
         
         mainContent.appendChild(currentConditions);
         this.container.appendChild(mainContent);
+    }
+
+    renderPrecipitationChance() {
+        const precipitaionChanceContainer = document.createElement('div');
+        precipitaionChanceContainer.classList.add('current-conditions-info');
+
+        const precipitationChanceIcon = new Image();
+        precipitationChanceIcon.classList.add('conditions-icon');
+        precipitationChanceIcon.src = PrecipitationChanceIcon;
+        precipitaionChanceContainer.appendChild(precipitationChanceIcon);
+
+        const precipitaionChanceInfo = document.createElement('div');
+        precipitaionChanceInfo.classList.add(
+            'current-conditions-info-description');
+        precipitaionChanceInfo.textContent = 'Chance of Rain';
+
+        const precipitationChance = document.createElement('div');
+        precipitationChance.setAttribute('id', 'chance-of-rain');
+        precipitaionChanceInfo.appendChild(precipitationChance);
+
+        precipitaionChanceContainer.appendChild(precipitaionChanceInfo);
+        return precipitaionChanceContainer;
     }
 
     /**
@@ -454,6 +476,9 @@ export class Page {
             this.weather.getUnits())}`;
 
         const currentHumidity = document.querySelector('#current-humidity');
-        currentHumidity.textContent = `${cityData.main.humidity}`;
+        currentHumidity.textContent = `${cityData.main.humidity} %`;
+
+        //const chanceOfRain = document.querySelector('#chance-of-rain');
+        //chanceOfRain.textContent = `${cityData.main}`
     }
 }
