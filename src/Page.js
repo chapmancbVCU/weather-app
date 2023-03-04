@@ -116,7 +116,7 @@ export class Page {
                 this.weather.getLongitude());
             console.log(descriptiveWeatherData);
             const mainContent = document.querySelector('#main');
-            this.updateContent(cityData);
+            this.updateContent(cityData, descriptiveWeatherData);
         });
         
     }
@@ -437,7 +437,7 @@ export class Page {
      * Sets and updates weather information in main content section of page.
      * @param {object} cityData JSON string containing weather data for locality.
      */
-    updateContent(cityData) {
+    updateContent(cityData, descriptiveWeatherData) {
         
         const city = document.querySelector('#city');
         city.textContent = `Current conditions in ${cityData.name}`;
@@ -478,7 +478,7 @@ export class Page {
         const currentHumidity = document.querySelector('#current-humidity');
         currentHumidity.textContent = `${cityData.main.humidity} %`;
 
-        //const chanceOfRain = document.querySelector('#chance-of-rain');
-        //chanceOfRain.textContent = `${cityData.main}`
+        const chanceOfRain = document.querySelector('#chance-of-rain');
+        chanceOfRain.textContent = `${descriptiveWeatherData.daily[0].pop * 100} %`;
     }
 }
