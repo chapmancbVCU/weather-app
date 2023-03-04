@@ -33,6 +33,11 @@ export class Page {
         }
     }
 
+    /**
+     * Creates a HTMLDivElement that renders the current date in <DayOfWeek>, 
+     * <Month> <DayOfMonth>, <Year> format.
+     * @returns HTMLDivElement containing date.
+     */
     getDateInfo() {
         let date = new Date();
         let dayOfWeek = date.toLocaleString(
@@ -50,20 +55,29 @@ export class Page {
         return dateInfo;
     }
 
+    /**
+     * Creates a HTMLDivElement that renders the current time.
+     * @returns HTMLDivElement containing the durrent time.
+     */
     getTimeInfo() {
         let date = new Date();
+
         let hours = date.getHours();
         let timePeriod = '';
-        let minutes = date.getMinutes();
-
-        if(hours >= 12) {
+        if (hours >= 12) {
             timePeriod = 'PM';
         } else {
             timePeriod = 'AM';
         }
-
-        if(hours > 12) {
+        
+        if (hours > 12) {
             hours = hours - 12;
+        }
+
+        // Get minutes and format it correctly if the value is less than 10.
+        let minutes = date.getMinutes();
+        if (minutes < 10) {
+            minutes = '0' + minutes;
         }
         
         const currentTime = document.createElement('div');
@@ -294,11 +308,12 @@ export class Page {
         description.textContent = cityData.weather[0].description;
 
         const descriptionIcon = document.querySelector('#description-icon');
-        descriptionIcon.src = ` http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
+        descriptionIcon.src = 
+            `http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
         temperature.textContent = `${this.convertTemperatureFromKelvin(
             cityData.main.temp)} \xB0${this.setToggleButtonText(
-                this.weather.getUnits())}`;
+            this.weather.getUnits())}`;
     }
 }
