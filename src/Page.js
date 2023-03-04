@@ -161,6 +161,13 @@ export class Page {
         descriptionContainer.appendChild(descriptionIcon);
         return descriptionContainer;
     }
+
+    renderFeelsLikeInfo() {
+        const feelsLikeContainer = document.createElement('div');
+        feelsLikeContainer.classList.add('current-conditions-info');
+        
+        return feelsLikeContainer;
+    }
     /**
      * Renders header and its components.
      */
@@ -214,9 +221,13 @@ export class Page {
         currentConditionsLeft.appendChild(this.renderLowTemperature());
         currentConditionsLeft.appendChild(
             this.renderCurrentConditionsDescription());
-        
-
         currentConditions.appendChild(currentConditionsLeft);
+
+        // Current conditions right
+        const currentConditionsRight = document.createElement('div');
+        currentConditionsRight.classList.add('current-conditions-right-container');
+        currentConditionsRight.appendChild(this.renderFeelsLikeInfo());
+        currentConditions.appendChild(currentConditionsRight);
         mainContent.appendChild(currentConditions);
 
         this.container.appendChild(mainContent);
