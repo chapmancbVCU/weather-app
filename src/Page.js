@@ -92,7 +92,8 @@ export class Page {
     }
 
     /**
-     * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind direction.
+     * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind 
+     * direction.
      * @param {Number} deg The direction of the winds. 
      * @returns A string value indicating general direction of the winds.
      */
@@ -487,10 +488,16 @@ export class Page {
      */
     submitButtonListener() {
         const searchBarForm = document.querySelector('#search-form');
-        searchBarForm.addEventListener('submit', (event) => {
+        searchBarForm.addEventListener('submit', async (event) => {
             event.preventDefault();
-            const searchQuery = document.getElementById('search').value;
-
+            console.log('--------------------------------------------------');
+            let searchQuery = document.getElementById('search').value;
+            let cityData = await this.weather.getCityData(searchQuery);
+            console.log(cityData);  
+            let descriptiveWeatherData = await this.weather.getWeatherData(
+                cityData.coord.lat, cityData.coord.lon);
+            console.log(descriptiveWeatherData);
+            this.updateContent(cityData, descriptiveWeatherData);
             document.forms[0].reset();
         });
     }
@@ -559,7 +566,7 @@ export class Page {
 
         const chanceOfRain = document.querySelector('#chance-of-rain');
         chanceOfRain.textContent = 
-            `${descriptiveWeatherData.daily[0].pop * 100} %`;
+            `${(descriptiveWeatherData.daily[0].pop * 100).toFixed(0)} %`;
 
         const currentWinds = document.querySelector('#current-wind-speed');
         currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}, 
