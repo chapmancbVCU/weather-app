@@ -134,10 +134,13 @@ export class Page {
     }
 
     renderCurrentConditionsDescription() {
+        // Create parent container
         const descriptionContainer = document.createElement('div');
         descriptionContainer.classList.add('description-container');
+
         const description = document.createElement('div');
         description.setAttribute('id', 'description');
+        
         descriptionContainer.appendChild(description);
 
         const descriptionIcon = new Image();

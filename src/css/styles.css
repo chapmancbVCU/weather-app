@@ -3,10 +3,17 @@
     padding: 0;
 }
 
+.description-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .logo-icon {
     height: 40px;
     margin-left: 10px;
 }
+
 header {
     background-color: grey;
 
