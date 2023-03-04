@@ -123,7 +123,7 @@ export class Page {
         const header = document.getElementById('header');
         header.remove();
     }
-    
+
     /**
      * Removes weather content from DOM after a search for weather from 
      * another city.
@@ -133,6 +133,18 @@ export class Page {
         mainContent.remove();
     }
 
+    renderCurrentConditionsDescription() {
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.classList.add('description-container');
+        const description = document.createElement('div');
+        description.setAttribute('id', 'description');
+        descriptionContainer.appendChild(description);
+
+        const descriptionIcon = new Image();
+        descriptionIcon.setAttribute('id', 'description-icon');
+        descriptionContainer.appendChild(descriptionIcon);
+        return descriptionContainer;
+    }
     /**
      * Renders header and its components.
      */
@@ -169,14 +181,9 @@ export class Page {
         // Current conditions left side        
         const currentConditionsLeft = document.createElement('div');
         currentConditionsLeft.appendChild(this.renderTemperatureInfo());
-
-        const description = document.createElement('div');
-        description.setAttribute('id', 'description');
-        currentConditionsLeft.appendChild(description);
-
-        const descriptionIcon = new Image();
-        descriptionIcon.setAttribute('id', 'description-icon');
-        currentConditionsLeft.appendChild(descriptionIcon);
+        currentConditionsLeft.appendChild(
+            this.renderCurrentConditionsDescription());
+        
 
         currentConditions.appendChild(currentConditionsLeft);
         mainContent.appendChild(currentConditions);
