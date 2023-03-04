@@ -23,9 +23,18 @@ body {
     font-size: 20px;
 }
 
+.conditions-icon {
+    height: 33px;
+}
+
 .current-conditions-info {
     display: flex;
     flex-direction: row;
+    margin-bottom: 5px;
+}
+
+.current-conditions-info-description {
+    margin-left: 10px;
 }
 
 .current-date, .current-time {
