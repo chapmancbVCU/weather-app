@@ -92,6 +92,30 @@ export class Page {
     }
 
     /**
+     * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind direction.
+     * @param {Number} deg The direction of the winds. 
+     * @returns A string value indicating general direction of the winds.
+     */
+    getWindDirection(deg) {
+        if ((deg >= 337.6 && deg <= 359.9) || deg >= 0 && deg <= 22.5) {
+            return 'N';
+        } else if (deg >= 22.6 && deg <= 67.5) {
+            return 'NE';
+        } else if (deg >= 67.6 && deg <= 112.5) {
+            return 'E';
+        } else if (deg >= 112.6 && deg <= 157.5) {
+            return 'SE';
+        } else if (deg >= 157.6 && deg <= 202.5) {
+            return 'S';
+        } else if (deg >= 202.6 && deg <= 247.5) {
+            return 'SW';
+        } else if (deg >= 247.6 && deg <= 292.5) {
+            return 'W';
+        } else if (deg >= 292.6 && deg <= 337.5) {
+            return 'NW';
+        }
+    }
+    /**
      * Returns wind as mph or km/h depending of location.
      * @param {Number} wind The wind speed expressed in meters per second. 
      * @returns The wind speed in mph or km/h.
@@ -538,10 +562,15 @@ export class Page {
             `${descriptiveWeatherData.daily[0].pop * 100} %`;
 
         const currentWinds = document.querySelector('#current-wind-speed');
-        currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}`;
+        currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}, 
+            ${this.getWindDirection(cityData.wind.deg)}`;
 
         const currentWindGusts = document.querySelector('#current-wind-gusts');
-        currentWindGusts.textContent = 
-            `${this.getWindSpeed(descriptiveWeatherData.current.wind_gust)}`;
+        if (!isNaN(descriptiveWeatherData.current.wind_gust)) {
+            currentWindGusts.textContent = 
+                `${this.getWindSpeed(descriptiveWeatherData.current.wind_gust)}`;
+        } else {
+            currentWindGusts.textContent = `${this.getWindSpeed(0)}`;
+        }
     }
 }
