@@ -1,6 +1,7 @@
 /******************************************************************************
  * IMPORTS
  *****************************************************************************/
+import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 
@@ -166,8 +167,20 @@ export class Page {
         const feelsLikeContainer = document.createElement('div');
         feelsLikeContainer.classList.add('current-conditions-info');
         
+        const feelsLikeIcon = new Image();
+        feelsLikeIcon.src = FeelsLikeIcon;
+        feelsLikeContainer.appendChild(feelsLikeIcon);
+
+        const feelsLikeInfo = document.createElement('div');
+        feelsLikeInfo.textContent = 'Feels Like';
+
+        const feelsLikeTemperature = document.createElement('div');
+        feelsLikeTemperature.setAttribute('id', 'feels-like-temperature');
+
+        feelsLikeContainer.appendChild(feelsLikeInfo);
         return feelsLikeContainer;
     }
+
     /**
      * Renders header and its components.
      */
