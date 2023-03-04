@@ -23,6 +23,11 @@ body {
     font-size: 20px;
 }
 
+.current-conditions-info {
+    display: flex;
+    flex-direction: row;
+}
+
 .current-date, .current-time {
     font-size: 18px;
 }
@@ -130,6 +135,20 @@ header {
 }
 
 @media only screen and (min-width: 900px) {
+    .current-conditions-container {
+        flex-direction: row;
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+    .current-conditions-left-container {
+        margin-right: auto;
+    }
+
+    .current-conditions-right-container {
+        margin-left: auto;
+    }
+
     header {
         height: 100px;
         justify-content: space-evenly;
