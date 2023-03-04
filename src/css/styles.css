@@ -3,6 +3,11 @@
     padding: 0;
 }
 
+.city-name {
+    margin-top: 25px;
+    text-align: center;
+}
+
 .description-container {
     display: flex;
     flex-direction: row;

@@ -140,7 +140,7 @@ export class Page {
 
         const description = document.createElement('div');
         description.setAttribute('id', 'description');
-        
+
         descriptionContainer.appendChild(description);
 
         const descriptionIcon = new Image();
@@ -172,8 +172,9 @@ export class Page {
         const mainContent = document.createElement('main');
         mainContent.setAttribute('id', 'main');
         
-        const city = document.createElement('h3');
+        const city = document.createElement('h2');
         city.setAttribute('id', 'city');
+        city.classList.add('city-name');
         mainContent.appendChild(city);
         mainContent.appendChild(this.getDateInfo());
         mainContent.appendChild(this.getTimeInfo());
