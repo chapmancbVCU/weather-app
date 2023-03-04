@@ -176,7 +176,7 @@ export class Page {
 
         const feelsLikeTemperature = document.createElement('div');
         feelsLikeTemperature.setAttribute('id', 'feels-like-temperature');
-
+        feelsLikeInfo.appendChild(feelsLikeTemperature);
         feelsLikeContainer.appendChild(feelsLikeInfo);
         return feelsLikeContainer;
     }
@@ -396,6 +396,13 @@ export class Page {
         todayLowTemperature.textContent = `Today's Low: 
             ${this.convertTemperatureFromKelvin(
             cityData.main.temp_min)} \xB0${this.setToggleButtonText(
+            this.weather.getUnits())}`;
+
+        const feelsLikeTemperature = document.querySelector(
+            '#feels-like-temperature');
+        feelsLikeTemperature.textContent = 
+            `${this.convertTemperatureFromKelvin(
+            cityData.main.feels_like)} \xB0${this.setToggleButtonText(
             this.weather.getUnits())}`;
     }
 }
