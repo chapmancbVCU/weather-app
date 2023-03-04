@@ -32,6 +32,10 @@ body {
     font-size: 18px;
 }
 
+.current-conditions-left-container {
+    text-align: center;
+}
+
 .current-time {
     margin-bottom: 25px;
 }
@@ -144,6 +148,7 @@ header {
 
     .current-conditions-left-container {
         margin-right: auto;
+        text-align: left;
     }
 
     .current-conditions-right-container {
