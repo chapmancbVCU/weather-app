@@ -76,7 +76,7 @@ export class Weather{
     getJSONDescriptiveWeatherData() {
         return this.JSONDescriptiveWeatherData;
     }
-    
+
     /**
      * Getter function for the latitude.
      * @returns The latitude of the user or search query

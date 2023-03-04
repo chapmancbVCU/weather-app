@@ -20,6 +20,7 @@ export class Page {
     constructor() {
         this.container = document.querySelector('#content');
         this.weather = new Weather();
+        this.localityInfo = '';
     }
 
     /**
@@ -137,8 +138,8 @@ export class Page {
         this.renderMainContent();
         document.addEventListener("DOMContentLoaded", async() => {
             // Get locality info on page load
-            let localityInfo = await this.weather.getCityInfo();
-            console.log(localityInfo);
+            this.localityInfo = await this.weather.getCityInfo();
+            console.log(this.localityInfo);
 
             // Setup content of toggle units button
             let countryName = await this.weather.getCountryName();
@@ -148,7 +149,7 @@ export class Page {
                 this.weather.getUnits())}`;
             
             // Get weather information.
-            let cityData = await this.weather.getCityData(localityInfo);
+            let cityData = await this.weather.getCityData(this.localityInfo);
             this.weather.setJSONCityData(cityData);
             console.log(cityData);
             let descriptiveWeatherData = await this.weather.getWeatherData(
@@ -496,9 +497,11 @@ export class Page {
             console.log('--------------------------------------------------');
             
             let searchQuery = document.getElementById('search').value;
+            
             if(searchQuery == '' || searchQuery == null) {
                 searchQuery.setCustomValidity();
             } else {
+                this.localityInfo = searchQuery;
                 let cityData = await this.weather.getCityData(searchQuery);
                 console.log(cityData);  
                 let descriptiveWeatherData = await this.weather.getWeatherData(
@@ -537,7 +540,13 @@ export class Page {
     updateContent(cityData, descriptiveWeatherData) {
         
         const city = document.querySelector('#city');
-        city.textContent = `Current conditions in ${cityData.name}`;
+        if (cityData.sys.country == 'US') {
+            city.textContent = `Current conditions in ${this.localityInfo}`;
+        } else {
+            city.textContent = `Current conditions in ${cityData.name}, 
+                ${cityData.sys.country}`;
+        }
+        
 
         const description = document.querySelector('#description');
         description.textContent = cityData.weather[0].description;
