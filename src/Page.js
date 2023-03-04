@@ -50,6 +50,7 @@ export class Page {
         let year = date.getFullYear();
 
         const dateInfo = document.createElement('div');
+        dateInfo.classList.add('current-date');
         dateInfo.textContent = dayOfWeek + ', ' + monthName + ' ' + dayOfMonth +
             ', ' + year;
         return dateInfo;
@@ -81,6 +82,7 @@ export class Page {
         }
         
         const currentTime = document.createElement('div');
+        currentTime.classList.add('current-time');
         currentTime.textContent = hours + ':' + minutes + ' ' + timePeriod;
         return currentTime;
     }
@@ -245,6 +247,7 @@ export class Page {
         temperature.classList.add('current-temperature');
         return temperature;
     }
+
     /**
      * Renders the title and logo.
      * @returns HTMLDivElement that contains title and logo for this page.

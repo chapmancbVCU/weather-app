@@ -9,6 +9,19 @@
     text-align: center;
 }
 
+
+.current-date, .current-time {
+    font-size: 18px;
+}
+
+.current-time {
+    margin-bottom: 25px;
+}
+
+.current-temperature {
+    font-size: 30px;
+}
+
 .description-container {
     display: flex;
     flex-direction: row;
