@@ -153,7 +153,7 @@ export class Page {
 
         const description = document.createElement('div');
         description.setAttribute('id', 'description');
-
+        description.classList.add('current-conditions-description');
         descriptionContainer.appendChild(description);
 
         const descriptionIcon = new Image();
