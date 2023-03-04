@@ -6,6 +6,7 @@ import HumidityIcon from "./icons/humidity.png";
 import PrecipitationChanceIcon from './icons/weather-pouring.png';
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
+import WindIcon from "./icons/weather-windy.png";
 
 
 /**
@@ -88,6 +89,19 @@ export class Page {
         currentTime.classList.add('current-time');
         currentTime.textContent = hours + ':' + minutes + ' ' + timePeriod;
         return currentTime;
+    }
+
+    /**
+     * Returns wind as mph or km/h depending of location.
+     * @param {Number} wind The wind speed expressed in meters per second. 
+     * @returns The wind speed in mph or km/h.
+     */
+    getWindSpeed(wind) {
+        if (this.weather.getUnits() === 'IMPERIAL') {
+            return (wind * 2.2369).toFixed(1) + ' mph';
+        } else {
+            return (wind * (18/5)).toFixed(1) + ' km/h'
+        }
     }
 
     /**
@@ -222,6 +236,10 @@ export class Page {
         return highTemperature;
     }
 
+    /**
+     * Renders a humidity icon and the current humidity.
+     * @returns HTMLDivElement that describes the current humidity.
+     */
     renderHumidity() {
         const currentHumidityContainer = document.createElement('div');
         currentHumidityContainer.classList.add('current-conditions-info');
@@ -284,12 +302,17 @@ export class Page {
         currentConditionsRight.appendChild(this.renderFeelsLikeInfo());
         currentConditionsRight.appendChild(this.renderHumidity());
         currentConditionsRight.appendChild(this.renderPrecipitationChance());
+        currentConditionsRight.appendChild(this.renderWindConditions());
         currentConditions.appendChild(currentConditionsRight);
         
         mainContent.appendChild(currentConditions);
         this.container.appendChild(mainContent);
     }
 
+    /**
+     * Renders a rain icon and the chance of precipitation.
+     * @returns HTMLDivElement that describes the chances of precipitatin.
+     */
     renderPrecipitationChance() {
         const precipitaionChanceContainer = document.createElement('div');
         precipitaionChanceContainer.classList.add('current-conditions-info');
@@ -396,6 +419,38 @@ export class Page {
     }
 
     /**
+     * Renders a wind icon and the current wind speeds.
+     * @returns HTMLDivElement that describes current wind conditions.
+     */
+    renderWindConditions() {
+        const windConditionsContainer = document.createElement('div');
+        windConditionsContainer.classList.add('current-conditions-info');
+
+        const windIcon = new Image();
+        windIcon.classList.add('conditions-icon');
+        windIcon.src = WindIcon;
+        windConditionsContainer.appendChild(windIcon);
+
+        const windInfo = document.createElement('div');
+        windInfo.classList.add('current-conditions-info-description');
+        windInfo.textContent = 'Winds';
+
+        const currentWinds = document.createElement('div');
+        currentWinds.setAttribute('id', 'current-wind-speed');
+        windInfo.appendChild(currentWinds);
+
+        const windGustInfo = document.createElement('div');
+        windGustInfo.textContent = 'Wind Gusts';
+        windInfo.appendChild(windGustInfo);
+        const windGusts = document.createElement('div');
+        windGusts.setAttribute('id', 'current-wind-gusts');
+        windInfo.appendChild(windGusts);
+
+        windConditionsContainer.appendChild(windInfo);
+        return windConditionsContainer;
+    }
+
+    /**
      * Sets to text for the toggle button based on selected units.
      */
     setToggleButtonText(units) {
@@ -479,6 +534,14 @@ export class Page {
         currentHumidity.textContent = `${cityData.main.humidity} %`;
 
         const chanceOfRain = document.querySelector('#chance-of-rain');
-        chanceOfRain.textContent = `${descriptiveWeatherData.daily[0].pop * 100} %`;
+        chanceOfRain.textContent = 
+            `${descriptiveWeatherData.daily[0].pop * 100} %`;
+
+        const currentWinds = document.querySelector('#current-wind-speed');
+        currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}`;
+
+        const currentWindGusts = document.querySelector('#current-wind-gusts');
+        currentWindGusts.textContent = 
+            `${this.getWindSpeed(descriptiveWeatherData.current.wind_gust)}`;
     }
 }
