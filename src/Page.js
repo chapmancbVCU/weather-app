@@ -624,7 +624,7 @@ export class Page {
 
         const descriptionIcon = document.querySelector('#description-icon');
         descriptionIcon.src = 
-            `http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
+            `https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
         temperature.textContent = `${this.convertTemperatureFromKelvin(
@@ -653,11 +653,11 @@ export class Page {
             this.weather.getUnits())}`;
 
         const currentHumidity = document.querySelector('#current-humidity');
-        currentHumidity.textContent = `${cityData.main.humidity} %`;
+        currentHumidity.textContent = `${cityData.main.humidity}%`;
 
         const chanceOfRain = document.querySelector('#chance-of-rain');
         chanceOfRain.textContent = 
-            `${(descriptiveWeatherData.daily[0].pop * 100).toFixed(0)} %`;
+            `${(descriptiveWeatherData.daily[0].pop * 100).toFixed(0)}%`;
 
         const currentWinds = document.querySelector('#current-wind-speed');
         currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}, 
