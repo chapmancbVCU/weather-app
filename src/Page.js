@@ -480,6 +480,75 @@ export class Page {
     }
 
     /**
+     * This function detects if a US state is abbreviated and updates search 
+     * query to contain full state name.
+     * @param {String} searchQuery The search query.
+     * @returns The original string or an updated string where the 
+     * abbreviation of a US state is converted to its full name.
+     */
+    stateAbbreviationMapping(searchQuery) {
+        let states = [
+            ['Arizona', 'AZ'],
+            ['Alabama', 'AL'],
+            ['Alaska', 'AK'],
+            ['Arkansas', 'AR'],
+            ['California', 'CA'],
+            ['Colorado', 'CO'],
+            ['Connecticut', 'CT'],
+            ['Delaware', 'DE'],
+            ['Florida', 'FL'],
+            ['Georgia', 'GA'],
+            ['Hawaii', 'HI'],
+            ['Idaho', 'ID'],
+            ['Illinois', 'IL'],
+            ['Indiana', 'IN'],
+            ['Iowa', 'IA'],
+            ['Kansas', 'KS'],
+            ['Kentucky', 'KY'],
+            ['Louisiana', 'LA'],
+            ['Maine', 'ME'],
+            ['Maryland', 'MD'],
+            ['Massachusetts', 'MA'],
+            ['Michigan', 'MI'],
+            ['Minnesota', 'MN'],
+            ['Mississippi', 'MS'],
+            ['Missouri', 'MO'],
+            ['Montana', 'MT'],
+            ['Nebraska', 'NE'],
+            ['Nevada', 'NV'],
+            ['New Hampshire', 'NH'],
+            ['New Jersey', 'NJ'],
+            ['New Mexico', 'NM'],
+            ['New York', 'NY'],
+            ['North Carolina', 'NC'],
+            ['North Dakota', 'ND'],
+            ['Ohio', 'OH'],
+            ['Oklahoma', 'OK'],
+            ['Oregon', 'OR'],
+            ['Pennsylvania', 'PA'],
+            ['Rhode Island', 'RI'],
+            ['South Carolina', 'SC'],
+            ['South Dakota', 'SD'],
+            ['Tennessee', 'TN'],
+            ['Texas', 'TX'],
+            ['Utah', 'UT'],
+            ['Vermont', 'VT'],
+            ['Virginia', 'VA'],
+            ['Washington', 'WA'],
+            ['West Virginia', 'WV'],
+            ['Wisconsin', 'WI'],
+            ['Wyoming', 'WY'],
+        ];
+        
+        for(let i = 0; i < states.length; i++) {
+            if(searchQuery.includes(states[i][1])) {
+                searchQuery = searchQuery.replace(states[i][1], states[i][0]);
+            } 
+        }
+       return searchQuery;
+    }
+
+    /**
      * Sets to text for the toggle button based on selected units.
      */
     setToggleButtonText(units) {
@@ -497,11 +566,16 @@ export class Page {
             console.log('--------------------------------------------------');
             
             let searchQuery = document.getElementById('search').value;
-            
             if(searchQuery == '' || searchQuery == null) {
                 searchQuery.setCustomValidity();
             } else {
+                /* If query has US State name abbreviated we detect and 
+                correct query before performing search. */
+                searchQuery = this.stateAbbreviationMapping(searchQuery);
+
+                // To display new location name at top of page.
                 this.localityInfo = searchQuery;
+
                 let cityData = await this.weather.getCityData(searchQuery);
                 console.log(cityData);  
                 let descriptiveWeatherData = await this.weather.getWeatherData(
@@ -509,9 +583,7 @@ export class Page {
                 console.log(descriptiveWeatherData);
                 this.updateContent(cityData, descriptiveWeatherData);
                 document.forms[0].reset();
-            }
-
-            
+            } 
         });
     }
 
@@ -547,7 +619,6 @@ export class Page {
                 ${cityData.sys.country}`;
         }
         
-
         const description = document.querySelector('#description');
         description.textContent = cityData.weather[0].description;
 
@@ -594,8 +665,8 @@ export class Page {
 
         const currentWindGusts = document.querySelector('#current-wind-gusts');
         if (!isNaN(descriptiveWeatherData.current.wind_gust)) {
-            currentWindGusts.textContent = 
-                `${this.getWindSpeed(descriptiveWeatherData.current.wind_gust)}`;
+            currentWindGusts.textContent = `${this.getWindSpeed(
+                descriptiveWeatherData.current.wind_gust)}`;
         } else {
             currentWindGusts.textContent = `${this.getWindSpeed(0)}`;
         }
