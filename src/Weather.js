@@ -69,10 +69,18 @@ export class Weather{
         return this.countryName;
     }
 
+    /**
+     * Getter function for returning city data as a JSON object.
+     * @returns JSON object containing city data.
+     */
     getJSONCityData() {
         return this.JSONCityData;
     }
 
+    /**
+     * Getter function for returning descriptive weather data as a JSON object.
+     * @returns JSON object containing descriptive weather data.
+     */
     getJSONDescriptiveWeatherData() {
         return this.JSONDescriptiveWeatherData;
     }
@@ -171,10 +179,20 @@ export class Weather{
         return this.units;
     }
 
+    /**
+     * Setter function for simple weather data in the form of a JSON object.
+     * @param {JSON} cityData JSON object containing weather data. 
+     */
     setJSONCityData(cityData) {
         this.JSONCityData = cityData;
     }
 
+    /**
+     * Setter function for descriptive weather data in the form of a JSON 
+     * object.
+     * @param {JSON} descriptiveWeatherData JSON object containing descriptive 
+     * weather data.
+     */
     setJSONDescriptiveWeatherData(descriptiveWeatherData) {
         this.JSONDescriptiveWeatherData = descriptiveWeatherData;
     }
