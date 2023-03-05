@@ -7,6 +7,10 @@ body {
     background-color: rgb(111, 200, 230);
 }
 
+body, html {
+    overscroll-behavior: none;
+}
+
 .city-name {
     margin-top: 25px;
     margin-bottom: 15px;

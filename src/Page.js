@@ -140,7 +140,6 @@ export class Page {
         const currentTime = document.querySelector('#current-time');
         currentTime.textContent = hours + ':' + minutes + ' ' + timePeriod;
     }
-    
 
     /**
      * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind 
@@ -167,6 +166,7 @@ export class Page {
             return 'NW';
         }
     }
+
     /**
      * Returns wind as mph or km/h depending of location.
      * @param {Number} wind The wind speed expressed in meters per second. 
