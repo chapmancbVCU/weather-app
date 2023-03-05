@@ -39,6 +39,12 @@ export class Page {
         }
     }
 
+    /**
+     * Determines time for locality we are getting weather forecast.
+     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
+     * weather data.
+     * @returns A string containing local timestamp.
+     */
     getDateTime(descriptiveWeatherData) {
         let dt = descriptiveWeatherData.current.dt;
         let timezone = descriptiveWeatherData.timezone_offset;
@@ -47,6 +53,10 @@ export class Page {
         return new Date(utc_milliseconds).toUTCString();
     }
 
+    /**
+     * This function reports the local date.
+     * @param {String} localDateTime The local timestamp.
+     */
     getDateInfo(localDateTime) {
         console.log(localDateTime);
 
@@ -93,6 +103,10 @@ export class Page {
             dayOfMonth + ', ' + year;
     }
 
+    /**
+     * This function reports the local time.
+     * @param {String} localDateTime The local timestamp.
+     */
     getTimeInfo(localDateTime) {
         let hours = localDateTime.slice(17, 19);
         let minutes = localDateTime.slice(20, 22);
@@ -667,7 +681,9 @@ export class Page {
 
     /**
      * Sets and updates weather information in main content section of page.
-     * @param {object} cityData JSON string containing weather data for locality.
+     * @param {JSON} cityData JSON string containing weather data for locality.
+     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
+     * weather data.
      */
     updateContent(cityData, descriptiveWeatherData) {
         let localDateTime = this.getDateTime(descriptiveWeatherData);
