@@ -149,22 +149,6 @@ header {
 }
 
 @media only screen and (min-width: 900px) {
-    .current-conditions-container {
-        flex-direction: row;
-        align-items: flex-start;
-        margin-left: 25px;
-        margin-right: 25px;
-    }
-
-    .current-conditions-left-container {
-        margin-right: auto;
-        text-align: left;
-    }
-
-    .current-conditions-right-container {
-        margin-left: auto;
-    }
-
     header {
         height: 100px;
         justify-content: space-evenly;
@@ -186,5 +170,23 @@ header {
 
     .toggle-button {
         margin-right: 25px;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .current-conditions-container {
+        flex-direction: row;
+        align-items: flex-start;
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+    .current-conditions-left-container {
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .current-conditions-right-container {
+        margin-left: auto;
     }
 }
