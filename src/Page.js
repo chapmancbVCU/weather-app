@@ -39,6 +39,18 @@ export class Page {
         }
     }
 
+    dailyForecastContent(descriptiveWeatherData) {
+        const numberOfDays = 8;
+        for(let i = 0; i < numberOfDays; i++) {
+            if (i > 0) {
+                const dailyForecast = document.querySelector(`#day-${i}`);
+                const dateTime = this.getDateTime(descriptiveWeatherData.daily[i].dt, descriptiveWeatherData.timezone_offset);
+
+                dailyForecast.textContent = `${dateTime}`;
+            }
+        }
+    }
+
     /**
      * Determines time for locality we are getting weather forecast.  This 
      * function takes into accout the timezone offset of the location we are 
@@ -72,8 +84,6 @@ export class Page {
      * @param {String} localDateTime The local timestamp.
      */
     getDateInfo(localDateTime) {
-        console.log(localDateTime);
-
         let days = [['Sunday', 'Sun'], ['Monday', 'Mon'], ['Tuesday', 'Tue'],
             ['Wednesday', 'Wed'], ['Thursday', 'Thu'], ['Friday', 'Fri'],
             ['Saturday', 'Sat']];
@@ -207,7 +217,6 @@ export class Page {
      * which units of measurement is selected.
      */
     getVisibility(visibility) {
-        console.log(`visibility ${visibility}`);
         if (this.weather.getUnits() === 'IMPERIAL') {
             return (visibility / 1609.344).toFixed(1) + ' miles';
         } else {
@@ -244,6 +253,7 @@ export class Page {
             console.log(descriptiveWeatherData);
             const mainContent = document.querySelector('#main');
             this.updateContent(cityData, descriptiveWeatherData);
+            this.dailyForecastContent(descriptiveWeatherData);
         });
         
     }
@@ -312,6 +322,19 @@ export class Page {
         return descriptionContainer;
     }
 
+    renderDailyForecast() {
+        const dailyForecastContainer = document.createElement('div');
+        dailyForecastContainer.classList.add('daily-forecast-container');
+        const numberOfDays = 8
+        for(let i = 0; i < numberOfDays; i++) {
+            if (i > 0) {
+                const dailyForecast = document.createElement('div');
+                dailyForecast.setAttribute('id', `day-${i}`);
+                dailyForecastContainer.appendChild(dailyForecast);
+            }
+        }
+        return dailyForecastContainer;
+    }
     /**
      * Creates a HTMLDivElement that renders the current date in <DayOfWeek>, 
      * <Month> <DayOfMonth>, <Year> format.
@@ -449,6 +472,7 @@ export class Page {
         currentConditions.appendChild(currentConditionsRight);
         mainContent.appendChild(currentConditions);
 
+        // Additional daily information.
         const additionalInformation = document.createElement('div');
         additionalInformation.classList.add('additional-information');
         additionalInformation.appendChild(this.renderSunRiseToday());
@@ -456,6 +480,10 @@ export class Page {
         additionalInformation.appendChild(this.renderBarometricPressure());
         additionalInformation.appendChild(this.renderVisibility());
         mainContent.appendChild(additionalInformation);
+
+        // Daily forecast
+        mainContent.appendChild(this.renderDailyForecast());
+
         this.container.appendChild(mainContent);
     }
 
@@ -769,6 +797,7 @@ export class Page {
                 this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
                 console.log(descriptiveWeatherData);
                 this.updateContent(cityData, descriptiveWeatherData);
+                this.dailyForecastContent(descriptiveWeatherData);
                 document.forms[0].reset();
             } 
         });
@@ -787,6 +816,9 @@ export class Page {
                 this.weather.getJSONCityData(), 
                 this.weather.getJSONDescriptiveWeatherData());
 
+            this.dailyForecastContent(
+                this.weather.getJSONDescriptiveWeatherData());
+            
             toggle.textContent = `\xB0${this.setToggleButtonText(
                 this.weather.getUnits())}`;
         });
