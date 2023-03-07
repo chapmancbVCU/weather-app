@@ -330,6 +330,7 @@ export class Page {
             if (i > 0) {
                 const dailyForecast = document.createElement('div');
                 dailyForecast.setAttribute('id', `day-${i}`);
+                dailyForecast.classList.add('daily-forecast');
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }

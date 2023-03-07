@@ -88,9 +88,21 @@ body, html {
     font-size: 30px;
 }
 
+.daily-forecast {
+
+}
+
 .daily-forecast-container {
+    margin-top: 25px;
+    border: solid whitesmoke 3px;
+    border-radius: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 85%;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .description-container {
@@ -223,8 +235,17 @@ header {
         margin-bottom: 20px;
     }
 
+    .daily-forecast {
+        min-width: 150px;
+    }
+
     .daily-forecast-container {
+        height: 200px;
+        overflow-y:unset;
+        overflow-x: scroll;
         flex-direction: row;
+        align-items: center;
+        justify-content: space-evenly;
     }
 
     .current-conditions-container {
