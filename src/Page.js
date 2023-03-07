@@ -117,7 +117,7 @@ export class Page {
      */
     getPressure(pressureInhPa) {
         const PRESSURE_CONVERSION_CONSTANT = 0.0295;
-        return (pressureInhPa * PRESSURE_CONVERSION_CONSTANT).toFixed(0);
+        return (pressureInhPa * PRESSURE_CONVERSION_CONSTANT).toFixed(1);
     }
 
     /**
@@ -211,7 +211,7 @@ export class Page {
         if (this.weather.getUnits() === 'IMPERIAL') {
             return (visibility / 1609.344).toFixed(1) + ' miles';
         } else {
-            return (visibility / 1000) + ' km';
+            return (visibility / 1000).toFixed(1) + ' km';
         }
     }
 
