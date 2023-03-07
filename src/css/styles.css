@@ -88,6 +88,11 @@ body, html {
     font-size: 30px;
 }
 
+.daily-forecast-container {
+    display: flex;
+    flex-direction: column;
+}
+
 .description-container {
     display: flex;
     flex-direction: row;
@@ -216,6 +221,10 @@ header {
         align-items: center;
         margin-top: 20px;
         margin-bottom: 20px;
+    }
+
+    .daily-forecast-container {
+        flex-direction: row;
     }
 
     .current-conditions-container {
