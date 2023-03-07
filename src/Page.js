@@ -762,9 +762,11 @@ export class Page {
                 this.localityInfo = searchQuery;
 
                 let cityData = await this.weather.getCityData(searchQuery);
+                this.weather.setJSONCityData(cityData);
                 console.log(cityData);  
                 let descriptiveWeatherData = await this.weather.getWeatherData(
                     cityData.coord.lat, cityData.coord.lon);
+                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
                 console.log(descriptiveWeatherData);
                 this.updateContent(cityData, descriptiveWeatherData);
                 document.forms[0].reset();
