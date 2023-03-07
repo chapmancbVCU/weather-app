@@ -53,6 +53,12 @@ export class Page {
         return new Date(utc_milliseconds).toUTCString();
     }
 
+    getDateTimeOther(unixTime, descriptiveWeatherData) {
+        return new Date((
+            descriptiveWeatherData.timezone_offset + unixTime) * 1000)
+            .toUTCString();
+    }
+
     /**
      * This function reports the local date.
      * @param {String} localDateTime The local timestamp.
@@ -77,17 +83,10 @@ export class Page {
         }
         let date = new Date();
 
-        let months = [['January', 'Jan'],
-            ['February', 'Feb'],
-            ['March', 'Mar'],
-            ['April', 'Apr'],
-            ['May', 'May'],
-            ['June', 'Jun'],
-            ['July', 'Jul'],
-            ['August', 'Aug'],
-            ['September', 'Sep'],
-            ['October', 'Oct'],
-            ['November', 'Nov'],
+        let months = [['January', 'Jan'], ['February', 'Feb'],
+            ['March', 'Mar'], ['April', 'Apr'], ['May', 'May'],
+            ['June', 'Jun'], ['July', 'Jul'], ['August', 'Aug'],
+            ['September', 'Sep'], ['October', 'Oct'], ['November', 'Nov'],
             ['December', 'Dec']];
         let monthName = localDateTime.slice(8, 11);
         for(let i = 0; i < months.length; i++) {
@@ -107,7 +106,7 @@ export class Page {
      * This function reports the local time.
      * @param {String} localDateTime The local timestamp.
      */
-    getTimeInfo(localDateTime) {
+    getTimeInfo(localDateTime, timeContainer) {
         let hours = localDateTime.slice(17, 19);
         let minutes = localDateTime.slice(20, 22);
 
@@ -137,8 +136,8 @@ export class Page {
             minutes = '0' + minutes;
         }
 
-        const currentTime = document.querySelector('#current-time');
-        currentTime.textContent = hours + ':' + minutes + ' ' + timePeriod;
+        //const currentTime = document.querySelector('#current-time');
+        timeContainer.textContent = hours + ':' + minutes + ' ' + timePeriod;
     }
 
     /**
@@ -395,8 +394,12 @@ export class Page {
         currentConditionsRight.appendChild(this.renderPrecipitationChance());
         currentConditionsRight.appendChild(this.renderWindConditions());
         currentConditions.appendChild(currentConditionsRight);
-        
         mainContent.appendChild(currentConditions);
+
+        const additionalInformation = document.createElement('div');
+        additionalInformation.classList.add('additional-information');
+        additionalInformation.appendChild(this.renderSunRiseToday());
+        mainContent.appendChild(additionalInformation);
         this.container.appendChild(mainContent);
     }
 
@@ -462,6 +465,19 @@ export class Page {
         return searchBarContainer;
     }
     
+    renderSunRiseToday() {
+        const sunRiseContainer = document.createElement('div');
+        sunRiseContainer.classList.add('additional-information-item');
+
+        const title = document.createElement('div');
+        title.textContent = 'Sunrise';
+        sunRiseContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'today-sunrise');
+        sunRiseContainer.appendChild(information);
+        return sunRiseContainer;
+    }
     /**
      * Renders the current temperature.
      * @returns HTMLDivElement that contains current temperature.
@@ -687,8 +703,9 @@ export class Page {
      */
     updateContent(cityData, descriptiveWeatherData) {
         let localDateTime = this.getDateTime(descriptiveWeatherData);
+        const currentTime = document.querySelector('#current-time');
         this.getDateInfo(localDateTime);
-        this.getTimeInfo(localDateTime);
+        this.getTimeInfo(localDateTime, currentTime);
         const city = document.querySelector('#city');
         if (cityData.sys.country == 'US') {
             city.textContent = `Current conditions in ${this.localityInfo}`;
@@ -748,5 +765,10 @@ export class Page {
         } else {
             currentWindGusts.textContent = `${this.getWindSpeed(0)}`;
         }
+
+        const todaySunRise = document.querySelector('#today-sunrise');
+        let sunRiseTime = this.getDateTimeOther(
+            descriptiveWeatherData.current.sunrise, descriptiveWeatherData);
+        this.getTimeInfo(sunRiseTime, todaySunRise);
     }
 }
