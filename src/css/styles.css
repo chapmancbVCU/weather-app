@@ -14,16 +14,23 @@
 
 .additional-information-data {
     margin-top: 5px;
-    
 }
 
 .additional-information-item {
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+}
+
+.additional-information-item:first-of-type {
+    margin-top: 20px;
+}
+
+.additional-information-item:last-of-type {
+    margin-bottom: 20px;
 }
 
 body {
@@ -207,6 +214,8 @@ header {
 
     .additional-information-item {
         align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
     }
 
     .current-conditions-container {
