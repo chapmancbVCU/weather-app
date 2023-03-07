@@ -111,6 +111,16 @@ export class Page {
     }
 
     /**
+     * Converts pressure in hectoPascals(hPa) to inches.
+     * @param {Number} pressureInhPa in hectoPascals (hPa).
+     * @returns The pressure represented in inches.
+     */
+    getPressure(pressureInhPa) {
+        const PRESSURE_CONVERSION_CONSTANT = 0.0295;
+        return pressureInhPa * PRESSURE_CONVERSION_CONSTANT;
+    }
+    
+    /**
      * This function reports the local time.
      * @param {String} localDateTime The local timestamp.
      * @param {HTMLDivElement} timeContainer The element whose text we will 
@@ -239,6 +249,21 @@ export class Page {
         mainContent.remove();
     }
 
+    renderBarometricPressure() {
+        const barometricPressureContainer = document.createElement('div');
+        barometricPressureContainer.classList.add(
+            'additional-information-item');
+
+        const title = document.createElement('h3');
+        title.textContent = 'Pressure';
+        barometricPressureContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'barometric-pressure');
+        information.classList.add('additional-information-data');
+        barometricPressureContainer.appendChild(information);
+        return barometricPressureContainer;
+    }
     /**
      * Renders the name of the city whose forecast we are viewing.
      * @returns HTMLHeadingElement that contains name of city. 
@@ -386,7 +411,8 @@ export class Page {
 
         // Current conditions left side        
         const currentConditionsLeft = document.createElement('div');
-        currentConditionsLeft.classList.add('current-conditions-left-container');
+        currentConditionsLeft.classList.add(
+            'current-conditions-left-container');
         currentConditionsLeft.appendChild(this.renderDate());
         currentConditionsLeft.appendChild(this.renderTime());
         currentConditionsLeft.appendChild(this.renderTemperatureInfo());
@@ -398,7 +424,8 @@ export class Page {
 
         // Current conditions right
         const currentConditionsRight = document.createElement('div');
-        currentConditionsRight.classList.add('current-conditions-right-container');
+        currentConditionsRight.classList.add(
+            'current-conditions-right-container');
         currentConditionsRight.appendChild(this.renderFeelsLikeInfo());
         currentConditionsRight.appendChild(this.renderHumidity());
         currentConditionsRight.appendChild(this.renderPrecipitationChance());
@@ -410,6 +437,7 @@ export class Page {
         additionalInformation.classList.add('additional-information');
         additionalInformation.appendChild(this.renderSunRiseToday());
         additionalInformation.appendChild(this.renderSunSetToday());
+        additionalInformation.appendChild(this.renderBarometricPressure());
         mainContent.appendChild(additionalInformation);
         this.container.appendChild(mainContent);
     }
@@ -814,5 +842,11 @@ export class Page {
             descriptiveWeatherData.current.sunset, 
             descriptiveWeatherData.timezone_offset);
         this.getTimeInfo(sunSetTime, todaySunSet);
+
+        const barometricPressure = document.querySelector(
+            '#barometric-pressure');
+        
+        barometricPressure.textContent = 
+            `${this.getPressure(cityData.main.pressure)}`;
     }
 }
