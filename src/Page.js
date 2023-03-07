@@ -40,23 +40,31 @@ export class Page {
     }
 
     /**
-     * Determines time for locality we are getting weather forecast.
+     * Determines time for locality we are getting weather forecast.  This 
+     * function takes into accout the timezone offset of the location we are 
+     * retrieving the weather forecast.
      * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
      * weather data.
      * @returns A string containing local timestamp.
      */
-    getDateTime(descriptiveWeatherData) {
+    /*getDateTime(descriptiveWeatherData) {
         let dt = descriptiveWeatherData.current.dt;
         let timezone = descriptiveWeatherData.timezone_offset;
         const utc_seconds = parseInt(dt, 10) + parseInt(timezone, 10);
         const utc_milliseconds = utc_seconds * 1000;
         return new Date(utc_milliseconds).toUTCString();
-    }
+    }*/
 
-    getDateTimeOther(unixTime, descriptiveWeatherData) {
-        return new Date((
-            descriptiveWeatherData.timezone_offset + unixTime) * 1000)
-            .toUTCString();
+    /**
+     * Converts unix time to a UTCString and takes into account timezone 
+     * offset.
+     * @param {Number} unixTime The time as a number that we want to convert to a 
+     * string.
+     * @param {String} timezoneOffset The timezone offset.
+     * @returns A string containing a timestamp.
+     */
+    getDateTime(unixTime, timezoneOffset) {
+        return new Date((timezoneOffset + unixTime) * 1000).toUTCString();
     }
 
     /**
@@ -105,6 +113,8 @@ export class Page {
     /**
      * This function reports the local time.
      * @param {String} localDateTime The local timestamp.
+     * @param {HTMLDivElement} timeContainer The element whose text we will 
+     * set with the time.
      */
     getTimeInfo(localDateTime, timeContainer) {
         let hours = localDateTime.slice(17, 19);
@@ -466,6 +476,10 @@ export class Page {
         return searchBarContainer;
     }
     
+    /**
+     * Renders information about today's sunrise.
+     * @returns HTMLDivElement that contains information about today's sunrise.
+     */
     renderSunRiseToday() {
         const sunRiseContainer = document.createElement('div');
         sunRiseContainer.classList.add('additional-information-item');
@@ -481,6 +495,10 @@ export class Page {
         return sunRiseContainer;
     }
 
+    /**
+     * Renders information about today's sunset.
+     * @returns HTMLDivElement that contains information about today's sunset.
+     */
     renderSunSetToday() {
         const sunSetContainer = document.createElement('div');
         sunSetContainer.classList.add('additional-information-item');
@@ -720,7 +738,8 @@ export class Page {
      * weather data.
      */
     updateContent(cityData, descriptiveWeatherData) {
-        let localDateTime = this.getDateTime(descriptiveWeatherData);
+        let localDateTime = this.getDateTime(descriptiveWeatherData.current.dt, 
+            descriptiveWeatherData.timezone_offset);
         const currentTime = document.querySelector('#current-time');
         this.getDateInfo(localDateTime);
         this.getTimeInfo(localDateTime, currentTime);
@@ -785,13 +804,15 @@ export class Page {
         }
 
         const todaySunRise = document.querySelector('#today-sunrise');
-        let sunRiseTime = this.getDateTimeOther(
-            descriptiveWeatherData.current.sunrise, descriptiveWeatherData);
+        let sunRiseTime = this.getDateTime(
+            descriptiveWeatherData.current.sunrise, 
+            descriptiveWeatherData.timezone_offset);
         this.getTimeInfo(sunRiseTime, todaySunRise);
 
         const todaySunSet = document.querySelector('#today-sunset');
-        let sunSetTime = this.getDateTimeOther(
-            descriptiveWeatherData.current.sunset, descriptiveWeatherData);
+        let sunSetTime = this.getDateTime(
+            descriptiveWeatherData.current.sunset, 
+            descriptiveWeatherData.timezone_offset);
         this.getTimeInfo(sunSetTime, todaySunSet);
     }
 }
