@@ -399,6 +399,7 @@ export class Page {
         const additionalInformation = document.createElement('div');
         additionalInformation.classList.add('additional-information');
         additionalInformation.appendChild(this.renderSunRiseToday());
+        additionalInformation.appendChild(this.renderSunSetToday());
         mainContent.appendChild(additionalInformation);
         this.container.appendChild(mainContent);
     }
@@ -478,6 +479,21 @@ export class Page {
         sunRiseContainer.appendChild(information);
         return sunRiseContainer;
     }
+
+    renderSunSetToday() {
+        const sunSetContainer = document.createElement('div');
+        sunSetContainer.classList.add('additional-information-item');
+
+        const title = document.createElement('div');
+        title.textContent = 'Sunset';
+        sunSetContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'today-sunset');
+        sunSetContainer.appendChild(information);
+        return sunSetContainer;
+    }
+
     /**
      * Renders the current temperature.
      * @returns HTMLDivElement that contains current temperature.
@@ -770,5 +786,10 @@ export class Page {
         let sunRiseTime = this.getDateTimeOther(
             descriptiveWeatherData.current.sunrise, descriptiveWeatherData);
         this.getTimeInfo(sunRiseTime, todaySunRise);
+
+        const todaySunSet = document.querySelector('#today-sunset');
+        let sunSetTime = this.getDateTimeOther(
+            descriptiveWeatherData.current.sunset, descriptiveWeatherData);
+        this.getTimeInfo(sunSetTime, todaySunSet);
     }
 }
