@@ -117,9 +117,9 @@ export class Page {
      */
     getPressure(pressureInhPa) {
         const PRESSURE_CONVERSION_CONSTANT = 0.0295;
-        return pressureInhPa * PRESSURE_CONVERSION_CONSTANT;
+        return (pressureInhPa * PRESSURE_CONVERSION_CONSTANT).toFixed(0);
     }
-    
+
     /**
      * This function reports the local time.
      * @param {String} localDateTime The local timestamp.
@@ -196,6 +196,22 @@ export class Page {
             return (wind * 2.2369).toFixed(1) + ' mph';
         } else {
             return (wind * (18/5)).toFixed(1) + ' km/h'
+        }
+    }
+
+    /**
+     * Converts visibility in meters to kilometers or miles depending on which 
+     * units are selected.
+     * @param {JSON} cityData string containing weather data for locality.
+     * @returns Visibility represented as miles or kilometers depending on 
+     * which units of measurement is selected.
+     */
+    getVisibility(visibility) {
+        console.log(`visibility ${visibility}`);
+        if (this.weather.getUnits() === 'IMPERIAL') {
+            return (visibility / 1609.344).toFixed(1) + ' miles';
+        } else {
+            return (visibility / 1000) + ' km';
         }
     }
 
@@ -438,6 +454,7 @@ export class Page {
         additionalInformation.appendChild(this.renderSunRiseToday());
         additionalInformation.appendChild(this.renderSunSetToday());
         additionalInformation.appendChild(this.renderBarometricPressure());
+        additionalInformation.appendChild(this.renderVisibility());
         mainContent.appendChild(additionalInformation);
         this.container.appendChild(mainContent);
     }
@@ -633,6 +650,20 @@ export class Page {
         return windConditionsContainer;
     }
 
+    renderVisibility() {
+        const visibilityContainer = document.createElement('div');
+        visibilityContainer.classList.add('additional-information-item');
+
+        const title = document.createElement('h3');
+        title.textContent = 'Visibility';
+        visibilityContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'visibility');
+        information.classList.add('additional-information-data');
+        visibilityContainer.appendChild(information);
+        return visibilityContainer;
+    }
     /**
      * This function detects if a US state is abbreviated and updates search 
      * query to contain full state name.
@@ -845,8 +876,10 @@ export class Page {
 
         const barometricPressure = document.querySelector(
             '#barometric-pressure');
-        
         barometricPressure.textContent = 
-            `${this.getPressure(cityData.main.pressure)}`;
+            `${this.getPressure(cityData.main.pressure)} in`;
+
+        const visibility = document.querySelector("#visibility");
+        visibility.textContent = `${this.getVisibility(cityData.visibility)}`;
     }
 }
