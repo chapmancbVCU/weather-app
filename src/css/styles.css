@@ -3,6 +3,29 @@
     padding: 0;
 }
 
+.additional-information {
+    color: whitesmoke;
+    margin-top: 20px;
+    font-size: 18px;
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+}
+
+.additional-information-data {
+    margin-top: 5px;
+    
+}
+
+.additional-information-item {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 body {
     background-color: rgb(111, 200, 230);
 }
@@ -71,7 +94,6 @@ body, html {
 
 header {
     background-color: grey;
-
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -178,6 +200,15 @@ header {
 }
 
 @media only screen and (min-width: 800px) {
+    .additional-information {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .additional-information-item {
+        align-items: center;
+    }
+
     .current-conditions-container {
         flex-direction: row;
         align-items: flex-start;

@@ -470,12 +470,13 @@ export class Page {
         const sunRiseContainer = document.createElement('div');
         sunRiseContainer.classList.add('additional-information-item');
 
-        const title = document.createElement('div');
+        const title = document.createElement('h3');
         title.textContent = 'Sunrise';
         sunRiseContainer.appendChild(title);
 
         const information = document.createElement('div');
         information.setAttribute('id', 'today-sunrise');
+        information.classList.add('additional-information-data');
         sunRiseContainer.appendChild(information);
         return sunRiseContainer;
     }
@@ -484,12 +485,13 @@ export class Page {
         const sunSetContainer = document.createElement('div');
         sunSetContainer.classList.add('additional-information-item');
 
-        const title = document.createElement('div');
+        const title = document.createElement('h3');
         title.textContent = 'Sunset';
         sunSetContainer.appendChild(title);
 
         const information = document.createElement('div');
         information.setAttribute('id', 'today-sunset');
+        information.classList.add('additional-information-data');
         sunSetContainer.appendChild(information);
         return sunSetContainer;
     }
