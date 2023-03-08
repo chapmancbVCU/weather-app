@@ -46,8 +46,11 @@ export class Page {
                 const dateTime = this.getDateTime(
                     descriptiveWeatherData.daily[i].dt, 
                     descriptiveWeatherData.timezone_offset);
-
                 dailyForecast.textContent = `${this.getForecastDate(dateTime)}`;
+
+                const dayTemperature = document.querySelector(
+                    `#day-temp-${i}`);
+               // dayTemperature.textContent = 
             }
         }
     }
@@ -280,7 +283,7 @@ export class Page {
             let countryName = await this.weather.getCountryName();
             this.weather.setUnits(countryName);
             const toggle = document.querySelector('#toggle-button');
-            toggle.textContent = `\xB0${this.setToggleButtonText(
+            toggle.textContent = `\xB0${this.setTemperatureUnitText(
                 this.weather.getUnits())}`;
             
             // Get weather information.
@@ -372,6 +375,10 @@ export class Page {
                 const dailyForecast = document.createElement('div');
                 dailyForecast.setAttribute('id', `day-${i}`);
                 dailyForecast.classList.add('daily-forecast');
+
+                const dayTemperature = document.createElement('div');
+                dayTemperature.setAttribute('id', `day-temp-${i}`);
+                dailyForecast.appendChild(dayTemperature);
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -734,6 +741,15 @@ export class Page {
         visibilityContainer.appendChild(information);
         return visibilityContainer;
     }
+
+    /**
+     * Sets to text for the toggle button based on selected units.
+     */
+    setTemperatureUnitText(units) {
+        return units == 'IMPERIAL' ? "F"
+            : "C";
+    }
+
     /**
      * This function detects if a US state is abbreviated and updates search 
      * query to contain full state name.
@@ -804,14 +820,6 @@ export class Page {
     }
 
     /**
-     * Sets to text for the toggle button based on selected units.
-     */
-    setToggleButtonText(units) {
-        return units == 'IMPERIAL' ? "F"
-            : "C";
-    }
-
-    /**
      * The event listener for the submit button.
      */
     submitButtonListener() {
@@ -861,7 +869,7 @@ export class Page {
             this.dailyForecastContent(
                 this.weather.getJSONDescriptiveWeatherData());
             
-            toggle.textContent = `\xB0${this.setToggleButtonText(
+            toggle.textContent = `\xB0${this.setTemperatureUnitText(
                 this.weather.getUnits())}`;
         });
     }
@@ -895,28 +903,28 @@ export class Page {
 
         const temperature = document.querySelector('#temperature');
         temperature.textContent = `${this.convertTemperatureFromKelvin(
-            cityData.main.temp)} \xB0${this.setToggleButtonText(
+            cityData.main.temp)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
         todayHighTemperature.textContent = `Today's High: 
             ${this.convertTemperatureFromKelvin(
-            cityData.main.temp_max)} \xB0${this.setToggleButtonText(
+            cityData.main.temp_max)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayLowTemperature = document.querySelector(
             '#today-low-temperature');
         todayLowTemperature.textContent = `Today's Low: 
             ${this.convertTemperatureFromKelvin(
-            cityData.main.temp_min)} \xB0${this.setToggleButtonText(
+            cityData.main.temp_min)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const feelsLikeTemperature = document.querySelector(
             '#feels-like-temperature');
         feelsLikeTemperature.textContent = 
             `${this.convertTemperatureFromKelvin(
-            cityData.main.feels_like)} \xB0${this.setToggleButtonText(
+            cityData.main.feels_like)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const currentHumidity = document.querySelector('#current-humidity');
