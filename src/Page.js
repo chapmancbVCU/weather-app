@@ -21,10 +21,6 @@ export class Page {
         this.container = document.querySelector('#content');
         this.weather = new Weather();
         this.localityInfo = '';
-
-        
-
-
     }
 
     /**
@@ -85,24 +81,31 @@ export class Page {
     }
 
     /**
-     * This function reports the local date.
+     * This function reports the local date in the following format: 
+     * <day_of_week>, <month> <day_of_month>, <year>.
      * @param {String} localDateTime The local timestamp.
      */
     getDateInfo(localDateTime) {
-        let dayOfWeek = this.getDayOfWeek(localDateTime);
+        const dateInfo = document.querySelector('#date-info');
+        dateInfo.textContent = this.getDayOfWeek(localDateTime) + ', ' + 
+            this.getFullMonthName(localDateTime) + ' ' + 
+            this.getDayOfMonth(localDateTime) + ', ' + 
+            localDateTime.slice(12, 16);
+    }
 
+    /**
+     * Returns the day of month using the ISO string as a parameter.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns The day of month contained in ISO timestamp string.
+     */
+    getDayOfMonth(localDateTime) {
         let dayOfMonth = localDateTime.slice(5, 7);
         if(dayOfMonth < 10) {
-            dayOfMonth = dayOfMonth.slice(1, 2);
+            return dayOfMonth.slice(1, 2);
+        } else {
+            return dayOfMonth;
         }
-
-        let monthName = this.getFullMonthName(localDateTime);
-
-        let year = localDateTime.slice(12, 16);
-
-        const dateInfo = document.querySelector('#date-info');
-        dateInfo.textContent = dayOfWeek + ', ' + monthName + ' ' + 
-            dayOfMonth + ', ' + year;
     }
 
     /**
@@ -132,7 +135,9 @@ export class Page {
      * <day of month>.
      */
     getForecastDate(dateTimeStamp) {
-        let dayOfWeek = this.getDayOfWeek(dateTimeStamp);
+        let dayOfWeek = this.getDayOfWeek(dateTimeStamp) + ", " + 
+            this.getFullMonthName(dateTimeStamp) + " " + 
+            this.getDayOfMonth(dateTimeStamp);
         return dayOfWeek;
     }
 
