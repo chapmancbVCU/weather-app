@@ -7,7 +7,6 @@ import PrecipitationChanceIcon from './icons/weather-pouring.png';
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 import WindIcon from "./icons/weather-windy.png";
-import { slice } from "lodash";
 
 
 /**
@@ -22,6 +21,10 @@ export class Page {
         this.container = document.querySelector('#content');
         this.weather = new Weather();
         this.localityInfo = '';
+
+        
+
+
     }
 
     /**
@@ -44,9 +47,11 @@ export class Page {
         for(let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
                 const dailyForecast = document.querySelector(`#day-${i}`);
-                const dateTime = this.getDateTime(descriptiveWeatherData.daily[i].dt, descriptiveWeatherData.timezone_offset);
+                const dateTime = this.getDateTime(
+                    descriptiveWeatherData.daily[i].dt, 
+                    descriptiveWeatherData.timezone_offset);
 
-                dailyForecast.textContent = `${dateTime}`;
+                dailyForecast.textContent = `${this.getForecastDate(dateTime)}`;
             }
         }
     }
@@ -84,40 +89,72 @@ export class Page {
      * @param {String} localDateTime The local timestamp.
      */
     getDateInfo(localDateTime) {
-        let days = [['Sunday', 'Sun'], ['Monday', 'Mon'], ['Tuesday', 'Tue'],
-            ['Wednesday', 'Wed'], ['Thursday', 'Thu'], ['Friday', 'Fri'],
-            ['Saturday', 'Sat']];
-
-        let dayOfWeek = localDateTime.slice(0, 3);
-        for(let i = 0; i < days.length; i++) {
-            if(dayOfWeek.includes(days[i][1])) {
-                dayOfWeek = dayOfWeek.replace(days[i][1], days[i][0]);
-            }
-        }
+        let dayOfWeek = this.getDayOfWeek(localDateTime);
 
         let dayOfMonth = localDateTime.slice(5, 7);
         if(dayOfMonth < 10) {
             dayOfMonth = dayOfMonth.slice(1, 2);
         }
-        let date = new Date();
 
-        let months = [['January', 'Jan'], ['February', 'Feb'],
-            ['March', 'Mar'], ['April', 'Apr'], ['May', 'May'],
-            ['June', 'Jun'], ['July', 'Jul'], ['August', 'Aug'],
-            ['September', 'Sep'], ['October', 'Oct'], ['November', 'Nov'],
-            ['December', 'Dec']];
-        let monthName = localDateTime.slice(8, 11);
-        for(let i = 0; i < months.length; i++) {
-            if(monthName.includes(months[i][1])) {
-                monthName = monthName.replace(months[i][1], months[i][0]);
-            }
-        }
+        let monthName = this.getFullMonthName(localDateTime);
 
         let year = localDateTime.slice(12, 16);
 
         const dateInfo = document.querySelector('#date-info');
         dateInfo.textContent = dayOfWeek + ', ' + monthName + ' ' + 
             dayOfMonth + ', ' + year;
+    }
+
+    /**
+     * Returns the full day of the week using the ISO string as a parameter.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns Full day of week name.
+     */
+    getDayOfWeek(dateTimeStamp) {
+        let days = [['Sunday', 'Sun'], ['Monday', 'Mon'], ['Tuesday', 'Tue'],
+            ['Wednesday', 'Wed'], ['Thursday', 'Thu'], ['Friday', 'Fri'],
+            ['Saturday', 'Sat']];
+
+        let dayOfWeek = dateTimeStamp.slice(0, 3);
+        for(let i = 0; i < days.length; i++) {
+            if(dayOfWeek.includes(days[i][1])) {
+                return dayOfWeek.replace(days[i][1], days[i][0]);
+            }
+        }
+    }
+
+    /**
+     * Returns a string containing the day of week, month, and day of month.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns String in the following format: <day of week>, <month> 
+     * <day of month>.
+     */
+    getForecastDate(dateTimeStamp) {
+        let dayOfWeek = this.getDayOfWeek(dateTimeStamp);
+        return dayOfWeek;
+    }
+
+    /**
+     * Returns the full name of the month using the ISO string as a parameter.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns Full name of the month.
+     */
+    getFullMonthName(dateTimeStamp) {
+        let months = [['January', 'Jan'], ['February', 'Feb'],
+            ['March', 'Mar'], ['April', 'Apr'], ['May', 'May'],
+            ['June', 'Jun'], ['July', 'Jul'], ['August', 'Aug'],
+            ['September', 'Sep'], ['October', 'Oct'], ['November', 'Nov'],
+            ['December', 'Dec']];
+
+        let monthName = dateTimeStamp.slice(8, 11);
+        for(let i = 0; i < months.length; i++) {
+            if(monthName.includes(months[i][1])) {
+                return monthName.replace(months[i][1], months[i][0]);
+            }
+        }
     }
 
     /**
