@@ -31,7 +31,7 @@ export class Page {
      * @returns The converted temperature in either Celcius or Farenheit.
      */
     convertTemperatureFromKelvin(temperature) {
-        if(this.weather.getUnits() === 'IMPERIAL') {
+        if (this.weather.getUnits() === 'IMPERIAL') {
             return ((temperature - 273.15) * 9/5 + 32).toFixed(0);
         } else {
             return (temperature - 273.15).toFixed(0);
@@ -40,7 +40,7 @@ export class Page {
 
     dailyForecastContent(descriptiveWeatherData) {
         const numberOfDays = 8;
-        for(let i = 0; i < numberOfDays; i++) {
+        for (let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
                 const dailyForecast = document.querySelector(`#day-${i}`);
                 const dateTime = this.getDateTime(
@@ -101,7 +101,7 @@ export class Page {
      */
     getDayOfMonth(localDateTime) {
         let dayOfMonth = localDateTime.slice(5, 7);
-        if(dayOfMonth < 10) {
+        if (dayOfMonth < 10) {
             return dayOfMonth.slice(1, 2);
         } else {
             return dayOfMonth;
@@ -120,8 +120,8 @@ export class Page {
             ['Saturday', 'Sat']];
 
         let dayOfWeek = dateTimeStamp.slice(0, 3);
-        for(let i = 0; i < days.length; i++) {
-            if(dayOfWeek.includes(days[i][1])) {
+        for (let i = 0; i < days.length; i++) {
+            if (dayOfWeek.includes(days[i][1])) {
                 return dayOfWeek.replace(days[i][1], days[i][0]);
             }
         }
@@ -135,10 +135,9 @@ export class Page {
      * <day of month>.
      */
     getForecastDate(dateTimeStamp) {
-        let dayOfWeek = this.getDayOfWeek(dateTimeStamp) + ", " + 
+        return this.getDayOfWeek(dateTimeStamp) + ", " + 
             this.getFullMonthName(dateTimeStamp) + " " + 
             this.getDayOfMonth(dateTimeStamp);
-        return dayOfWeek;
     }
 
     /**
@@ -155,8 +154,8 @@ export class Page {
             ['December', 'Dec']];
 
         let monthName = dateTimeStamp.slice(8, 11);
-        for(let i = 0; i < months.length; i++) {
-            if(monthName.includes(months[i][1])) {
+        for (let i = 0; i < months.length; i++) {
+            if (monthName.includes(months[i][1])) {
                 return monthName.replace(months[i][1], months[i][0]);
             }
         }
@@ -182,7 +181,7 @@ export class Page {
         let hours = localDateTime.slice(17, 19);
         let minutes = localDateTime.slice(20, 22);
 
-        if(minutes < 10) {
+        if (minutes < 10) {
             minutes = minutes.slice(0, 1);
         }
 
@@ -220,21 +219,21 @@ export class Page {
      */
     getWindDirection(deg) {
         if ((deg >= 337.6 && deg <= 359.9) || deg >= 0 && deg <= 22.5) {
-            return 'N';
-        } else if (deg >= 22.6 && deg <= 67.5) {
-            return 'NE';
-        } else if (deg >= 67.6 && deg <= 112.5) {
-            return 'E';
-        } else if (deg >= 112.6 && deg <= 157.5) {
-            return 'SE';
-        } else if (deg >= 157.6 && deg <= 202.5) {
             return 'S';
-        } else if (deg >= 202.6 && deg <= 247.5) {
+        } else if (deg >= 22.6 && deg <= 67.5) {
             return 'SW';
-        } else if (deg >= 247.6 && deg <= 292.5) {
+        } else if (deg >= 67.6 && deg <= 112.5) {
             return 'W';
-        } else if (deg >= 292.6 && deg <= 337.5) {
+        } else if (deg >= 112.6 && deg <= 157.5) {
             return 'NW';
+        } else if (deg >= 157.6 && deg <= 202.5) {
+            return 'N';
+        } else if (deg >= 202.6 && deg <= 247.5) {
+            return 'NE';
+        } else if (deg >= 247.6 && deg <= 292.5) {
+            return 'E';
+        } else if (deg >= 292.6 && deg <= 337.5) {
+            return 'SE';
         }
     }
 
@@ -368,7 +367,7 @@ export class Page {
         const dailyForecastContainer = document.createElement('div');
         dailyForecastContainer.classList.add('daily-forecast-container');
         const numberOfDays = 8
-        for(let i = 0; i < numberOfDays; i++) {
+        for (let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
                 const dailyForecast = document.createElement('div');
                 dailyForecast.setAttribute('id', `day-${i}`);
