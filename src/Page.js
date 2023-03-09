@@ -42,15 +42,25 @@ export class Page {
         const numberOfDays = 8;
         for (let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
-                const dailyForecast = document.querySelector(`#day-${i}`);
+                const date = document.querySelector(`#day-${i}`);
                 const dateTime = this.getDateTime(
                     descriptiveWeatherData.daily[i].dt, 
                     descriptiveWeatherData.timezone_offset);
-                dailyForecast.textContent = `${this.getForecastDate(dateTime)}`;
+                date.textContent = `${this.getForecastDate(dateTime)}`;
 
-                const dayTemperature = document.querySelector(
-                    `#day-temp-${i}`);
-               // dayTemperature.textContent = 
+                const highTemperature = document.querySelector(
+                    `#high-temp-${i}`);
+                highTemperature.textContent = 
+                    `High: ${descriptiveWeatherData.daily[i].temp.max} 
+                    \xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
+                
+                const lowTemperature = document.querySelector(
+                    `#low-temp-${i}`);
+                lowTemperature.textContent = 
+                    `Low: ${descriptiveWeatherData.daily[i].temp.min} 
+                    \xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
             }
         }
     }
@@ -373,12 +383,31 @@ export class Page {
         for (let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
                 const dailyForecast = document.createElement('div');
-                dailyForecast.setAttribute('id', `day-${i}`);
                 dailyForecast.classList.add('daily-forecast');
 
-                const dayTemperature = document.createElement('div');
-                dayTemperature.setAttribute('id', `day-temp-${i}`);
-                dailyForecast.appendChild(dayTemperature);
+                // Setup date.
+                const date = document.createElement('h3');
+                date.setAttribute('id', `day-${i}`);
+                date.classList.add('date');
+                dailyForecast.appendChild(date);
+
+                // Temperature details
+                const dailyTemperaturesContainer = 
+                    document.createElement('div');
+                dailyTemperaturesContainer.classList.add(
+                    'daily-temperatures-container');
+                
+                const dailyHigh = document.createElement('div')
+                dailyHigh.setAttribute('id', `high-temp-${i}`);
+                dailyHigh.classList.add('daily-temperatures');
+                dailyTemperaturesContainer.appendChild(dailyHigh);
+
+                const dailyLow = document.createElement('div');
+                dailyLow.setAttribute('id', `low-temp-${i}`);
+                dailyLow.classList.add('daily-temperatures');
+                dailyTemperaturesContainer.appendChild(dailyLow);
+                
+                 dailyForecast.appendChild(dailyTemperaturesContainer);   
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -727,6 +756,10 @@ export class Page {
         return windConditionsContainer;
     }
 
+    /**
+     * Renders information about current visibility conditions.
+     * @returns HTMLDivElement that describes current visibility conditions.
+     */
     renderVisibility() {
         const visibilityContainer = document.createElement('div');
         visibilityContainer.classList.add('additional-information-item');
