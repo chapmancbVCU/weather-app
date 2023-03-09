@@ -1,6 +1,7 @@
 /******************************************************************************
  * IMPORTS
  *****************************************************************************/
+import { DateTimeUtility } from "./DateTimeUtility";
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import HumidityIcon from "./icons/humidity.png";
 import PrecipitationChanceIcon from './icons/weather-pouring.png';
@@ -19,19 +20,26 @@ export class Page {
      */
     constructor() {
         this.container = document.querySelector('#content');
-        this.weather = new Weather();
+        this.dateTimeUtility = new DateTimeUtility();
         this.localityInfo = '';
+        this.weather = new Weather();
     }
 
+    /**
+     * Sets and updates weather information in daily forecast section of page.
+     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
+     * weather data.
+     */
     dailyForecastContent(descriptiveWeatherData) {
         const numberOfDays = 8;
         for (let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
                 const date = document.querySelector(`#day-${i}`);
-                const dateTime = this.getDateTime(
+                const dateTime = this.dateTimeUtility.getDateTime(
                     descriptiveWeatherData.daily[i].dt, 
                     descriptiveWeatherData.timezone_offset);
-                date.textContent = `${this.getForecastDate(dateTime)}`;
+                date.textContent = `${this.dateTimeUtility.getForecastDate(
+                    dateTime)}`;
 
                 const highTemperature = document.querySelector(
                     `#high-temp-${i}`);
@@ -59,155 +67,6 @@ export class Page {
                     daily[i].weather[0].icon}@2x.png`;
             }
         }
-    }
-
-    /**
-     * Determines time for locality we are getting weather forecast.  This 
-     * function takes into accout the timezone offset of the location we are 
-     * retrieving the weather forecast.
-     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
-     * weather data.
-     * @returns A string containing local timestamp.
-     */
-    /*getDateTime(descriptiveWeatherData) {
-        let dt = descriptiveWeatherData.current.dt;
-        let timezone = descriptiveWeatherData.timezone_offset;
-        const utc_seconds = parseInt(dt, 10) + parseInt(timezone, 10);
-        const utc_milliseconds = utc_seconds * 1000;
-        return new Date(utc_milliseconds).toUTCString();
-    }*/
-
-    /**
-     * Converts unix time to a UTCString and takes into account timezone 
-     * offset.
-     * @param {Number} unixTime The time as a number that we want to convert to a 
-     * string.
-     * @param {String} timezoneOffset The timezone offset.
-     * @returns A string containing a timestamp.
-     */
-    getDateTime(unixTime, timezoneOffset) {
-        return new Date((timezoneOffset + unixTime) * 1000).toUTCString();
-    }
-
-    /**
-     * This function reports the local date in the following format: 
-     * <day_of_week>, <month> <day_of_month>, <year>.
-     * @param {String} localDateTime The local timestamp.
-     */
-    getDateInfo(localDateTime) {
-        const dateInfo = document.querySelector('#date-info');
-        dateInfo.textContent = this.getDayOfWeek(localDateTime) + ', ' + 
-            this.getFullMonthName(localDateTime) + ' ' + 
-            this.getDayOfMonth(localDateTime) + ', ' + 
-            localDateTime.slice(12, 16);
-    }
-
-    /**
-     * Returns the day of month using the ISO string as a parameter.
-     * @param {String} dateTimeStamp Date and time information in the form of 
-     * an ISO string.
-     * @returns The day of month contained in ISO timestamp string.
-     */
-    getDayOfMonth(localDateTime) {
-        let dayOfMonth = localDateTime.slice(5, 7);
-        if (dayOfMonth < 10) {
-            return dayOfMonth.slice(1, 2);
-        } else {
-            return dayOfMonth;
-        }
-    }
-
-    /**
-     * Returns the full day of the week using the ISO string as a parameter.
-     * @param {String} dateTimeStamp Date and time information in the form of 
-     * an ISO string.
-     * @returns Full day of week name.
-     */
-    getDayOfWeek(dateTimeStamp) {
-        let days = [['Sunday', 'Sun'], ['Monday', 'Mon'], ['Tuesday', 'Tue'],
-            ['Wednesday', 'Wed'], ['Thursday', 'Thu'], ['Friday', 'Fri'],
-            ['Saturday', 'Sat']];
-
-        let dayOfWeek = dateTimeStamp.slice(0, 3);
-        for (let i = 0; i < days.length; i++) {
-            if (dayOfWeek.includes(days[i][1])) {
-                return dayOfWeek.replace(days[i][1], days[i][0]);
-            }
-        }
-    }
-
-    /**
-     * Returns a string containing the day of week, month, and day of month.
-     * @param {String} dateTimeStamp Date and time information in the form of 
-     * an ISO string.
-     * @returns String in the following format: <day of week>, <month> 
-     * <day of month>.
-     */
-    getForecastDate(dateTimeStamp) {
-        return this.getDayOfWeek(dateTimeStamp) + ", " + 
-            this.getFullMonthName(dateTimeStamp) + " " + 
-            this.getDayOfMonth(dateTimeStamp);
-    }
-
-    /**
-     * Returns the full name of the month using the ISO string as a parameter.
-     * @param {String} dateTimeStamp Date and time information in the form of 
-     * an ISO string.
-     * @returns Full name of the month.
-     */
-    getFullMonthName(dateTimeStamp) {
-        let months = [['January', 'Jan'], ['February', 'Feb'],
-            ['March', 'Mar'], ['April', 'Apr'], ['May', 'May'],
-            ['June', 'Jun'], ['July', 'Jul'], ['August', 'Aug'],
-            ['September', 'Sep'], ['October', 'Oct'], ['November', 'Nov'],
-            ['December', 'Dec']];
-
-        let monthName = dateTimeStamp.slice(8, 11);
-        for (let i = 0; i < months.length; i++) {
-            if (monthName.includes(months[i][1])) {
-                return monthName.replace(months[i][1], months[i][0]);
-            }
-        }
-    }
-
-    /**
-     * This function reports the local time.
-     * @param {String} localDateTime The local timestamp.
-     * @param {HTMLDivElement} timeContainer The element whose text we will 
-     * set with the time.
-     */
-    getTimeInfo(localDateTime, timeContainer) {
-        let hours = localDateTime.slice(17, 19);
-        let minutes = localDateTime.slice(20, 22);
-
-        if (minutes < 10) {
-            minutes = minutes.slice(0, 1);
-        }
-
-        let timePeriod = '';
-        if (hours >= 12) {
-            timePeriod = 'PM';
-        } else {
-            timePeriod = 'AM';
-        }
-        
-        // When hours is greater than 12
-        if (hours > 12) {
-            hours = hours - 12;
-        }
-
-        // Handle midnight
-        if (hours == 0) {
-            hours = 12;
-        }
-
-        // Get minutes and format it correctly if the value is less than 10.
-        if (minutes < 10) {
-            minutes = '0' + minutes;
-        }
-
-        //const currentTime = document.querySelector('#current-time');
-        timeContainer.textContent = hours + ':' + minutes + ' ' + timePeriod;
     }
 
     /**
@@ -245,22 +104,9 @@ export class Page {
     }
 
     /**
-     * Remove header from DOM.
+     * Renders today's barometric pressure readings.
+     * @returns HTMLDivElement containing today's barometric pressure readings.
      */
-    removeHeaderFromDOM() {
-        const header = document.getElementById('header');
-        header.remove();
-    }
-
-    /**
-     * Removes weather content from DOM after a search for weather from 
-     * another city.
-     */
-    removeMainContentFromDOM() {
-        const mainContent = document.getElementById('main');
-        mainContent.remove();
-    }
-
     renderBarometricPressure() {
         const barometricPressureContainer = document.createElement('div');
         barometricPressureContainer.classList.add(
@@ -276,6 +122,7 @@ export class Page {
         barometricPressureContainer.appendChild(information);
         return barometricPressureContainer;
     }
+
     /**
      * Renders the name of the city whose forecast we are viewing.
      * @returns HTMLHeadingElement that contains name of city. 
@@ -308,6 +155,13 @@ export class Page {
         return descriptionContainer;
     }
 
+    /**
+     * Renders conditions description and associated icon for 7 day forecast.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDiv element containing conditions for each day in the 
+     * 7 day forecast.
+     */
     renderDailyConditions(index) {
         // Create parent container
         const descriptionContainer = document.createElement('div');
@@ -324,6 +178,10 @@ export class Page {
         return descriptionContainer;
     }
 
+    /**
+     * The parent container for the 7 day forecast.
+     * @returns HTMLDivElement The daily forecast section of the webpage.
+     */
     renderDailyForecast() {
         const dailyForecastContainer = document.createElement('div');
         dailyForecastContainer.classList.add('daily-forecast-container');
@@ -898,11 +756,12 @@ export class Page {
      * weather data.
      */
     updateContent(cityData, descriptiveWeatherData) {
-        let localDateTime = this.getDateTime(descriptiveWeatherData.current.dt, 
+        let localDateTime = this.dateTimeUtility.getDateTime(
+            descriptiveWeatherData.current.dt, 
             descriptiveWeatherData.timezone_offset);
         const currentTime = document.querySelector('#current-time');
-        this.getDateInfo(localDateTime);
-        this.getTimeInfo(localDateTime, currentTime);
+        this.dateTimeUtility.getDateInfo(localDateTime);
+        this.dateTimeUtility.getTimeInfo(localDateTime, currentTime);
         const city = document.querySelector('#city');
         if (cityData.sys.country == 'US') {
             city.textContent = `Current conditions in ${this.localityInfo}`;
@@ -965,16 +824,16 @@ export class Page {
         }
 
         const todaySunRise = document.querySelector('#today-sunrise');
-        let sunRiseTime = this.getDateTime(
+        let sunRiseTime = this.dateTimeUtility.getDateTime(
             descriptiveWeatherData.current.sunrise, 
             descriptiveWeatherData.timezone_offset);
-        this.getTimeInfo(sunRiseTime, todaySunRise);
+        this.dateTimeUtility.getTimeInfo(sunRiseTime, todaySunRise);
 
         const todaySunSet = document.querySelector('#today-sunset');
-        let sunSetTime = this.getDateTime(
+        let sunSetTime = this.dateTimeUtility.getDateTime(
             descriptiveWeatherData.current.sunset, 
             descriptiveWeatherData.timezone_offset);
-        this.getTimeInfo(sunSetTime, todaySunSet);
+        this.dateTimeUtility.getTimeInfo(sunSetTime, todaySunSet);
 
         const barometricPressure = document.querySelector(
             '#barometric-pressure');
