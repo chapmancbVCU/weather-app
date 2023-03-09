@@ -104,7 +104,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line16">line 16</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line17">line 17</a>
     </li></ul></dd>
     
 
@@ -167,7 +167,7 @@
     
 
     
-    <h4 class="name" id="convertTemperatureFromKelvin"><span class="type-signature"></span>convertTemperatureFromKelvin<span class="signature">(temperature)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="dailyForecastContent"><span class="type-signature"></span>dailyForecastContent<span class="signature">(descriptiveWeatherData)</span><span class="type-signature"></span></h4>
     
 
     
@@ -175,8 +175,7 @@
 
 
 <div class="description">
-    Converts temperature to Celcius or Farenheit depending on which unit of 
-measurement is selected.
+    Sets and updates weather information in daily forecast section of page.
 </div>
 
 
@@ -212,13 +211,13 @@ measurement is selected.
 
         <tr>
             
-                <td class="name"><code>temperature</code></td>
+                <td class="name"><code>descriptiveWeatherData</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Number</span>
+<span class="param-type">JSON</span>
 
 
             
@@ -228,8 +227,8 @@ measurement is selected.
 
             
 
-            <td class="description last">The temperate we want to convert from 
-Kelvin.</td>
+            <td class="description last">JSON string containing descriptive 
+weather data.</td>
         </tr>
 
     
@@ -295,508 +294,6 @@ Kelvin.</td>
 
 
 
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The converted temperature in either Celcius or Farenheit.
-</div>
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getDateInfo"><span class="type-signature"></span>getDateInfo<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Creates a HTMLDivElement that renders the current date in <DayOfWeek>, 
-<Month> <DayOfMonth>, <Year> format.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line46">line 46</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    HTMLDivElement containing date.
-</div>
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getTimeInfo"><span class="type-signature"></span>getTimeInfo<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Creates a HTMLDivElement that renders the current time.
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line68">line 68</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    HTMLDivElement containing the durrent time.
-</div>
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getWindDirection"><span class="type-signature"></span>getWindDirection<span class="signature">(deg)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Returns either N, NE, E, SE, S, SW, W, or NW depending on wind 
-direction.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>deg</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The direction of the winds.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line101">line 101</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    A string value indicating general direction of the winds.
-</div>
-
-
-
-    
-
-
-
-
-
-        
-            
-
-    
-
-    
-    <h4 class="name" id="getWindSpeed"><span class="type-signature"></span>getWindSpeed<span class="signature">(wind)</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Returns wind as mph or km/h depending of location.
-</div>
-
-
-
-
-
-
-
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>wind</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The wind speed expressed in meters per second.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line125">line 125</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<h5>Returns:</h5>
-
-        
-<div class="param-desc">
-    The wind speed in mph or km/h.
-</div>
-
-
-
-    
 
 
 
@@ -860,7 +357,7 @@ direction.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line136">line 136</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line75">line 75</a>
     </li></ul></dd>
     
 
@@ -896,7 +393,7 @@ direction.
     
 
     
-    <h4 class="name" id="removeHeaderFromDOM"><span class="type-signature"></span>removeHeaderFromDOM<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="renderBarometricPressure"><span class="type-signature"></span>renderBarometricPressure<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -904,7 +401,7 @@ direction.
 
 
 <div class="description">
-    Remove header from DOM.
+    Renders today's barometric pressure readings.
 </div>
 
 
@@ -948,7 +445,7 @@ direction.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line169">line 169</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line110">line 110</a>
     </li></ul></dd>
     
 
@@ -973,95 +470,16 @@ direction.
 
 
 
-
-
-
-
+<h5>Returns:</h5>
 
         
-            
-
-    
-
-    
-    <h4 class="name" id="removeMainContentFromDOM"><span class="type-signature"></span>removeMainContentFromDOM<span class="signature">()</span><span class="type-signature"></span></h4>
-    
-
-    
-
-
-
-<div class="description">
-    Removes weather content from DOM after a search for weather from 
-another city.
+<div class="param-desc">
+    HTMLDivElement containing today's barometric pressure readings.
 </div>
 
 
 
-
-
-
-
-
-
-
-
-
-
-<dl class="details">
-
     
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line178">line 178</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1125,7 +543,7 @@ another city.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line187">line 187</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line130">line 130</a>
     </li></ul></dd>
     
 
@@ -1223,7 +641,7 @@ another city.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line199">line 199</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line142">line 142</a>
     </li></ul></dd>
     
 
@@ -1254,6 +672,796 @@ another city.
 <div class="param-desc">
     HTMLDivElement that contains a text and icon reflecting 
 current conditions.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderDailyConditions"><span class="type-signature"></span>renderDailyConditions<span class="signature">(index)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders conditions description and associated icon for 7 day forecast.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The index in array containing daily forecast 
+information from descriptive weather data JSON object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line165">line 165</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDiv element containing conditions for each day in the 
+7 day forecast.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderDailyForecast"><span class="type-signature"></span>renderDailyForecast<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    The parent container for the 7 day forecast.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line185">line 185</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement The daily forecast section of the webpage.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderDailyForecastDate"><span class="type-signature"></span>renderDailyForecastDate<span class="signature">(index)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders day for heading section of each date in daily forecast section.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The index in array containing daily forecast 
+information from descriptive weather data JSON object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line222">line 222</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement containing date for daily forecast.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderDailyForecastHighTemperature"><span class="type-signature"></span>renderDailyForecastHighTemperature<span class="signature">(index)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders daily high temperatures for each day in daily forecast section.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The index in array containing daily forecast 
+information from descriptive weather data JSON object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line250">line 250</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement containing high temperature for daily forecast.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderDailyForecastLowTemperature"><span class="type-signature"></span>renderDailyForecastLowTemperature<span class="signature">(index)</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders daily low temperatures for each day in daily forecast section.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>index</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The index in array containing daily forecast 
+information from descriptive weather data JSON object.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line236">line 236</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement containing low temperature for daily forecast.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderDate"><span class="type-signature"></span>renderDate<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a HTMLDivElement that renders the current date in <DayOfWeek>, 
+<Month> <DayOfMonth>, <Year> format.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line263">line 263</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement containing date.
 </div>
 
 
@@ -1322,7 +1530,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line219">line 219</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line275">line 275</a>
     </li></ul></dd>
     
 
@@ -1420,7 +1628,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line242">line 242</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line298">line 298</a>
     </li></ul></dd>
     
 
@@ -1508,7 +1716,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line260">line 260</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line316">line 316</a>
     </li></ul></dd>
     
 
@@ -1606,7 +1814,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line271">line 271</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line327">line 327</a>
     </li></ul></dd>
     
 
@@ -1704,7 +1912,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line296">line 296</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line352">line 352</a>
     </li></ul></dd>
     
 
@@ -1802,7 +2010,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line306">line 306</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line362">line 362</a>
     </li></ul></dd>
     
 
@@ -1890,7 +2098,7 @@ current conditions.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line344">line 344</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line414">line 414</a>
     </li></ul></dd>
     
 
@@ -1989,7 +2197,7 @@ weather forecast.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line371">line 371</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line441">line 441</a>
     </li></ul></dd>
     
 
@@ -2019,6 +2227,202 @@ weather forecast.
         
 <div class="param-desc">
     HTMLDivElement for search bar.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderSunRiseToday"><span class="type-signature"></span>renderSunRiseToday<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders information about today's sunrise.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line476">line 476</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement that contains information about today's sunrise.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderSunSetToday"><span class="type-signature"></span>renderSunSetToday<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders information about today's sunset.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line495">line 495</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement that contains information about today's sunset.
 </div>
 
 
@@ -2087,7 +2491,7 @@ weather forecast.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line406">line 406</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line514">line 514</a>
     </li></ul></dd>
     
 
@@ -2117,6 +2521,104 @@ weather forecast.
         
 <div class="param-desc">
     HTMLDivElement that contains current temperature.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderTime"><span class="type-signature"></span>renderTime<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Creates a HTMLDivElement that renders the current time.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line525">line 525</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement containing the durrent time.
 </div>
 
 
@@ -2185,7 +2687,7 @@ weather forecast.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line417">line 417</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line536">line 536</a>
     </li></ul></dd>
     
 
@@ -2283,7 +2785,7 @@ weather forecast.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line441">line 441</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line560">line 560</a>
     </li></ul></dd>
     
 
@@ -2313,6 +2815,104 @@ weather forecast.
         
 <div class="param-desc">
     HTMDivElement for toggle button and its parent container.
+</div>
+
+
+
+    
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="renderVisibility"><span class="type-signature"></span>renderVisibility<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    Renders information about current visibility conditions.
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line605">line 605</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    HTMLDivElement that describes current visibility conditions.
 </div>
 
 
@@ -2381,7 +2981,7 @@ weather forecast.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line454">line 454</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line573">line 573</a>
     </li></ul></dd>
     
 
@@ -2427,7 +3027,7 @@ weather forecast.
     
 
     
-    <h4 class="name" id="setToggleButtonText"><span class="type-signature"></span>setToggleButtonText<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="setTemperatureUnitText"><span class="type-signature"></span>setTemperatureUnitText<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -2479,7 +3079,7 @@ weather forecast.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line554">line 554</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line623">line 623</a>
     </li></ul></dd>
     
 
@@ -2617,7 +3217,7 @@ query to contain full state name.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line489">line 489</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line635">line 635</a>
     </li></ul></dd>
     
 
@@ -2716,7 +3316,7 @@ abbreviation of a US state is converted to its full name.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line562">line 562</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line700">line 700</a>
     </li></ul></dd>
     
 
@@ -2804,7 +3404,7 @@ abbreviation of a US state is converted to its full name.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line593">line 593</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line734">line 734</a>
     </li></ul></dd>
     
 
@@ -2840,7 +3440,7 @@ abbreviation of a US state is converted to its full name.
     
 
     
-    <h4 class="name" id="updateContent"><span class="type-signature"></span>updateContent<span class="signature">(cityData)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="updateContent"><span class="type-signature"></span>updateContent<span class="signature">(cityData, descriptiveWeatherData)</span><span class="type-signature"></span></h4>
     
 
     
@@ -2890,7 +3490,7 @@ abbreviation of a US state is converted to its full name.
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">JSON</span>
 
 
             
@@ -2901,6 +3501,30 @@ abbreviation of a US state is converted to its full name.
             
 
             <td class="description last">JSON string containing weather data for locality.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>descriptiveWeatherData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JSON</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">JSON string containing descriptive 
+weather data.</td>
         </tr>
 
     
@@ -2941,7 +3565,7 @@ abbreviation of a US state is converted to its full name.
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line612">line 612</a>
+        <a href="Page.js.html">Page.js</a>, <a href="Page.js.html#line758">line 758</a>
     </li></ul></dd>
     
 
@@ -2987,13 +3611,13 @@ abbreviation of a US state is converted to its full name.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="API.html">API</a></li><li><a href="Page.html">Page</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#page">page</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="API.html">API</a></li><li><a href="DateTimeUtility.html">DateTimeUtility</a></li><li><a href="Page.html">Page</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#page">page</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Mar 04 2023 19:51:07 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Mar 08 2023 20:53:44 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

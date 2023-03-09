@@ -29,6 +29,7 @@
             <pre class="prettyprint source linenums"><code>/******************************************************************************
  * IMPORTS
  *****************************************************************************/
+import { DateTimeUtility } from "./DateTimeUtility";
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import HumidityIcon from "./icons/humidity.png";
 import PrecipitationChanceIcon from './icons/weather-pouring.png';
@@ -47,114 +48,52 @@ export class Page {
      */
     constructor() {
         this.container = document.querySelector('#content');
-        this.weather = new Weather();
+        this.dateTimeUtility = new DateTimeUtility();
         this.localityInfo = '';
+        this.weather = new Weather();
     }
 
     /**
-     * Converts temperature to Celcius or Farenheit depending on which unit of 
-     * measurement is selected.
-     * @param {Number} temperature The temperate we want to convert from 
-     * Kelvin. 
-     * @returns The converted temperature in either Celcius or Farenheit.
+     * Sets and updates weather information in daily forecast section of page.
+     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
+     * weather data.
      */
-    convertTemperatureFromKelvin(temperature) {
-        if(this.weather.getUnits() === 'IMPERIAL') {
-            return ((temperature - 273.15) * 9/5 + 32).toFixed(0);
-        } else {
-            return (temperature - 273.15).toFixed(0);
-        }
-    }
+    dailyForecastContent(descriptiveWeatherData) {
+        const numberOfDays = 8;
+        for (let i = 0; i &lt; numberOfDays; i++) {
+            if (i > 0) {
+                const date = document.querySelector(`#day-${i}`);
+                const dateTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].dt, 
+                    descriptiveWeatherData.timezone_offset);
+                date.textContent = `${this.dateTimeUtility.getForecastDate(
+                    dateTime)}`;
 
-    /**
-     * Creates a HTMLDivElement that renders the current date in &lt;DayOfWeek>, 
-     * &lt;Month> &lt;DayOfMonth>, &lt;Year> format.
-     * @returns HTMLDivElement containing date.
-     */
-    getDateInfo() {
-        let date = new Date();
-        let dayOfWeek = date.toLocaleString(
-            window.navigator.language, {weekday: 'long'});
+                const highTemperature = document.querySelector(
+                    `#high-temp-${i}`);
+                highTemperature.textContent = 
+                    `High: ${descriptiveWeatherData.daily[i].temp.max} 
+                    \xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
+                
+                const lowTemperature = document.querySelector(
+                    `#low-temp-${i}`);
+                lowTemperature.textContent = 
+                    `Low: ${descriptiveWeatherData.daily[i].temp.min} 
+                    \xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
 
-        const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep",
-            "Oct","Nov","Dec"];
-        let monthName = month[date.getMonth()];
-        let dayOfMonth = date.getDay();
-        let year = date.getFullYear();
+                const dailyDescription = document.querySelector(
+                    `#daily-description-${i}`);
+                dailyDescription.textContent = `${descriptiveWeatherData.
+                    daily[i].weather[0].description}`;
 
-        const dateInfo = document.createElement('div');
-        dateInfo.classList.add('current-date');
-        dateInfo.textContent = dayOfWeek + ', ' + monthName + ' ' + dayOfMonth +
-            ', ' + year;
-        return dateInfo;
-    }
-
-    /**
-     * Creates a HTMLDivElement that renders the current time.
-     * @returns HTMLDivElement containing the durrent time.
-     */
-    getTimeInfo() {
-        let date = new Date();
-
-        let hours = date.getHours();
-        let timePeriod = '';
-        if (hours >= 12) {
-            timePeriod = 'PM';
-        } else {
-            timePeriod = 'AM';
-        }
-        
-        if (hours > 12) {
-            hours = hours - 12;
-        }
-
-        // Get minutes and format it correctly if the value is less than 10.
-        let minutes = date.getMinutes();
-        if (minutes &lt; 10) {
-            minutes = '0' + minutes;
-        }
-        
-        const currentTime = document.createElement('div');
-        currentTime.classList.add('current-time');
-        currentTime.textContent = hours + ':' + minutes + ' ' + timePeriod;
-        return currentTime;
-    }
-
-    /**
-     * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind 
-     * direction.
-     * @param {Number} deg The direction of the winds. 
-     * @returns A string value indicating general direction of the winds.
-     */
-    getWindDirection(deg) {
-        if ((deg >= 337.6 &amp;&amp; deg &lt;= 359.9) || deg >= 0 &amp;&amp; deg &lt;= 22.5) {
-            return 'N';
-        } else if (deg >= 22.6 &amp;&amp; deg &lt;= 67.5) {
-            return 'NE';
-        } else if (deg >= 67.6 &amp;&amp; deg &lt;= 112.5) {
-            return 'E';
-        } else if (deg >= 112.6 &amp;&amp; deg &lt;= 157.5) {
-            return 'SE';
-        } else if (deg >= 157.6 &amp;&amp; deg &lt;= 202.5) {
-            return 'S';
-        } else if (deg >= 202.6 &amp;&amp; deg &lt;= 247.5) {
-            return 'SW';
-        } else if (deg >= 247.6 &amp;&amp; deg &lt;= 292.5) {
-            return 'W';
-        } else if (deg >= 292.6 &amp;&amp; deg &lt;= 337.5) {
-            return 'NW';
-        }
-    }
-    /**
-     * Returns wind as mph or km/h depending of location.
-     * @param {Number} wind The wind speed expressed in meters per second. 
-     * @returns The wind speed in mph or km/h.
-     */
-    getWindSpeed(wind) {
-        if (this.weather.getUnits() === 'IMPERIAL') {
-            return (wind * 2.2369).toFixed(1) + ' mph';
-        } else {
-            return (wind * (18/5)).toFixed(1) + ' km/h'
+                const dailyDescriptionIcon = document.querySelector(
+                    `#daily-description-icon-${i}`);
+                dailyDescriptionIcon.src = 
+                    `https://openweathermap.org/img/wn/${descriptiveWeatherData.
+                    daily[i].weather[0].icon}@2x.png`;
+            }
         }
     }
 
@@ -173,7 +112,7 @@ export class Page {
             let countryName = await this.weather.getCountryName();
             this.weather.setUnits(countryName);
             const toggle = document.querySelector('#toggle-button');
-            toggle.textContent = `\xB0${this.setToggleButtonText(
+            toggle.textContent = `\xB0${this.setTemperatureUnitText(
                 this.weather.getUnits())}`;
             
             // Get weather information.
@@ -187,25 +126,29 @@ export class Page {
             console.log(descriptiveWeatherData);
             const mainContent = document.querySelector('#main');
             this.updateContent(cityData, descriptiveWeatherData);
+            this.dailyForecastContent(descriptiveWeatherData);
         });
         
     }
 
     /**
-     * Remove header from DOM.
+     * Renders today's barometric pressure readings.
+     * @returns HTMLDivElement containing today's barometric pressure readings.
      */
-    removeHeaderFromDOM() {
-        const header = document.getElementById('header');
-        header.remove();
-    }
+    renderBarometricPressure() {
+        const barometricPressureContainer = document.createElement('div');
+        barometricPressureContainer.classList.add(
+            'additional-information-item');
 
-    /**
-     * Removes weather content from DOM after a search for weather from 
-     * another city.
-     */
-    removeMainContentFromDOM() {
-        const mainContent = document.getElementById('main');
-        mainContent.remove();
+        const title = document.createElement('h3');
+        title.textContent = 'Pressure';
+        barometricPressureContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'barometric-pressure');
+        information.classList.add('additional-information-data');
+        barometricPressureContainer.appendChild(information);
+        return barometricPressureContainer;
     }
 
     /**
@@ -238,6 +181,119 @@ export class Page {
         descriptionIcon.setAttribute('id', 'description-icon');
         descriptionContainer.appendChild(descriptionIcon);
         return descriptionContainer;
+    }
+
+    /**
+     * Renders conditions description and associated icon for 7 day forecast.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDiv element containing conditions for each day in the 
+     * 7 day forecast.
+     */
+    renderDailyConditions(index) {
+        // Create parent container
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.classList.add('description-container');
+
+        const description = document.createElement('div');
+        description.setAttribute('id', `daily-description-${index}`);
+        description.classList.add('current-conditions-description');
+        descriptionContainer.appendChild(description);
+
+        const descriptionIcon = new Image();
+        descriptionIcon.setAttribute('id', `daily-description-icon-${index}`);
+        descriptionContainer.appendChild(descriptionIcon);
+        return descriptionContainer;
+    }
+
+    /**
+     * The parent container for the 7 day forecast.
+     * @returns HTMLDivElement The daily forecast section of the webpage.
+     */
+    renderDailyForecast() {
+        const dailyForecastContainer = document.createElement('div');
+        dailyForecastContainer.classList.add('daily-forecast-container');
+        const numberOfDays = 8
+        for (let i = 0; i &lt; numberOfDays; i++) {
+            if (i > 0) {
+                const dailyForecast = document.createElement('div');
+                dailyForecast.classList.add('daily-forecast');
+
+                // Setup date.
+                dailyForecast.appendChild(this.renderDailyForecastDate(i));
+
+                // Temperature details
+                const dailyTemperaturesContainer = 
+                    document.createElement('div');
+                dailyTemperaturesContainer.classList.add(
+                    'daily-temperatures-container');
+                dailyTemperaturesContainer.appendChild(
+                    this.renderDailyForecastHighTemperature(i));
+                dailyTemperaturesContainer.appendChild(
+                    this.renderDailyForecastLowTemperature(i));
+                dailyForecast.appendChild(dailyTemperaturesContainer);
+
+                const dailyConditions = this.renderDailyConditions(i);
+                dailyForecast.appendChild(dailyConditions);
+                dailyForecastContainer.appendChild(dailyForecast);
+            }
+        }
+        return dailyForecastContainer;
+    }
+
+    /**
+     * Renders day for heading section of each date in daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing date for daily forecast.
+     */
+    renderDailyForecastDate(index) {
+        const date = document.createElement('h3');
+        date.setAttribute('id', `day-${index}`);
+        date.classList.add('date');
+        
+        return date;
+    }
+
+    /**
+     * Renders daily low temperatures for each day in daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing low temperature for daily forecast.
+     */
+    renderDailyForecastLowTemperature(index) {
+        const dailyLow = document.createElement('div');
+        dailyLow.setAttribute('id', `low-temp-${index}`);
+        dailyLow.classList.add('daily-temperatures');
+
+        return dailyLow;
+    }
+
+    /**
+     * Renders daily high temperatures for each day in daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing high temperature for daily forecast.
+     */
+    renderDailyForecastHighTemperature(index) {
+        const dailyHigh = document.createElement('div')
+        dailyHigh.setAttribute('id', `high-temp-${index}`);
+        dailyHigh.classList.add('daily-temperatures');
+
+        return dailyHigh;
+    }
+
+    /**
+     * Creates a HTMLDivElement that renders the current date in &lt;DayOfWeek>, 
+     * &lt;Month> &lt;DayOfMonth>, &lt;Year> format.
+     * @returns HTMLDivElement containing date.
+     */
+    renderDate() {
+        const dateInfo = document.createElement('div');
+        dateInfo.setAttribute('id', 'date-info');
+        dateInfo.classList.add('current-date');
+        
+        return dateInfo;
     }
 
     /**
@@ -342,9 +398,10 @@ export class Page {
 
         // Current conditions left side        
         const currentConditionsLeft = document.createElement('div');
-        currentConditionsLeft.classList.add('current-conditions-left-container');
-        currentConditionsLeft.appendChild(this.getDateInfo());
-        currentConditionsLeft.appendChild(this.getTimeInfo());
+        currentConditionsLeft.classList.add(
+            'current-conditions-left-container');
+        currentConditionsLeft.appendChild(this.renderDate());
+        currentConditionsLeft.appendChild(this.renderTime());
         currentConditionsLeft.appendChild(this.renderTemperatureInfo());
         currentConditionsLeft.appendChild(this.renderHighTemperature());
         currentConditionsLeft.appendChild(this.renderLowTemperature());
@@ -354,14 +411,27 @@ export class Page {
 
         // Current conditions right
         const currentConditionsRight = document.createElement('div');
-        currentConditionsRight.classList.add('current-conditions-right-container');
+        currentConditionsRight.classList.add(
+            'current-conditions-right-container');
         currentConditionsRight.appendChild(this.renderFeelsLikeInfo());
         currentConditionsRight.appendChild(this.renderHumidity());
         currentConditionsRight.appendChild(this.renderPrecipitationChance());
         currentConditionsRight.appendChild(this.renderWindConditions());
         currentConditions.appendChild(currentConditionsRight);
-        
         mainContent.appendChild(currentConditions);
+
+        // Additional daily information.
+        const additionalInformation = document.createElement('div');
+        additionalInformation.classList.add('additional-information');
+        additionalInformation.appendChild(this.renderSunRiseToday());
+        additionalInformation.appendChild(this.renderSunSetToday());
+        additionalInformation.appendChild(this.renderBarometricPressure());
+        additionalInformation.appendChild(this.renderVisibility());
+        mainContent.appendChild(additionalInformation);
+
+        // Daily forecast
+        mainContent.appendChild(this.renderDailyForecast());
+
         this.container.appendChild(mainContent);
     }
 
@@ -428,6 +498,44 @@ export class Page {
     }
     
     /**
+     * Renders information about today's sunrise.
+     * @returns HTMLDivElement that contains information about today's sunrise.
+     */
+    renderSunRiseToday() {
+        const sunRiseContainer = document.createElement('div');
+        sunRiseContainer.classList.add('additional-information-item');
+
+        const title = document.createElement('h3');
+        title.textContent = 'Sunrise';
+        sunRiseContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'today-sunrise');
+        information.classList.add('additional-information-data');
+        sunRiseContainer.appendChild(information);
+        return sunRiseContainer;
+    }
+
+    /**
+     * Renders information about today's sunset.
+     * @returns HTMLDivElement that contains information about today's sunset.
+     */
+    renderSunSetToday() {
+        const sunSetContainer = document.createElement('div');
+        sunSetContainer.classList.add('additional-information-item');
+
+        const title = document.createElement('h3');
+        title.textContent = 'Sunset';
+        sunSetContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'today-sunset');
+        information.classList.add('additional-information-data');
+        sunSetContainer.appendChild(information);
+        return sunSetContainer;
+    }
+
+    /**
      * Renders the current temperature.
      * @returns HTMLDivElement that contains current temperature.
      */
@@ -436,6 +544,17 @@ export class Page {
         temperature.setAttribute('id', 'temperature');
         temperature.classList.add('current-temperature');
         return temperature;
+    }
+
+    /**
+     * Creates a HTMLDivElement that renders the current time.
+     * @returns HTMLDivElement containing the durrent time.
+     */
+    renderTime() {
+        const currentTime = document.createElement('div');
+        currentTime.classList.add('current-time');
+        currentTime.setAttribute('id', 'current-time');
+        return currentTime;
     }
 
     /**
@@ -508,6 +627,33 @@ export class Page {
     }
 
     /**
+     * Renders information about current visibility conditions.
+     * @returns HTMLDivElement that describes current visibility conditions.
+     */
+    renderVisibility() {
+        const visibilityContainer = document.createElement('div');
+        visibilityContainer.classList.add('additional-information-item');
+
+        const title = document.createElement('h3');
+        title.textContent = 'Visibility';
+        visibilityContainer.appendChild(title);
+
+        const information = document.createElement('div');
+        information.setAttribute('id', 'visibility');
+        information.classList.add('additional-information-data');
+        visibilityContainer.appendChild(information);
+        return visibilityContainer;
+    }
+
+    /**
+     * Sets to text for the toggle button based on selected units.
+     */
+    setTemperatureUnitText(units) {
+        return units == 'IMPERIAL' ? "F"
+            : "C";
+    }
+
+    /**
      * This function detects if a US state is abbreviated and updates search 
      * query to contain full state name.
      * @param {String} searchQuery The search query.
@@ -577,14 +723,6 @@ export class Page {
     }
 
     /**
-     * Sets to text for the toggle button based on selected units.
-     */
-    setToggleButtonText(units) {
-        return units == 'IMPERIAL' ? "F"
-            : "C";
-    }
-
-    /**
      * The event listener for the submit button.
      */
     submitButtonListener() {
@@ -605,11 +743,14 @@ export class Page {
                 this.localityInfo = searchQuery;
 
                 let cityData = await this.weather.getCityData(searchQuery);
+                this.weather.setJSONCityData(cityData);
                 console.log(cityData);  
                 let descriptiveWeatherData = await this.weather.getWeatherData(
                     cityData.coord.lat, cityData.coord.lon);
+                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
                 console.log(descriptiveWeatherData);
                 this.updateContent(cityData, descriptiveWeatherData);
+                this.dailyForecastContent(descriptiveWeatherData);
                 document.forms[0].reset();
             } 
         });
@@ -628,17 +769,27 @@ export class Page {
                 this.weather.getJSONCityData(), 
                 this.weather.getJSONDescriptiveWeatherData());
 
-            toggle.textContent = `\xB0${this.setToggleButtonText(
+            this.dailyForecastContent(
+                this.weather.getJSONDescriptiveWeatherData());
+            
+            toggle.textContent = `\xB0${this.setTemperatureUnitText(
                 this.weather.getUnits())}`;
         });
     }
 
     /**
      * Sets and updates weather information in main content section of page.
-     * @param {object} cityData JSON string containing weather data for locality.
+     * @param {JSON} cityData JSON string containing weather data for locality.
+     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
+     * weather data.
      */
     updateContent(cityData, descriptiveWeatherData) {
-        
+        let localDateTime = this.dateTimeUtility.getDateTime(
+            descriptiveWeatherData.current.dt, 
+            descriptiveWeatherData.timezone_offset);
+        const currentTime = document.querySelector('#current-time');
+        this.dateTimeUtility.getDateInfo(localDateTime);
+        this.dateTimeUtility.getTimeInfo(localDateTime, currentTime);
         const city = document.querySelector('#city');
         if (cityData.sys.country == 'US') {
             city.textContent = `Current conditions in ${this.localityInfo}`;
@@ -652,52 +803,74 @@ export class Page {
 
         const descriptionIcon = document.querySelector('#description-icon');
         descriptionIcon.src = 
-            `http://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
+            `https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
-        temperature.textContent = `${this.convertTemperatureFromKelvin(
-            cityData.main.temp)} \xB0${this.setToggleButtonText(
+        temperature.textContent = `${this.weather.convertTemperatureFromKelvin(
+            cityData.main.temp)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
         todayHighTemperature.textContent = `Today's High: 
-            ${this.convertTemperatureFromKelvin(
-            cityData.main.temp_max)} \xB0${this.setToggleButtonText(
+            ${this.weather.convertTemperatureFromKelvin(
+            cityData.main.temp_max)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayLowTemperature = document.querySelector(
             '#today-low-temperature');
         todayLowTemperature.textContent = `Today's Low: 
-            ${this.convertTemperatureFromKelvin(
-            cityData.main.temp_min)} \xB0${this.setToggleButtonText(
+            ${this.weather.convertTemperatureFromKelvin(
+            cityData.main.temp_min)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const feelsLikeTemperature = document.querySelector(
             '#feels-like-temperature');
         feelsLikeTemperature.textContent = 
-            `${this.convertTemperatureFromKelvin(
-            cityData.main.feels_like)} \xB0${this.setToggleButtonText(
+            `${this.weather.convertTemperatureFromKelvin(
+            cityData.main.feels_like)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const currentHumidity = document.querySelector('#current-humidity');
-        currentHumidity.textContent = `${cityData.main.humidity} %`;
+        currentHumidity.textContent = `${cityData.main.humidity}%`;
 
         const chanceOfRain = document.querySelector('#chance-of-rain');
         chanceOfRain.textContent = 
-            `${(descriptiveWeatherData.daily[0].pop * 100).toFixed(0)} %`;
+            `${(descriptiveWeatherData.daily[0].pop * 100).toFixed(0)}%`;
 
         const currentWinds = document.querySelector('#current-wind-speed');
-        currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}, 
-            ${this.getWindDirection(cityData.wind.deg)}`;
+        currentWinds.textContent = 
+            `${this.weather.getWindSpeed(cityData.wind.speed)}, 
+            ${this.weather.getWindDirection(cityData.wind.deg)}`;
 
         const currentWindGusts = document.querySelector('#current-wind-gusts');
         if (!isNaN(descriptiveWeatherData.current.wind_gust)) {
-            currentWindGusts.textContent = `${this.getWindSpeed(
+            currentWindGusts.textContent = `${this.weather.getWindSpeed(
                 descriptiveWeatherData.current.wind_gust)}`;
         } else {
-            currentWindGusts.textContent = `${this.getWindSpeed(0)}`;
+            currentWindGusts.textContent = `${this.weather.getWindSpeed(0)}`;
         }
+
+        const todaySunRise = document.querySelector('#today-sunrise');
+        let sunRiseTime = this.dateTimeUtility.getDateTime(
+            descriptiveWeatherData.current.sunrise, 
+            descriptiveWeatherData.timezone_offset);
+        this.dateTimeUtility.getTimeInfo(sunRiseTime, todaySunRise);
+
+        const todaySunSet = document.querySelector('#today-sunset');
+        let sunSetTime = this.dateTimeUtility.getDateTime(
+            descriptiveWeatherData.current.sunset, 
+            descriptiveWeatherData.timezone_offset);
+        this.dateTimeUtility.getTimeInfo(sunSetTime, todaySunSet);
+
+        const barometricPressure = document.querySelector(
+            '#barometric-pressure');
+        barometricPressure.textContent = 
+            `${this.weather.getPressure(cityData.main.pressure)} in`;
+
+        const visibility = document.querySelector("#visibility");
+        visibility.textContent = 
+            `${this.weather.getVisibility(cityData.visibility)}`;
     }
 }</code></pre>
         </article>
@@ -709,13 +882,13 @@ export class Page {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="API.html">API</a></li><li><a href="Page.html">Page</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#page">page</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="API.html">API</a></li><li><a href="DateTimeUtility.html">DateTimeUtility</a></li><li><a href="Page.html">Page</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#page">page</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Mar 04 2023 19:51:07 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Mar 08 2023 20:53:44 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
