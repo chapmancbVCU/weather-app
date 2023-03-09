@@ -307,9 +307,7 @@ export class Page {
                 dailyForecast.classList.add('daily-forecast');
 
                 // Setup date.
-                const date = document.createElement('h3');
-                date.setAttribute('id', `day-${i}`);
-                date.classList.add('date');
+                const date = this.renderDailyForecastDate(i);
                 dailyForecast.appendChild(date);
 
                 // Temperature details
@@ -318,14 +316,10 @@ export class Page {
                 dailyTemperaturesContainer.classList.add(
                     'daily-temperatures-container');
                 
-                const dailyHigh = document.createElement('div')
-                dailyHigh.setAttribute('id', `high-temp-${i}`);
-                dailyHigh.classList.add('daily-temperatures');
+                const dailyHigh = this.renderDailyForecastHighTemperature(i);
                 dailyTemperaturesContainer.appendChild(dailyHigh);
 
-                const dailyLow = document.createElement('div');
-                dailyLow.setAttribute('id', `low-temp-${i}`);
-                dailyLow.classList.add('daily-temperatures');
+                const dailyLow = this.renderDailyForecastLowTemperature(i);
                 dailyTemperaturesContainer.appendChild(dailyLow);
                 
                  dailyForecast.appendChild(dailyTemperaturesContainer);   
@@ -334,6 +328,47 @@ export class Page {
         }
         return dailyForecastContainer;
     }
+
+    /**
+     * Renders day for heading section of each date in daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing date for daily forecast.
+     */
+    renderDailyForecastDate(index) {
+        const date = document.createElement('h3');
+        date.setAttribute('id', `day-${index}`);
+        date.classList.add('date');
+        
+        return date;
+    }
+
+    /**
+     * Renders daily low temperatures for each day in daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing low temperature for daily forecast.
+     */
+    renderDailyForecastLowTemperature(index) {
+        const dailyLow = document.createElement('div');
+        dailyLow.setAttribute('id', `low-temp-${index}`);
+        dailyLow.classList.add('daily-temperatures');
+    }
+
+    /**
+     * Renders daily high temperatures for each day in daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing high temperature for daily forecast.
+     */
+    renderDailyForecastHighTemperature(index) {
+        const dailyHigh = document.createElement('div')
+        dailyHigh.setAttribute('id', `high-temp-${index}`);
+        dailyHigh.classList.add('daily-temperatures');
+
+        return dailyHigh;
+    }
+
     /**
      * Creates a HTMLDivElement that renders the current date in <DayOfWeek>, 
      * <Month> <DayOfMonth>, <Year> format.
@@ -347,6 +382,17 @@ export class Page {
         return dateInfo;
     }
 
+    renderDailyHighTemperature(descriptiveWeatherData, index) {
+        const highTemperature = document.querySelector(
+            `#high-temp-${index}`);
+
+        highTemperature.textContent = 
+            `High: ${descriptiveWeatherData.daily[i].temp.max} 
+            \xB0${this.setTemperatureUnitText(
+            this.weather.getUnits())}`;
+
+        return highTemperature;
+    }
     /**
      * Renders a feels like icon and the feels like temperature.
      * @returns HTMLDivElement that describes feels like temperature.
