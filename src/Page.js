@@ -23,21 +23,6 @@ export class Page {
         this.localityInfo = '';
     }
 
-    /**
-     * Converts temperature to Celcius or Farenheit depending on which unit of 
-     * measurement is selected.
-     * @param {Number} temperature The temperate we want to convert from 
-     * Kelvin. 
-     * @returns The converted temperature in either Celcius or Farenheit.
-     */
-    convertTemperatureFromKelvin(temperature) {
-        if (this.weather.getUnits() === 'IMPERIAL') {
-            return ((temperature - 273.15) * 9/5 + 32).toFixed(0);
-        } else {
-            return (temperature - 273.15).toFixed(0);
-        }
-    }
-
     dailyForecastContent(descriptiveWeatherData) {
         const numberOfDays = 8;
         for (let i = 0; i < numberOfDays; i++) {
@@ -175,16 +160,6 @@ export class Page {
     }
 
     /**
-     * Converts pressure in hectoPascals(hPa) to inches.
-     * @param {Number} pressureInhPa in hectoPascals (hPa).
-     * @returns The pressure represented in inches.
-     */
-    getPressure(pressureInhPa) {
-        const PRESSURE_CONVERSION_CONSTANT = 0.0295;
-        return (pressureInhPa * PRESSURE_CONVERSION_CONSTANT).toFixed(1);
-    }
-
-    /**
      * This function reports the local time.
      * @param {String} localDateTime The local timestamp.
      * @param {HTMLDivElement} timeContainer The element whose text we will 
@@ -222,60 +197,6 @@ export class Page {
 
         //const currentTime = document.querySelector('#current-time');
         timeContainer.textContent = hours + ':' + minutes + ' ' + timePeriod;
-    }
-
-    /**
-     * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind 
-     * direction.
-     * @param {Number} deg The direction of the winds. 
-     * @returns A string value indicating general direction of the winds.
-     */
-    getWindDirection(deg) {
-        if ((deg >= 337.6 && deg <= 359.9) || deg >= 0 && deg <= 22.5) {
-            return 'S';
-        } else if (deg >= 22.6 && deg <= 67.5) {
-            return 'SW';
-        } else if (deg >= 67.6 && deg <= 112.5) {
-            return 'W';
-        } else if (deg >= 112.6 && deg <= 157.5) {
-            return 'NW';
-        } else if (deg >= 157.6 && deg <= 202.5) {
-            return 'N';
-        } else if (deg >= 202.6 && deg <= 247.5) {
-            return 'NE';
-        } else if (deg >= 247.6 && deg <= 292.5) {
-            return 'E';
-        } else if (deg >= 292.6 && deg <= 337.5) {
-            return 'SE';
-        }
-    }
-
-    /**
-     * Returns wind as mph or km/h depending of location.
-     * @param {Number} wind The wind speed expressed in meters per second. 
-     * @returns The wind speed in mph or km/h.
-     */
-    getWindSpeed(wind) {
-        if (this.weather.getUnits() === 'IMPERIAL') {
-            return (wind * 2.2369).toFixed(1) + ' mph';
-        } else {
-            return (wind * (18/5)).toFixed(1) + ' km/h'
-        }
-    }
-
-    /**
-     * Converts visibility in meters to kilometers or miles depending on which 
-     * units are selected.
-     * @param {JSON} cityData string containing weather data for locality.
-     * @returns Visibility represented as miles or kilometers depending on 
-     * which units of measurement is selected.
-     */
-    getVisibility(visibility) {
-        if (this.weather.getUnits() === 'IMPERIAL') {
-            return (visibility / 1609.344).toFixed(1) + ' miles';
-        } else {
-            return (visibility / 1000).toFixed(1) + ' km';
-        }
     }
 
     /**
@@ -935,28 +856,28 @@ export class Page {
             `https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
-        temperature.textContent = `${this.convertTemperatureFromKelvin(
+        temperature.textContent = `${this.weather.convertTemperatureFromKelvin(
             cityData.main.temp)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
         todayHighTemperature.textContent = `Today's High: 
-            ${this.convertTemperatureFromKelvin(
+            ${this.weather.convertTemperatureFromKelvin(
             cityData.main.temp_max)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayLowTemperature = document.querySelector(
             '#today-low-temperature');
         todayLowTemperature.textContent = `Today's Low: 
-            ${this.convertTemperatureFromKelvin(
+            ${this.weather.convertTemperatureFromKelvin(
             cityData.main.temp_min)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const feelsLikeTemperature = document.querySelector(
             '#feels-like-temperature');
         feelsLikeTemperature.textContent = 
-            `${this.convertTemperatureFromKelvin(
+            `${this.weather.convertTemperatureFromKelvin(
             cityData.main.feels_like)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
@@ -968,15 +889,16 @@ export class Page {
             `${(descriptiveWeatherData.daily[0].pop * 100).toFixed(0)}%`;
 
         const currentWinds = document.querySelector('#current-wind-speed');
-        currentWinds.textContent = `${this.getWindSpeed(cityData.wind.speed)}, 
-            ${this.getWindDirection(cityData.wind.deg)}`;
+        currentWinds.textContent = 
+            `${this.weather.getWindSpeed(cityData.wind.speed)}, 
+            ${this.weather.getWindDirection(cityData.wind.deg)}`;
 
         const currentWindGusts = document.querySelector('#current-wind-gusts');
         if (!isNaN(descriptiveWeatherData.current.wind_gust)) {
-            currentWindGusts.textContent = `${this.getWindSpeed(
+            currentWindGusts.textContent = `${this.weather.getWindSpeed(
                 descriptiveWeatherData.current.wind_gust)}`;
         } else {
-            currentWindGusts.textContent = `${this.getWindSpeed(0)}`;
+            currentWindGusts.textContent = `${this.weather.getWindSpeed(0)}`;
         }
 
         const todaySunRise = document.querySelector('#today-sunrise');
@@ -994,9 +916,10 @@ export class Page {
         const barometricPressure = document.querySelector(
             '#barometric-pressure');
         barometricPressure.textContent = 
-            `${this.getPressure(cityData.main.pressure)} in`;
+            `${this.weather.getPressure(cityData.main.pressure)} in`;
 
         const visibility = document.querySelector("#visibility");
-        visibility.textContent = `${this.getVisibility(cityData.visibility)}`;
+        visibility.textContent = 
+            `${this.weather.getVisibility(cityData.visibility)}`;
     }
 }

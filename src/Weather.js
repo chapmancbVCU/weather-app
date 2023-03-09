@@ -23,6 +23,21 @@ export class Weather{
     }
 
     /**
+     * Converts temperature to Celcius or Farenheit depending on which unit of 
+     * measurement is selected.
+     * @param {Number} temperature The temperate we want to convert from 
+     * Kelvin. 
+     * @returns The converted temperature in either Celcius or Farenheit.
+     */
+    convertTemperatureFromKelvin(temperature) {
+        if (this.getUnits() === 'IMPERIAL') {
+            return ((temperature - 273.15) * 9/5 + 32).toFixed(0);
+        } else {
+            return (temperature - 273.15).toFixed(0);
+        }
+    }
+
+    /**
      * Returns the limited weather data using api call based on city name.
      * @param {String} city The locality whose weather we want to retrieve.
      * @returns The limited local weather data.
@@ -145,6 +160,16 @@ export class Weather{
     }
 
     /**
+     * Converts pressure in hectoPascals(hPa) to inches.
+     * @param {Number} pressureInhPa in hectoPascals (hPa).
+     * @returns The pressure represented in inches.
+     */
+    getPressure(pressureInhPa) {
+        const PRESSURE_CONVERSION_CONSTANT = 0.0295;
+        return (pressureInhPa * PRESSURE_CONVERSION_CONSTANT).toFixed(1);
+    }
+
+    /**
      * Returns the detailed weather data of the user's location or search 
      * query.
      * @param {Number} latitude The latitude of user's location or search 
@@ -170,6 +195,32 @@ export class Weather{
     }
 
     /**
+     * Returns either N, NE, E, SE, S, SW, W, or NW depending on wind 
+     * direction.
+     * @param {Number} deg The direction of the winds. 
+     * @returns A string value indicating general direction of the winds.
+     */
+    getWindDirection(deg) {
+        if ((deg >= 337.6 && deg <= 359.9) || deg >= 0 && deg <= 22.5) {
+            return 'S';
+        } else if (deg >= 22.6 && deg <= 67.5) {
+            return 'SW';
+        } else if (deg >= 67.6 && deg <= 112.5) {
+            return 'W';
+        } else if (deg >= 112.6 && deg <= 157.5) {
+            return 'NW';
+        } else if (deg >= 157.6 && deg <= 202.5) {
+            return 'N';
+        } else if (deg >= 202.6 && deg <= 247.5) {
+            return 'NE';
+        } else if (deg >= 247.6 && deg <= 292.5) {
+            return 'E';
+        } else if (deg >= 292.6 && deg <= 337.5) {
+            return 'SE';
+        }
+    }
+
+    /**
      * Getter function that retrieves the units.  This value can be METRIC or 
      * IMPERIAL.
      * @returns The units name that the user as selected or detected based on 
@@ -177,6 +228,34 @@ export class Weather{
      */
     getUnits() {
         return this.units;
+    }
+
+    /**
+     * Converts visibility in meters to kilometers or miles depending on which 
+     * units are selected.
+     * @param {JSON} cityData string containing weather data for locality.
+     * @returns Visibility represented as miles or kilometers depending on 
+     * which units of measurement is selected.
+     */
+    getVisibility(visibility) {
+        if (this.getUnits() === 'IMPERIAL') {
+            return (visibility / 1609.344).toFixed(1) + ' miles';
+        } else {
+            return (visibility / 1000).toFixed(1) + ' km';
+        }
+    }
+
+    /**
+     * Returns wind as mph or km/h depending of location.
+     * @param {Number} wind The wind speed expressed in meters per second. 
+     * @returns The wind speed in mph or km/h.
+     */
+    getWindSpeed(wind) {
+        if (this.getUnits() === 'IMPERIAL') {
+            return (wind * 2.2369).toFixed(1) + ' mph';
+        } else {
+            return (wind * (18/5)).toFixed(1) + ' km/h'
+        }
     }
 
     /**
