@@ -46,6 +46,17 @@ export class Page {
                     `Low: ${descriptiveWeatherData.daily[i].temp.min} 
                     \xB0${this.setTemperatureUnitText(
                     this.weather.getUnits())}`;
+
+                const dailyDescription = document.querySelector(
+                    `#daily-description-${i}`);
+                dailyDescription.textContent = `${descriptiveWeatherData.
+                    daily[i].weather[0].description}`;
+
+                const dailyDescriptionIcon = document.querySelector(
+                    `#daily-description-icon-${i}`);
+                dailyDescriptionIcon.src = 
+                    `https://openweathermap.org/img/wn/${descriptiveWeatherData.
+                    daily[i].weather[0].icon}@2x.png`;
             }
         }
     }
@@ -297,6 +308,22 @@ export class Page {
         return descriptionContainer;
     }
 
+    renderDailyConditions(index) {
+        // Create parent container
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.classList.add('description-container');
+
+        const description = document.createElement('div');
+        description.setAttribute('id', `daily-description-${index}`);
+        description.classList.add('current-conditions-description');
+        descriptionContainer.appendChild(description);
+
+        const descriptionIcon = new Image();
+        descriptionIcon.setAttribute('id', `daily-description-icon-${index}`);
+        descriptionContainer.appendChild(descriptionIcon);
+        return descriptionContainer;
+    }
+
     renderDailyForecast() {
         const dailyForecastContainer = document.createElement('div');
         dailyForecastContainer.classList.add('daily-forecast-container');
@@ -307,22 +334,21 @@ export class Page {
                 dailyForecast.classList.add('daily-forecast');
 
                 // Setup date.
-                const date = this.renderDailyForecastDate(i);
-                dailyForecast.appendChild(date);
+                dailyForecast.appendChild(this.renderDailyForecastDate(i));
 
                 // Temperature details
                 const dailyTemperaturesContainer = 
                     document.createElement('div');
                 dailyTemperaturesContainer.classList.add(
                     'daily-temperatures-container');
-                
-                const dailyHigh = this.renderDailyForecastHighTemperature(i);
-                dailyTemperaturesContainer.appendChild(dailyHigh);
+                dailyTemperaturesContainer.appendChild(
+                    this.renderDailyForecastHighTemperature(i));
+                dailyTemperaturesContainer.appendChild(
+                    this.renderDailyForecastLowTemperature(i));
+                dailyForecast.appendChild(dailyTemperaturesContainer);
 
-                const dailyLow = this.renderDailyForecastLowTemperature(i);
-                dailyTemperaturesContainer.appendChild(dailyLow);
-                
-                 dailyForecast.appendChild(dailyTemperaturesContainer);   
+                const dailyConditions = this.renderDailyConditions(i);
+                dailyForecast.appendChild(dailyConditions);
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -353,6 +379,8 @@ export class Page {
         const dailyLow = document.createElement('div');
         dailyLow.setAttribute('id', `low-temp-${index}`);
         dailyLow.classList.add('daily-temperatures');
+
+        return dailyLow;
     }
 
     /**
@@ -382,17 +410,6 @@ export class Page {
         return dateInfo;
     }
 
-    renderDailyHighTemperature(descriptiveWeatherData, index) {
-        const highTemperature = document.querySelector(
-            `#high-temp-${index}`);
-
-        highTemperature.textContent = 
-            `High: ${descriptiveWeatherData.daily[i].temp.max} 
-            \xB0${this.setTemperatureUnitText(
-            this.weather.getUnits())}`;
-
-        return highTemperature;
-    }
     /**
      * Renders a feels like icon and the feels like temperature.
      * @returns HTMLDivElement that describes feels like temperature.
