@@ -109,7 +109,7 @@ export class Weather{
     }
 
     /**
-     * Retrieves locality information of user.
+     * Retrieves locality information of user upon initialization of page.
      * @param {String} geoLocationInfo JSON string that contains information 
      * about user's current location.
      * @returns The locality of where the user resides.
@@ -119,7 +119,9 @@ export class Weather{
             const response = await fetch(geoLocationInfo);
             const data = await response.json();
             const country = data.countryName;
-            if(country.includes('United States of America')) {
+            if(country.includes('United States of America') ||
+                country.includes('Myanmar') ||
+                country.includes('Liberia')) {
                 return data.locality + ", " + data.principalSubdivision;
             } else {
                 return data.city + ", " + data.countryName;
@@ -301,7 +303,9 @@ export class Weather{
      * location detection.
      */
     setUnits(countryName) {
-        if (countryName.includes('United States of America')) {
+        if (countryName.includes('United States of America') ||
+            countryName.includes('Myanmar') ||
+            countryName.includes('Liberia')) {
             this.units = 'IMPERIAL'
         } else {
             this.units = 'METRIC';
