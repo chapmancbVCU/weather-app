@@ -44,14 +44,16 @@ export class Page {
                 const highTemperature = document.querySelector(
                     `#high-temp-${i}`);
                 highTemperature.textContent = 
-                    `High: ${descriptiveWeatherData.daily[i].temp.max} 
+                    `High: ${this.weather.getTemperature(
+                    descriptiveWeatherData.daily[i].temp.max)} 
                     \xB0${this.setTemperatureUnitText(
                     this.weather.getUnits())}`;
                 
                 const lowTemperature = document.querySelector(
                     `#low-temp-${i}`);
                 lowTemperature.textContent = 
-                    `Low: ${descriptiveWeatherData.daily[i].temp.min} 
+                    `Low: ${this.weather.getTemperature(
+                    descriptiveWeatherData.daily[i].temp.min)} 
                     \xB0${this.setTemperatureUnitText(
                     this.weather.getUnits())}`;
 
@@ -76,45 +78,35 @@ export class Page {
         this.renderHeader();
         this.renderMainContent();
         document.addEventListener("DOMContentLoaded", async() => {
-            let countryName = '';
-            let cityData = '';
-            let descriptiveWeatherData = '';
-
             try {
                 // Get locality info on page load
                 this.localityInfo = await this.weather.getCityInfo();
                 console.log(this.localityInfo);
-                countryName = await this.weather.getInitCountryName();
+
+                // Setup content of toggle units button
+                let countryName = await this.weather.getInitCountryName();
+                this.weather.setUnits(countryName);
+
+                const toggle = document.querySelector('#toggle-button');
+                toggle.textContent = `\xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
                 
                 // Get weather information.
-                cityData = await this.weather.getCityData(this.localityInfo);
-                descriptiveWeatherData = await this.weather.getWeatherData(
+                let cityData = await this.weather.getCityData(this.localityInfo);
+                this.weather.setJSONCityData(cityData);
+                console.log(cityData);
+                let descriptiveWeatherData = await this.weather.getWeatherData(
                     this.weather.getLatitude(), 
                     this.weather.getLongitude());
+                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
+                console.log(descriptiveWeatherData);
+                const mainContent = document.querySelector('#main');
+                this.updateContent(cityData, descriptiveWeatherData);
+                this.dailyForecastContent(descriptiveWeatherData);
             } catch (error) {
                 console.log(error);
             }
-
-            // Print data for testing
-            console.log(cityData);
-            console.log(descriptiveWeatherData);
-
-            // Save data to instance variables.
-            this.weather.setJSONCityData(cityData);
-            this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
-                
-            // Setup content of toggle units button
-            this.weather.setUnits(countryName);
-            const toggle = document.querySelector('#toggle-button');
-            toggle.textContent = `\xB0${this.setTemperatureUnitText(
-                this.weather.getUnits())}`;
-            
-            // Setup content.
-            const mainContent = document.querySelector('#main');
-            this.updateContent(cityData, descriptiveWeatherData);
-            this.dailyForecastContent(descriptiveWeatherData);
         });
-        
     }
 
     /**
@@ -686,35 +678,27 @@ export class Page {
             if(searchQuery == '' || searchQuery == null) {
                 searchQuery.setCustomValidity();
             } else {
-                /* If query has US State name abbreviated we detect and 
-                correct query before performing search. */
-                searchQuery = this.stateAbbreviationMapping(searchQuery);
-
-                // To display new location name at top of page.
-                this.localityInfo = searchQuery;
-
-                let cityData = '';
-                let descriptiveWeatherData = '';
-
                 try {
-                    cityData = await this.weather.getCityData(searchQuery);
-                    descriptiveWeatherData = await this.weather.getWeatherData(
+                    /* If query has US State name abbreviated we detect and 
+                    correct query before performing search. */
+                    searchQuery = this.stateAbbreviationMapping(searchQuery);
+
+                    // To display new location name at top of page.
+                    this.localityInfo = searchQuery;
+
+                    let cityData = await this.weather.getCityData(searchQuery);
+                    this.weather.setJSONCityData(cityData);
+                    console.log(cityData);  
+                    let descriptiveWeatherData = await this.weather.getWeatherData(
                         cityData.coord.lat, cityData.coord.lon);
+                    this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
+                    console.log(descriptiveWeatherData);
+                    this.updateContent(cityData, descriptiveWeatherData);
+                    this.dailyForecastContent(descriptiveWeatherData);
+                    document.forms[0].reset();
                 } catch (error) {
                     console.log(error);
                 }
-
-                // Print data 
-                console.log(cityData); 
-                console.log(descriptiveWeatherData);
-
-                // Save data to instance variables.
-                this.weather.setJSONCityData(cityData);
-                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
-                
-                this.updateContent(cityData, descriptiveWeatherData);
-                this.dailyForecastContent(descriptiveWeatherData);
-                document.forms[0].reset();
             } 
         });
     }
@@ -769,22 +753,24 @@ export class Page {
             `https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
-        temperature.textContent = `${this.weather.convertTemperatureFromKelvin(
-            cityData.main.temp)} \xB0${this.setTemperatureUnitText(
+        temperature.textContent = `${this.weather.getTemperature(
+            descriptiveWeatherData.current.temp)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
         todayHighTemperature.textContent = `Today's High: 
-            ${this.weather.convertTemperatureFromKelvin(
-            cityData.main.temp_max)} \xB0${this.setTemperatureUnitText(
+            ${this.weather.getTemperature(
+            descriptiveWeatherData.daily[0].temp.max)} 
+            \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayLowTemperature = document.querySelector(
             '#today-low-temperature');
         todayLowTemperature.textContent = `Today's Low: 
-            ${this.weather.convertTemperatureFromKelvin(
-            cityData.main.temp_min)} \xB0${this.setTemperatureUnitText(
+            ${this.weather.getTemperature(
+            descriptiveWeatherData.daily[0].temp.min)} 
+            \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const feelsLikeTemperature = document.querySelector(
