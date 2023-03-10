@@ -14,7 +14,7 @@ export class Weather{
         this.apiKeys = new API();
         let geoLocationInfo = this.getLocationInformation();
         this.city = this.getLocalityInfo(geoLocationInfo);
-        this.countryName = this.getCountryInfo(geoLocationInfo);
+        this.initCountryName = this.getCountryInfo(geoLocationInfo);
         this.JSONCityData = '';
         this.JSONDescriptiveWeatherData = '';
         this.latitude = 0;
@@ -80,8 +80,8 @@ export class Weather{
      * Getter function for retrieving the users country.
      * @returns The nation where the user resides.
      */
-    getCountryName() {
-        return this.countryName;
+    getInitCountryName() {
+        return this.initCountryName;
     }
 
     /**
