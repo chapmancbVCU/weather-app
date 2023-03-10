@@ -2,6 +2,7 @@
 /******************************************************************************
  * IMPORTS
  *****************************************************************************/
+import { forOwn } from "lodash";
 import { API } from "./api";
 
 
@@ -15,6 +16,7 @@ export class Weather{
         let geoLocationInfo = this.getLocationInformation();
         this.city = this.getLocalityInfo(geoLocationInfo);
         this.initCountryName = this.getCountryInfo(geoLocationInfo);
+        this.initialUnits = '';
         this.JSONCityData = '';
         this.JSONDescriptiveWeatherData = '';
         this.latitude = 0;
@@ -84,6 +86,10 @@ export class Weather{
         return this.initCountryName;
     }
 
+    getInitialUnits() {
+        return this.initialUnits;
+    }
+
     /**
      * Getter function for returning city data as a JSON object.
      * @returns JSON object containing city data.
@@ -119,9 +125,7 @@ export class Weather{
             const response = await fetch(geoLocationInfo);
             const data = await response.json();
             const country = data.countryName;
-            if(country.includes('United States of America') ||
-                country.includes('Myanmar') ||
-                country.includes('Liberia')) {
+            if(country.includes('United States of America')) {
                 return data.locality + ", " + data.principalSubdivision;
             } else {
                 return data.city + ", " + data.countryName;
@@ -169,6 +173,22 @@ export class Weather{
     getPressure(pressureInhPa) {
         const PRESSURE_CONVERSION_CONSTANT = 0.0295;
         return (pressureInhPa * PRESSURE_CONVERSION_CONSTANT).toFixed(1);
+    }
+
+    getTemperature(temperature) {
+        if (this.getInitialUnits() == 'IMPERIAL') {
+            if(this.getUnits() == 'IMPERIAL') {
+                return temperature.toFixed(0);
+            } else {
+                return ((temperature - 32) * (5/9)).toFixed(0);
+            }   
+        } else if (this.getInitialUnits() == 'METRIC') {
+            if(this.getUnits() == 'IMPERIAL') {
+                return ((temperature * 1.8) + 32).toFixed(0);
+            } else {
+                return temperature;
+            }
+        }
     }
 
     /**
@@ -306,8 +326,10 @@ export class Weather{
         if (countryName.includes('United States of America') ||
             countryName.includes('Myanmar') ||
             countryName.includes('Liberia')) {
+            this.initialUnits = 'IMPERIAL';
             this.units = 'IMPERIAL'
         } else {
+            this.initialUnits = 'METRIC';
             this.units = 'METRIC';
         }
     }
