@@ -253,7 +253,8 @@ main {
     }
 
     .daily-conditions-info {
-        margin-left: 15px;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .daily-forecast-container {
