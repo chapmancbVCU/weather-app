@@ -89,6 +89,8 @@ body, html {
 }
 
 .daily-forecast {
+    border: solid whitesmoke 2px;
+    width: 80%;
     display: flex;
     flex-direction: column;
 }
@@ -102,18 +104,21 @@ body, html {
 }
 
 .daily-temperatures-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .daily-temperatures {
     text-align: center;
+    width: 100%;
 }
 
 .description-container {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: center;
 }
 
 .date {
@@ -208,9 +213,6 @@ header {
 }
 
 @media only screen and (min-width: 900px) {
-    .daily-temperatures-container {
-        flex-direction: row;
-    }
     header {
         height: 100px;
         justify-content: space-evenly;
@@ -245,6 +247,10 @@ header {
         align-items: center;
         margin-top: 20px;
         margin-bottom: 20px;
+    }
+
+    .daily-temperatures-container {
+        flex-direction: row;
     }
 
     .current-conditions-container {
