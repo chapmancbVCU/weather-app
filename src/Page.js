@@ -74,7 +74,7 @@ export class Page {
                 `${(descriptiveWeatherData.daily[i].pop * 100).toFixed(0)}%`;
 
                 const currentWinds = document.querySelector(
-                    `#current-wind-speed-${i}`);
+                    `#daily-wind-speed-${i}`);
                 currentWinds.textContent = 
                     `${this.weather.getWindSpeed(
                         descriptiveWeatherData.daily[i].wind_speed)}, 
@@ -82,7 +82,7 @@ export class Page {
                         descriptiveWeatherData.daily[i].wind_deg)}`;
 
                 const currentWindGusts = document.querySelector(
-                    `#current-wind-gusts-${i}`);
+                    `#daily-wind-gusts-${i}`);
                 if (!isNaN(descriptiveWeatherData.daily[i].wind_gust)) {
                     currentWindGusts.textContent = 
                         `${this.weather.getWindSpeed(
@@ -91,6 +91,11 @@ export class Page {
                     currentWindGusts.textContent = 
                         `${this.weather.getWindSpeed(0)}`;
                 }
+
+                const currentHumidity = document.querySelector(
+                    `#daily-humidity-${i}`);
+                currentHumidity.textContent = 
+                    `${descriptiveWeatherData.daily[i].humidity}%`;
             }
         }
     }
@@ -260,15 +265,20 @@ export class Page {
     }
 
     renderDailyForecastDetails(index) {
+        // Setup parent container
         const dailyForecastDetailsContainer = document.createElement('div');
         dailyForecastDetailsContainer.classList.add('daily-forecast-details');
 
+        // Setup left side content.
         const dailyForecastDetailsLeft = document.createElement('div');
         dailyForecastDetailsLeft.classList.add('daily-forecast-details-left');
         dailyForecastDetailsLeft.appendChild(
             this.renderDailyForecastPrecipitationChance(index));
+        dailyForecastDetailsLeft.appendChild(
+            this.renderDailyForecastHumidity(index));
         dailyForecastDetailsContainer.appendChild(dailyForecastDetailsLeft);
 
+        // Setup right side content
         const dailyForecastDetailsRight = document.createElement('div');
         dailyForecastDetailsRight.classList.add('daily-forecast-details-right');
         dailyForecastDetailsRight.appendChild(
@@ -306,7 +316,35 @@ export class Page {
         return dailyHigh;
     }
 
-    /**
+    /** 
+     * Renders the humidity for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing humidity information for the daily 
+     * forecast.
+     */
+    renderDailyForecastHumidity(index) {
+        const currentHumidityContainer = document.createElement('div');
+        currentHumidityContainer.classList.add('daily-conditions-info');
+
+        const humidityIcon = new Image();
+        humidityIcon.classList.add('conditions-icon');
+        humidityIcon.src = HumidityIcon;
+        currentHumidityContainer.appendChild(humidityIcon);
+
+        const humidityInfo = document.createElement('div');
+        humidityInfo.classList.add('current-conditions-info-description');
+        humidityInfo.textContent = 'Humidity';
+
+        const currentHumidity = document.createElement('div');
+        currentHumidity.setAttribute('id', `daily-humidity-${index}`);
+        humidityInfo.appendChild(currentHumidity);
+
+        currentHumidityContainer.appendChild(humidityInfo);
+        return currentHumidityContainer;
+    }
+
+    /** 
      * Renders the chance of precipitation for each in the daily forecast 
      * section.
      * @param {Number} index The index in array containing daily forecast 
@@ -335,6 +373,13 @@ export class Page {
         return precipitaionChanceContainer;
     }
 
+    /**
+     * Renders the wind conditions for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing the wind conditions for the daily 
+     * forecast.
+     */
     renderDailyForecastWindConditions(index) {
         const windConditionsContainer = document.createElement('div');
         windConditionsContainer.classList.add('daily-conditions-info');
@@ -349,14 +394,14 @@ export class Page {
         windInfo.textContent = 'Winds';
 
         const currentWinds = document.createElement('div');
-        currentWinds.setAttribute('id', `current-wind-speed-${index}`);
+        currentWinds.setAttribute('id', `daily-wind-speed-${index}`);
         windInfo.appendChild(currentWinds);
 
         const windGustInfo = document.createElement('div');
         windGustInfo.textContent = 'Wind Gusts';
         windInfo.appendChild(windGustInfo);
         const windGusts = document.createElement('div');
-        windGusts.setAttribute('id', `current-wind-gusts-${index}`);
+        windGusts.setAttribute('id', `daily-wind-gusts-${index}`);
         windInfo.appendChild(windGusts);
 
         windConditionsContainer.appendChild(windInfo);
