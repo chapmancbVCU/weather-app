@@ -72,14 +72,16 @@ export class Page {
                 const highTemperature = document.querySelector(
                     `#high-temp-${i}`);
                 highTemperature.textContent = 
-                    `High: ${descriptiveWeatherData.daily[i].temp.max} 
+                    `High: ${this.weather.getTemperature(
+                    descriptiveWeatherData.daily[i].temp.max)} 
                     \xB0${this.setTemperatureUnitText(
                     this.weather.getUnits())}`;
                 
                 const lowTemperature = document.querySelector(
                     `#low-temp-${i}`);
                 lowTemperature.textContent = 
-                    `Low: ${descriptiveWeatherData.daily[i].temp.min} 
+                    `Low: ${this.weather.getTemperature(
+                    descriptiveWeatherData.daily[i].temp.min)} 
                     \xB0${this.setTemperatureUnitText(
                     this.weather.getUnits())}`;
 
@@ -93,6 +95,30 @@ export class Page {
                 dailyDescriptionIcon.src = 
                     `https://openweathermap.org/img/wn/${descriptiveWeatherData.
                     daily[i].weather[0].icon}@2x.png`;
+
+                const chanceOfRain = document.querySelector(
+                    `#chance-of-rain-${i}`);
+                chanceOfRain.textContent = 
+                `${(descriptiveWeatherData.daily[i].pop * 100).toFixed(0)}%`;
+
+                const currentWinds = document.querySelector(
+                    `#current-wind-speed-${i}`);
+                currentWinds.textContent = 
+                    `${this.weather.getWindSpeed(
+                        descriptiveWeatherData.daily[i].wind_speed)}, 
+                    ${this.weather.getWindDirection(
+                        descriptiveWeatherData.daily[i].wind_deg)}`;
+
+                const currentWindGusts = document.querySelector(
+                    `#current-wind-gusts-${i}`);
+                if (!isNaN(descriptiveWeatherData.daily[i].wind_gust)) {
+                    currentWindGusts.textContent = 
+                        `${this.weather.getWindSpeed(
+                        descriptiveWeatherData.daily[i].wind_gust)}`;
+                } else {
+                    currentWindGusts.textContent = 
+                        `${this.weather.getWindSpeed(0)}`;
+                }
             }
         }
     }
@@ -104,31 +130,35 @@ export class Page {
         this.renderHeader();
         this.renderMainContent();
         document.addEventListener("DOMContentLoaded", async() => {
-            // Get locality info on page load
-            this.localityInfo = await this.weather.getCityInfo();
-            console.log(this.localityInfo);
+            try {
+                // Get locality info on page load
+                this.localityInfo = await this.weather.getCityInfo();
+                console.log(this.localityInfo);
 
-            // Setup content of toggle units button
-            let countryName = await this.weather.getCountryName();
-            this.weather.setUnits(countryName);
-            const toggle = document.querySelector('#toggle-button');
-            toggle.textContent = `\xB0${this.setTemperatureUnitText(
-                this.weather.getUnits())}`;
-            
-            // Get weather information.
-            let cityData = await this.weather.getCityData(this.localityInfo);
-            this.weather.setJSONCityData(cityData);
-            console.log(cityData);
-            let descriptiveWeatherData = await this.weather.getWeatherData(
-                this.weather.getLatitude(), 
-                this.weather.getLongitude());
-            this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
-            console.log(descriptiveWeatherData);
-            const mainContent = document.querySelector('#main');
-            this.updateContent(cityData, descriptiveWeatherData);
-            this.dailyForecastContent(descriptiveWeatherData);
+                // Setup content of toggle units button
+                let countryName = await this.weather.getInitCountryName();
+                this.weather.setUnits(countryName);
+
+                const toggle = document.querySelector('#toggle-button');
+                toggle.textContent = `\xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
+                
+                // Get weather information.
+                let cityData = await this.weather.getCityData(this.localityInfo);
+                this.weather.setJSONCityData(cityData);
+                console.log(cityData);
+                let descriptiveWeatherData = await this.weather.getWeatherData(
+                    this.weather.getLatitude(), 
+                    this.weather.getLongitude());
+                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
+                console.log(descriptiveWeatherData);
+                const mainContent = document.querySelector('#main');
+                this.updateContent(cityData, descriptiveWeatherData);
+                this.dailyForecastContent(descriptiveWeatherData);
+            } catch (error) {
+                console.log(error);
+            }
         });
-        
     }
 
     /**
@@ -222,7 +252,7 @@ export class Page {
                 // Setup date.
                 dailyForecast.appendChild(this.renderDailyForecastDate(i));
 
-                // Temperature details
+                // Temperature details.
                 const dailyTemperaturesContainer = 
                     document.createElement('div');
                 dailyTemperaturesContainer.classList.add(
@@ -233,8 +263,10 @@ export class Page {
                     this.renderDailyForecastLowTemperature(i));
                 dailyForecast.appendChild(dailyTemperaturesContainer);
 
-                const dailyConditions = this.renderDailyConditions(i);
-                dailyForecast.appendChild(dailyConditions);
+                // Daily conditions.
+                dailyForecast.appendChild(this.renderDailyConditions(i));
+                dailyForecast.appendChild(this.renderDailyForecastDetails(i));
+
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -255,6 +287,25 @@ export class Page {
         return date;
     }
 
+    renderDailyForecastDetails(index) {
+        const dailyForecastDetailsContainer = document.createElement('div');
+        dailyForecastDetailsContainer.classList.add('daily-forecast-details');
+
+        const dailyForecastDetailsLeft = document.createElement('div');
+        dailyForecastDetailsLeft.classList.add('daily-forecast-details-left');
+        dailyForecastDetailsLeft.appendChild(
+            this.renderDailyForecastPrecipitationChance(index));
+        dailyForecastDetailsContainer.appendChild(dailyForecastDetailsLeft);
+
+        const dailyForecastDetailsRight = document.createElement('div');
+        dailyForecastDetailsRight.classList.add('daily-forecast-details-right');
+        dailyForecastDetailsRight.appendChild(
+            this.renderDailyForecastWindConditions(index));
+        dailyForecastDetailsContainer.appendChild(dailyForecastDetailsRight);
+
+        return dailyForecastDetailsContainer;
+    }
+
     /**
      * Renders daily low temperatures for each day in daily forecast section.
      * @param {Number} index The index in array containing daily forecast 
@@ -265,7 +316,6 @@ export class Page {
         const dailyLow = document.createElement('div');
         dailyLow.setAttribute('id', `low-temp-${index}`);
         dailyLow.classList.add('daily-temperatures');
-
         return dailyLow;
     }
 
@@ -273,14 +323,72 @@ export class Page {
      * Renders daily high temperatures for each day in daily forecast section.
      * @param {Number} index The index in array containing daily forecast 
      * information from descriptive weather data JSON object.
-     * @returns HTMLDivElement containing high temperature for daily forecast.
+     * @returns HTMLDivElement containing high temperature for the daily 
+     * forecast.
      */
     renderDailyForecastHighTemperature(index) {
         const dailyHigh = document.createElement('div')
         dailyHigh.setAttribute('id', `high-temp-${index}`);
         dailyHigh.classList.add('daily-temperatures');
-
+        dailyHigh.classList.add('daily-high-temperature');
         return dailyHigh;
+    }
+
+    /**
+     * Renders the chance of precipitation for each in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing the chance of precipitation for the 
+     * daily forecast.
+     */
+    renderDailyForecastPrecipitationChance(index) {
+        const precipitaionChanceContainer = document.createElement('div');
+        precipitaionChanceContainer.classList.add('daily-conditions-info');
+        const precipitationChanceIcon = new Image();
+        precipitationChanceIcon.classList.add('conditions-icon');
+        precipitationChanceIcon.src = PrecipitationChanceIcon;
+        precipitaionChanceContainer.appendChild(precipitationChanceIcon);
+
+        const precipitaionChanceInfo = document.createElement('div');
+        precipitaionChanceInfo.classList.add(
+            'current-conditions-info-description');
+        precipitaionChanceInfo.textContent = 'Chance of Rain';
+
+        const precipitationChance = document.createElement('div');
+        precipitationChance.setAttribute('id', `chance-of-rain-${index}`);
+        precipitaionChanceInfo.appendChild(precipitationChance);
+
+        precipitaionChanceContainer.appendChild(precipitaionChanceInfo);
+        return precipitaionChanceContainer;
+    }
+
+    renderDailyForecastWindConditions(index) {
+        const windConditionsContainer = document.createElement('div');
+        windConditionsContainer.classList.add('daily-conditions-info');
+
+        const windIcon = new Image();
+        windIcon.classList.add('conditions-icon');
+        windIcon.src = WindIcon;
+        windConditionsContainer.appendChild(windIcon);
+
+        const windInfo = document.createElement('div');
+        windInfo.classList.add('current-conditions-info-description');
+        windInfo.textContent = 'Winds';
+
+        const currentWinds = document.createElement('div');
+        currentWinds.setAttribute('id', `current-wind-speed-${index}`);
+        windInfo.appendChild(currentWinds);
+
+        const windGustInfo = document.createElement('div');
+        windGustInfo.textContent = 'Wind Gusts';
+        windInfo.appendChild(windGustInfo);
+        const windGusts = document.createElement('div');
+        windGusts.setAttribute('id', `current-wind-gusts-${index}`);
+        windInfo.appendChild(windGusts);
+
+        windConditionsContainer.appendChild(windInfo);
+        return windConditionsContainer;
     }
 
     /**
@@ -661,58 +769,23 @@ export class Page {
      * abbreviation of a US state is converted to its full name.
      */
     stateAbbreviationMapping(searchQuery) {
-        let states = [
-            ['Arizona', 'AZ'],
-            ['Alabama', 'AL'],
-            ['Alaska', 'AK'],
-            ['Arkansas', 'AR'],
-            ['California', 'CA'],
-            ['Colorado', 'CO'],
-            ['Connecticut', 'CT'],
-            ['Delaware', 'DE'],
-            ['Florida', 'FL'],
-            ['Georgia', 'GA'],
-            ['Hawaii', 'HI'],
-            ['Idaho', 'ID'],
-            ['Illinois', 'IL'],
-            ['Indiana', 'IN'],
-            ['Iowa', 'IA'],
-            ['Kansas', 'KS'],
-            ['Kentucky', 'KY'],
-            ['Louisiana', 'LA'],
-            ['Maine', 'ME'],
-            ['Maryland', 'MD'],
-            ['Massachusetts', 'MA'],
-            ['Michigan', 'MI'],
-            ['Minnesota', 'MN'],
-            ['Mississippi', 'MS'],
-            ['Missouri', 'MO'],
-            ['Montana', 'MT'],
-            ['Nebraska', 'NE'],
-            ['Nevada', 'NV'],
-            ['New Hampshire', 'NH'],
-            ['New Jersey', 'NJ'],
-            ['New Mexico', 'NM'],
-            ['New York', 'NY'],
-            ['North Carolina', 'NC'],
-            ['North Dakota', 'ND'],
-            ['Ohio', 'OH'],
-            ['Oklahoma', 'OK'],
-            ['Oregon', 'OR'],
-            ['Pennsylvania', 'PA'],
-            ['Rhode Island', 'RI'],
-            ['South Carolina', 'SC'],
-            ['South Dakota', 'SD'],
-            ['Tennessee', 'TN'],
-            ['Texas', 'TX'],
-            ['Utah', 'UT'],
-            ['Vermont', 'VT'],
-            ['Virginia', 'VA'],
-            ['Washington', 'WA'],
-            ['West Virginia', 'WV'],
-            ['Wisconsin', 'WI'],
-            ['Wyoming', 'WY'],
-        ];
+        let states = [ ['Arizona', 'AZ'], ['Alabama', 'AL'], ['Alaska', 'AK'],
+            ['Arkansas', 'AR'], ['California', 'CA'], ['Colorado', 'CO'],
+            ['Connecticut', 'CT'], ['Delaware', 'DE'], ['Florida', 'FL'],
+            ['Georgia', 'GA'], ['Hawaii', 'HI'], ['Idaho', 'ID'],
+            ['Illinois', 'IL'], ['Indiana', 'IN'], ['Iowa', 'IA'],
+            ['Kansas', 'KS'], ['Kentucky', 'KY'], ['Louisiana', 'LA'],
+            ['Maine', 'ME'], ['Maryland', 'MD'], ['Massachusetts', 'MA'],
+            ['Michigan', 'MI'], ['Minnesota', 'MN'], ['Mississippi', 'MS'],
+            ['Missouri', 'MO'], ['Montana', 'MT'], ['Nebraska', 'NE'],
+            ['Nevada', 'NV'], ['New Hampshire', 'NH'], ['New Jersey', 'NJ'],
+            ['New Mexico', 'NM'], ['New York', 'NY'], ['North Carolina', 'NC'],
+            ['North Dakota', 'ND'], ['Ohio', 'OH'], ['Oklahoma', 'OK'],
+            ['Oregon', 'OR'], ['Pennsylvania', 'PA'], ['Rhode Island', 'RI'],
+            ['South Carolina', 'SC'], ['South Dakota', 'SD'],
+            ['Tennessee', 'TN'], ['Texas', 'TX'],  ['Utah', 'UT'],
+            ['Vermont', 'VT'], ['Virginia', 'VA'], ['Washington', 'WA'],
+            ['West Virginia', 'WV'], ['Wisconsin', 'WI'], ['Wyoming', 'WY']];
         
         for(let i = 0; i &lt; states.length; i++) {
             if(searchQuery.includes(states[i][1])) {
@@ -735,23 +808,27 @@ export class Page {
             if(searchQuery == '' || searchQuery == null) {
                 searchQuery.setCustomValidity();
             } else {
-                /* If query has US State name abbreviated we detect and 
-                correct query before performing search. */
-                searchQuery = this.stateAbbreviationMapping(searchQuery);
+                try {
+                    /* If query has US State name abbreviated we detect and 
+                    correct query before performing search. */
+                    searchQuery = this.stateAbbreviationMapping(searchQuery);
 
-                // To display new location name at top of page.
-                this.localityInfo = searchQuery;
+                    // To display new location name at top of page.
+                    this.localityInfo = searchQuery;
 
-                let cityData = await this.weather.getCityData(searchQuery);
-                this.weather.setJSONCityData(cityData);
-                console.log(cityData);  
-                let descriptiveWeatherData = await this.weather.getWeatherData(
-                    cityData.coord.lat, cityData.coord.lon);
-                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
-                console.log(descriptiveWeatherData);
-                this.updateContent(cityData, descriptiveWeatherData);
-                this.dailyForecastContent(descriptiveWeatherData);
-                document.forms[0].reset();
+                    let cityData = await this.weather.getCityData(searchQuery);
+                    this.weather.setJSONCityData(cityData);
+                    console.log(cityData);  
+                    let descriptiveWeatherData = await this.weather.getWeatherData(
+                        cityData.coord.lat, cityData.coord.lon);
+                    this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
+                    console.log(descriptiveWeatherData);
+                    this.updateContent(cityData, descriptiveWeatherData);
+                    this.dailyForecastContent(descriptiveWeatherData);
+                    document.forms[0].reset();
+                } catch (error) {
+                    console.log(error);
+                }
             } 
         });
     }
@@ -806,22 +883,24 @@ export class Page {
             `https://openweathermap.org/img/wn/${cityData.weather[0].icon}@2x.png`;
 
         const temperature = document.querySelector('#temperature');
-        temperature.textContent = `${this.weather.convertTemperatureFromKelvin(
-            cityData.main.temp)} \xB0${this.setTemperatureUnitText(
+        temperature.textContent = `${this.weather.getTemperature(
+            descriptiveWeatherData.current.temp)} \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
         todayHighTemperature.textContent = `Today's High: 
-            ${this.weather.convertTemperatureFromKelvin(
-            cityData.main.temp_max)} \xB0${this.setTemperatureUnitText(
+            ${this.weather.getTemperature(
+            descriptiveWeatherData.daily[0].temp.max)} 
+            \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const todayLowTemperature = document.querySelector(
             '#today-low-temperature');
         todayLowTemperature.textContent = `Today's Low: 
-            ${this.weather.convertTemperatureFromKelvin(
-            cityData.main.temp_min)} \xB0${this.setTemperatureUnitText(
+            ${this.weather.getTemperature(
+            descriptiveWeatherData.daily[0].temp.min)} 
+            \xB0${this.setTemperatureUnitText(
             this.weather.getUnits())}`;
 
         const feelsLikeTemperature = document.querySelector(
@@ -888,7 +967,7 @@ export class Page {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Mar 08 2023 20:53:44 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Mar 10 2023 21:19:29 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
