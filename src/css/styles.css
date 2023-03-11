@@ -168,6 +168,20 @@ header {
     justify-content: center;
 }
 
+.hide-show-button {
+    height: 40px;
+    width: 150px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    border-radius: 5px;
+    
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 main {
     display: flex;
     flex-direction: column;
