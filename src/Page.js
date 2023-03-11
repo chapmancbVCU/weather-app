@@ -74,29 +74,37 @@ export class Page {
                 chanceOfRain.textContent = 
                 `${(descriptiveWeatherData.daily[i].pop * 100).toFixed(0)}%`;
 
-                const currentWinds = document.querySelector(
+                const winds = document.querySelector(
                     `#daily-wind-speed-${i}`);
-                currentWinds.textContent = 
+                winds.textContent = 
                     `${this.weather.getWindSpeed(
                         descriptiveWeatherData.daily[i].wind_speed)}, 
                     ${this.weather.getWindDirection(
                         descriptiveWeatherData.daily[i].wind_deg)}`;
 
-                const currentWindGusts = document.querySelector(
+                const windGusts = document.querySelector(
                     `#daily-wind-gusts-${i}`);
                 if (!isNaN(descriptiveWeatherData.daily[i].wind_gust)) {
-                    currentWindGusts.textContent = 
+                    windGusts.textContent = 
                         `${this.weather.getWindSpeed(
                         descriptiveWeatherData.daily[i].wind_gust)}`;
                 } else {
-                    currentWindGusts.textContent = 
+                    windGusts.textContent = 
                         `${this.weather.getWindSpeed(0)}`;
                 }
 
-                const currentHumidity = document.querySelector(
+                const humidity = document.querySelector(
                     `#daily-humidity-${i}`);
-                currentHumidity.textContent = 
+                humidity.textContent = 
                     `${descriptiveWeatherData.daily[i].humidity}%`;
+
+                const dewPoint = document.querySelector(
+                    `#daily-dew-point-${i}`);
+                dewPoint.textContent =
+                    `${this.weather.getTemperature(
+                    descriptiveWeatherData.daily[i].dew_point)} 
+                    \xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
             }
         }
     }
@@ -280,6 +288,8 @@ export class Page {
             this.renderDailyForecastPrecipitationChance(index));
         dailyForecastDetailsLeft.appendChild(
             this.renderDailyForecastHumidity(index));
+        dailyForecastDetailsLeft.appendChild(
+            this.renderDailyForecastDewPoint(index));
         dailyForecastDetailsContainer.appendChild(dailyForecastDetailsLeft);
 
         // Setup right side content
@@ -299,10 +309,25 @@ export class Page {
      * @returns HTMLDivElement containing dew point information for the daily 
      * forecast.
      */
-    renderDailyForecastDewpoint(index) {
-        const dewpointContainer = document.createElement('div');
+    renderDailyForecastDewPoint(index) {
+        const dewPointContainer = document.createElement('div');
+        dewPointContainer.classList.add('daily-conditions-info');
 
-        return dewpointContainer;
+        const dewPointIcon = new Image();
+        dewPointIcon.classList.add('conditions-icon');
+        dewPointIcon.src = DewPointIcon;
+        dewPointContainer.appendChild(dewPointIcon);
+
+        const dewPointInfo = document.createElement('div');
+        dewPointInfo.classList.add('current-conditions-info-description');
+        dewPointInfo.textContent = 'Dew Point';
+
+        const dewPoint = document.createElement('div');
+        dewPoint.setAttribute('id', `daily-dew-point-${index}`);
+        dewPointInfo.appendChild(dewPoint);
+
+        dewPointContainer.appendChild(dewPointInfo);
+        return dewPointContainer;
     }
 
     /**
