@@ -14,6 +14,7 @@ import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 import WindIcon from "./icons/weather-windy.png";
 import uviIcon from "./icons/UVI.png";
+import VisibilityIncon from "./icons/visibility.png";
 
 
 /**
