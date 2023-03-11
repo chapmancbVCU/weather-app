@@ -6,8 +6,10 @@ import DewPointIcon from "./icons/dew-point.png";
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import HumidityIcon from "./icons/humidity.png";
 import MoonRiseIcon from "./icons/moon-rise.png";
+import MoonSetIcon from "./icons/moon-set.png";
 import PrecipitationChanceIcon from "./icons/weather-pouring.png";
 import SunRiseIcon from "./icons/sun-rise.png";
+import SunSetIcon from "./icons/sun-set.png";
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 import WindIcon from "./icons/weather-windy.png";
@@ -120,11 +122,23 @@ export class Page {
                     descriptiveWeatherData.timezone_offset);
                 this.dateTimeUtility.getTimeInfo(sunRiseTime, dailySunRise);
 
+                const dailySunSet = document.querySelector(`#daily-sun-set-${i}`);
+                let sunSetTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].sunset, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(sunSetTime, dailySunSet);
+
                 const dailyMoonRise = document.querySelector(`#daily-moon-rise-${i}`);
                 let moonRiseTime = this.dateTimeUtility.getDateTime(
                     descriptiveWeatherData.daily[i].moonrise, 
                     descriptiveWeatherData.timezone_offset);
                 this.dateTimeUtility.getTimeInfo(moonRiseTime, dailyMoonRise);
+
+                const dailyMoonSet = document.querySelector(`#daily-moon-set-${i}`);
+                let moonSetTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].moonset, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(moonSetTime, dailyMoonSet);
             }
         }
     }
@@ -558,6 +572,35 @@ export class Page {
         return moonRiseInfoContainer;
     }
 
+    renderDailyMoonSet(index) {
+        const moonSetInfoContainer = document.createElement('div');
+        moonSetInfoContainer.classList.add('daily-conditions-info');
+
+        const moonSetIcon = new Image();
+        moonSetIcon.classList.add('conditions-icon');
+        moonSetIcon.src = MoonSetIcon;
+        moonSetInfoContainer.appendChild(moonSetIcon);
+
+        const moonSetInfo = document.createElement('div');
+        moonSetInfo.classList.add('current-conditions-info-description');
+        moonSetInfo.textContent = 'Moon Set';
+
+        const moonSet = document.createElement('div');
+        moonSet.setAttribute('id', `daily-moon-set-${index}`);
+        moonSetInfo.appendChild(moonSet);
+
+        moonSetInfoContainer.appendChild(moonSetInfo);
+        return moonSetInfoContainer;
+    }
+
+    /**
+     * Renders information about sun rise, sun set, moon rise, moon set for 
+     * each day of the 7 day forecast.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing details for sun rise, sun set, moon 
+     * rise, and moon set foreach day of the 7 day forecast.
+     */
     renderDailySunAndMoonInfo(index) {
         // Setup parent container
         const sunAndMoonInfoContainer = document.createElement('div');
@@ -567,12 +610,14 @@ export class Page {
         const sunRiseSunSetInfo = document.createElement('div');
         sunRiseSunSetInfo.classList.add('daily-forecast-details-left');
         sunRiseSunSetInfo.appendChild(this.renderDailySunRise(index));
+        sunRiseSunSetInfo.appendChild(this.renderDailySunSet(index));
         sunAndMoonInfoContainer.appendChild(sunRiseSunSetInfo);
 
         // Setup right side content.
         const moonRiseMoonSetInfo = document.createElement('div');
         moonRiseMoonSetInfo.classList.add('daily-forecast-details-right');
         moonRiseMoonSetInfo.appendChild(this.renderDailyMoonRise(index));
+        moonRiseMoonSetInfo.appendChild(this.renderDailyMoonSet(index));
         sunAndMoonInfoContainer.appendChild(moonRiseMoonSetInfo);
         return sunAndMoonInfoContainer;
     }
@@ -598,6 +643,26 @@ export class Page {
         return sunRiseInfoContainer;
     }
 
+    renderDailySunSet(index) {
+        const sunSetInfoContainer = document.createElement('div');
+        sunSetInfoContainer.classList.add('daily-conditions-info');
+
+        const sunSetIcon = new Image();
+        sunSetIcon.classList.add('conditions-icon');
+        sunSetIcon.src = SunSetIcon;
+        sunSetInfoContainer.appendChild(sunSetIcon);
+
+        const sunSetInfo = document.createElement('div');
+        sunSetInfo.classList.add('current-conditions-info-description');
+        sunSetInfo.textContent = 'Sun Set';
+
+        const sunSet = document.createElement('div');
+        sunSet.setAttribute('id', `daily-sun-set-${index}`);
+        sunSetInfo.appendChild(sunSet);
+
+        sunSetInfoContainer.appendChild(sunSetInfo);
+        return sunSetInfoContainer;
+    }
     /**
      * Creates a HTMLDivElement that renders the current date in <DayOfWeek>, 
      * <Month> <DayOfMonth>, <Year> format.
