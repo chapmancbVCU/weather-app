@@ -213,6 +213,8 @@ export class Page {
 
                 // Daily conditions.
                 dailyForecast.appendChild(this.renderDailyConditions(i));
+                dailyForecast.appendChild(this.renderDailyForecastDetails());
+
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -233,6 +235,13 @@ export class Page {
         return date;
     }
 
+    renderDailyForecastDetails(index) {
+        const dailyForecastDetailsContainer = document.createElement('div');
+        dailyForecastDetailsContainer.classList.add('daily-forecast-details');
+
+        return dailyForecastDetailsContainer;
+    }
+
     /**
      * Renders daily low temperatures for each day in daily forecast section.
      * @param {Number} index The index in array containing daily forecast 
@@ -243,7 +252,6 @@ export class Page {
         const dailyLow = document.createElement('div');
         dailyLow.setAttribute('id', `low-temp-${index}`);
         dailyLow.classList.add('daily-temperatures');
-
         return dailyLow;
     }
 
@@ -257,7 +265,7 @@ export class Page {
         const dailyHigh = document.createElement('div')
         dailyHigh.setAttribute('id', `high-temp-${index}`);
         dailyHigh.classList.add('daily-temperatures');
-
+        dailyHigh.classList.add('daily-high-temperature');
         return dailyHigh;
     }
 
