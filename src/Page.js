@@ -23,6 +23,7 @@ export class Page {
     constructor() {
         this.container = document.querySelector('#content');
         this.dateTimeUtility = new DateTimeUtility();
+        this.displayDailyForecast = 0;
         this.localityInfo = '';
         this.weather = new Weather();
     }
@@ -115,11 +116,33 @@ export class Page {
     }
 
     /**
+     * This fuction contains event listener for button that hides and shows 
+     * daily forecast.
+     */
+    hideShowDailyForecast() {
+        const hideShowButton = document.querySelector(
+            '#hide-show-daily-forecast');
+        hideShowButton.addEventListener('click', () => {
+            const dailyForecastContainer = document.querySelector(
+                '#daily-forecast-container');
+            if (this.displayDailyForecast == 1) {
+                dailyForecastContainer.style.display = 'flex';
+                this.displayDailyForecast = 0;
+            } else {
+                dailyForecastContainer.style.display = 'none';
+                this.displayDailyForecast = 1;
+            }
+        });
+        
+    }
+
+    /**
      * Initialize page components when user first visits page.
      */
     initializeComponents() {
         this.renderHeader();
         this.renderMainContent();
+        this.hideShowDailyForecast();
         document.addEventListener("DOMContentLoaded", async() => {
             try {
                 // Get locality info on page load
@@ -237,6 +260,8 @@ export class Page {
     renderDailyForecast() {
         const dailyForecastContainer = document.createElement('div');
         dailyForecastContainer.classList.add('daily-forecast-container');
+        dailyForecastContainer.setAttribute('id', 'daily-forecast-container');
+
         const numberOfDays = 8
         for (let i = 0; i < numberOfDays; i++) {
             if (i > 0) {
@@ -640,6 +665,11 @@ export class Page {
         mainContent.appendChild(additionalInformation);
 
         // Daily forecast
+        const hideShowButton = document.createElement('button');
+        hideShowButton.textContent = 'Daily Forecast';
+        hideShowButton.classList.add('hide-show-button');
+        hideShowButton.setAttribute('id', 'hide-show-daily-forecast');
+        mainContent.appendChild(hideShowButton);
         mainContent.appendChild(this.renderDailyForecast());
 
         this.container.appendChild(mainContent);
