@@ -168,6 +168,11 @@ header {
     justify-content: center;
 }
 
+main {
+    display: flex;
+    flex-direction: column;
+}
+
 .search-bar {
     background-color: #FFFFFF;
     border: 1px solid #D6D9DC;
@@ -251,9 +256,19 @@ header {
         margin-left: 15px;
     }
     
+    .daily-forecast-container {
+        width: 90%;
+        align-self: center;
+    }
+
     .daily-forecast-details-left,
     .daily-forecast-details-right {
         width: 50%;
+    }
+
+    .current-conditions-container {
+        width: 70%;
+        align-self: center;
     }
 
     header {
