@@ -2,6 +2,7 @@
  * IMPORTS
  *****************************************************************************/
 import { DateTimeUtility } from "./DateTimeUtility";
+import DewPointIcon from "./icons/dew-point.png";
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import HumidityIcon from "./icons/humidity.png";
 import PrecipitationChanceIcon from './icons/weather-pouring.png';
@@ -121,13 +122,16 @@ export class Page {
                     this.weather.getUnits())}`;
                 
                 // Get weather information.
-                let cityData = await this.weather.getCityData(this.localityInfo);
+                let cityData = await this.weather.getCityData(
+                    this.localityInfo);
                 this.weather.setJSONCityData(cityData);
                 console.log(cityData);
-                let descriptiveWeatherData = await this.weather.getWeatherData(
+                let descriptiveWeatherData = 
+                    await this.weather.getWeatherData(
                     this.weather.getLatitude(), 
                     this.weather.getLongitude());
-                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
+                this.weather.setJSONDescriptiveWeatherData(
+                    descriptiveWeatherData);
                 console.log(descriptiveWeatherData);
                 const mainContent = document.querySelector('#main');
                 this.updateContent(cityData, descriptiveWeatherData);
@@ -288,6 +292,19 @@ export class Page {
         return dailyForecastDetailsContainer;
     }
 
+    /** 
+     * Renders the dew point for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing dew point information for the daily 
+     * forecast.
+     */
+    renderDailyForecastDewpoint(index) {
+        const dewpointContainer = document.createElement('div');
+
+        return dewpointContainer;
+    }
+
     /**
      * Renders daily low temperatures for each day in daily forecast section.
      * @param {Number} index The index in array containing daily forecast 
@@ -324,24 +341,24 @@ export class Page {
      * forecast.
      */
     renderDailyForecastHumidity(index) {
-        const currentHumidityContainer = document.createElement('div');
-        currentHumidityContainer.classList.add('daily-conditions-info');
+        const humidityContainer = document.createElement('div');
+        humidityContainer.classList.add('daily-conditions-info');
 
         const humidityIcon = new Image();
         humidityIcon.classList.add('conditions-icon');
         humidityIcon.src = HumidityIcon;
-        currentHumidityContainer.appendChild(humidityIcon);
+        humidityContainer.appendChild(humidityIcon);
 
         const humidityInfo = document.createElement('div');
         humidityInfo.classList.add('current-conditions-info-description');
         humidityInfo.textContent = 'Humidity';
 
-        const currentHumidity = document.createElement('div');
-        currentHumidity.setAttribute('id', `daily-humidity-${index}`);
-        humidityInfo.appendChild(currentHumidity);
+        const humidity = document.createElement('div');
+        humidity.setAttribute('id', `daily-humidity-${index}`);
+        humidityInfo.appendChild(humidity);
 
-        currentHumidityContainer.appendChild(humidityInfo);
-        return currentHumidityContainer;
+        humidityContainer.appendChild(humidityInfo);
+        return humidityContainer;
     }
 
     /** 
@@ -355,6 +372,7 @@ export class Page {
     renderDailyForecastPrecipitationChance(index) {
         const precipitaionChanceContainer = document.createElement('div');
         precipitaionChanceContainer.classList.add('daily-conditions-info');
+
         const precipitationChanceIcon = new Image();
         precipitationChanceIcon.classList.add('conditions-icon');
         precipitationChanceIcon.src = PrecipitationChanceIcon;
