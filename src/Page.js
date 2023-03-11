@@ -9,6 +9,7 @@ import PrecipitationChanceIcon from './icons/weather-pouring.png';
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 import WindIcon from "./icons/weather-windy.png";
+import uviIcon from "./icons/UVI.png";
 
 
 /**
@@ -105,6 +106,10 @@ export class Page {
                     descriptiveWeatherData.daily[i].dew_point)} 
                     \xB0${this.setTemperatureUnitText(
                     this.weather.getUnits())}`;
+
+                const uvIndex = document.querySelector(`#daily-uv-index-${i}`);
+                uvIndex.textContent = `${(descriptiveWeatherData.daily[i].uvi).
+                    toFixed(0)} out of 10`;
             }
         }
     }
@@ -276,6 +281,13 @@ export class Page {
         return date;
     }
 
+    /**
+     * Renders information about conditions for each day of the 7 day forecast.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing details for each day of the 7 day 
+     * forecast.
+     */
     renderDailyForecastDetails(index) {
         // Setup parent container
         const dailyForecastDetailsContainer = document.createElement('div');
@@ -297,6 +309,8 @@ export class Page {
         dailyForecastDetailsRight.classList.add('daily-forecast-details-right');
         dailyForecastDetailsRight.appendChild(
             this.renderDailyForecastWindConditions(index));
+        dailyForecastDetailsRight.appendChild(
+            this.renderDailyForecastUVIndex(index));
         dailyForecastDetailsContainer.appendChild(dailyForecastDetailsRight);
 
         return dailyForecastDetailsContainer;
@@ -449,6 +463,34 @@ export class Page {
 
         windConditionsContainer.appendChild(windInfo);
         return windConditionsContainer;
+    }
+
+    /** 
+     * Renders the UV Index for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing UV Index information for the daily 
+     * forecast.
+     */
+    renderDailyForecastUVIndex(index) {
+        const uvIndexContainer = document.createElement('div');
+        uvIndexContainer.classList.add('daily-conditions-info');
+
+        const uvIndexIcon = new Image();
+        uvIndexIcon.classList.add('conditions-icon');
+        uvIndexIcon.src = uviIcon;
+        uvIndexContainer.appendChild(uvIndexIcon);
+
+        const uvIndexInfo = document.createElement('div');
+        uvIndexInfo.classList.add('current-conditions-info-description');
+        uvIndexInfo.textContent = 'UV Index';
+
+        const uvIndex = document.createElement('div');
+        uvIndex.setAttribute('id', `daily-uv-index-${index}`);
+        uvIndexInfo.appendChild(uvIndex);
+
+        uvIndexContainer.appendChild(uvIndexInfo);
+        return uvIndexContainer;
     }
 
     /**
