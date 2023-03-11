@@ -67,6 +67,30 @@ export class Page {
                 dailyDescriptionIcon.src = 
                     `https://openweathermap.org/img/wn/${descriptiveWeatherData.
                     daily[i].weather[0].icon}@2x.png`;
+
+                const chanceOfRain = document.querySelector(
+                    `#chance-of-rain-${i}`);
+                chanceOfRain.textContent = 
+                `${(descriptiveWeatherData.daily[i].pop * 100).toFixed(0)}%`;
+
+                const currentWinds = document.querySelector(
+                    `#current-wind-speed-${i}`);
+                currentWinds.textContent = 
+                    `${this.weather.getWindSpeed(
+                        descriptiveWeatherData.daily[i].wind_speed)}, 
+                    ${this.weather.getWindDirection(
+                        descriptiveWeatherData.daily[i].wind_deg)}`;
+
+                const currentWindGusts = document.querySelector(
+                    `#current-wind-gusts-${i}`);
+                if (!isNaN(descriptiveWeatherData.daily[i].wind_gust)) {
+                    currentWindGusts.textContent = 
+                        `${this.weather.getWindSpeed(
+                        descriptiveWeatherData.daily[i].wind_gust)}`;
+                } else {
+                    currentWindGusts.textContent = 
+                        `${this.weather.getWindSpeed(0)}`;
+                }
             }
         }
     }
@@ -213,7 +237,7 @@ export class Page {
 
                 // Daily conditions.
                 dailyForecast.appendChild(this.renderDailyConditions(i));
-                dailyForecast.appendChild(this.renderDailyForecastDetails());
+                dailyForecast.appendChild(this.renderDailyForecastDetails(i));
 
                 dailyForecastContainer.appendChild(dailyForecast);
             }
@@ -239,6 +263,18 @@ export class Page {
         const dailyForecastDetailsContainer = document.createElement('div');
         dailyForecastDetailsContainer.classList.add('daily-forecast-details');
 
+        const dailyForecastDetailsLeft = document.createElement('div');
+        dailyForecastDetailsLeft.classList.add('daily-forecast-details-left');
+        dailyForecastDetailsLeft.appendChild(
+            this.renderDailyForecastPrecipitationChance(index));
+        dailyForecastDetailsContainer.appendChild(dailyForecastDetailsLeft);
+
+        const dailyForecastDetailsRight = document.createElement('div');
+        dailyForecastDetailsRight.classList.add('daily-forecast-details-right');
+        dailyForecastDetailsRight.appendChild(
+            this.renderDailyForecastWindConditions(index));
+        dailyForecastDetailsContainer.appendChild(dailyForecastDetailsRight);
+
         return dailyForecastDetailsContainer;
     }
 
@@ -259,7 +295,8 @@ export class Page {
      * Renders daily high temperatures for each day in daily forecast section.
      * @param {Number} index The index in array containing daily forecast 
      * information from descriptive weather data JSON object.
-     * @returns HTMLDivElement containing high temperature for daily forecast.
+     * @returns HTMLDivElement containing high temperature for the daily 
+     * forecast.
      */
     renderDailyForecastHighTemperature(index) {
         const dailyHigh = document.createElement('div')
@@ -267,6 +304,63 @@ export class Page {
         dailyHigh.classList.add('daily-temperatures');
         dailyHigh.classList.add('daily-high-temperature');
         return dailyHigh;
+    }
+
+    /**
+     * Renders the chance of precipitation for each in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing the chance of precipitation for the 
+     * daily forecast.
+     */
+    renderDailyForecastPrecipitationChance(index) {
+        const precipitaionChanceContainer = document.createElement('div');
+        precipitaionChanceContainer.classList.add('daily-conditions-info');
+        const precipitationChanceIcon = new Image();
+        precipitationChanceIcon.classList.add('conditions-icon');
+        precipitationChanceIcon.src = PrecipitationChanceIcon;
+        precipitaionChanceContainer.appendChild(precipitationChanceIcon);
+
+        const precipitaionChanceInfo = document.createElement('div');
+        precipitaionChanceInfo.classList.add(
+            'current-conditions-info-description');
+        precipitaionChanceInfo.textContent = 'Chance of Rain';
+
+        const precipitationChance = document.createElement('div');
+        precipitationChance.setAttribute('id', `chance-of-rain-${index}`);
+        precipitaionChanceInfo.appendChild(precipitationChance);
+
+        precipitaionChanceContainer.appendChild(precipitaionChanceInfo);
+        return precipitaionChanceContainer;
+    }
+
+    renderDailyForecastWindConditions(index) {
+        const windConditionsContainer = document.createElement('div');
+        windConditionsContainer.classList.add('daily-conditions-info');
+
+        const windIcon = new Image();
+        windIcon.classList.add('conditions-icon');
+        windIcon.src = WindIcon;
+        windConditionsContainer.appendChild(windIcon);
+
+        const windInfo = document.createElement('div');
+        windInfo.classList.add('current-conditions-info-description');
+        windInfo.textContent = 'Winds';
+
+        const currentWinds = document.createElement('div');
+        currentWinds.setAttribute('id', `current-wind-speed-${index}`);
+        windInfo.appendChild(currentWinds);
+
+        const windGustInfo = document.createElement('div');
+        windGustInfo.textContent = 'Wind Gusts';
+        windInfo.appendChild(windGustInfo);
+        const windGusts = document.createElement('div');
+        windGusts.setAttribute('id', `current-wind-gusts-${index}`);
+        windInfo.appendChild(windGusts);
+
+        windConditionsContainer.appendChild(windInfo);
+        return windConditionsContainer;
     }
 
     /**
