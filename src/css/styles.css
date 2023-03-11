@@ -98,6 +98,7 @@ body, html {
 
 .daily-forecast-details-left,
 .daily-forecast-details-right {
+    width: 150px;
     display: flex;
     flex-direction: column;
     margin-left: auto;
@@ -169,6 +170,7 @@ header {
 }
 
 .hide-show-button {
+    background-color: orange;
     height: 40px;
     width: 150px;
 
@@ -177,7 +179,7 @@ header {
 
     border-radius: 5px;
     
-    margin-top: 15px;
+    margin-top: 25px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -248,6 +250,7 @@ main {
 }
 
 .toggle-button {
+    background-color: orange;
     margin-top: 10px;
     margin-bottom: 10px;
 

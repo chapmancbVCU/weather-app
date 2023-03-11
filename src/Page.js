@@ -5,7 +5,9 @@ import { DateTimeUtility } from "./DateTimeUtility";
 import DewPointIcon from "./icons/dew-point.png";
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import HumidityIcon from "./icons/humidity.png";
-import PrecipitationChanceIcon from './icons/weather-pouring.png';
+import MoonRiseIcon from "./icons/moon-rise.png";
+import PrecipitationChanceIcon from "./icons/weather-pouring.png";
+import SunRiseIcon from "./icons/sun-rise.png";
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 import WindIcon from "./icons/weather-windy.png";
@@ -23,7 +25,7 @@ export class Page {
     constructor() {
         this.container = document.querySelector('#content');
         this.dateTimeUtility = new DateTimeUtility();
-        this.displayDailyForecast = 0;
+        this.displayDailyForecast = 1;
         this.localityInfo = '';
         this.weather = new Weather();
     }
@@ -111,6 +113,18 @@ export class Page {
                 const uvIndex = document.querySelector(`#daily-uv-index-${i}`);
                 uvIndex.textContent = `${(descriptiveWeatherData.daily[i].uvi).
                     toFixed(0)} out of 10`;
+
+                const dailySunRise = document.querySelector(`#daily-sun-rise-${i}`);
+                let sunRiseTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].sunrise, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(sunRiseTime, dailySunRise);
+
+                const dailyMoonRise = document.querySelector(`#daily-moon-rise-${i}`);
+                let moonRiseTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].moonrise, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(moonRiseTime, dailyMoonRise);
             }
         }
     }
@@ -136,6 +150,9 @@ export class Page {
         
     }
 
+    hourlyForecastContent(descriptiveWeatherData) {
+
+    }
     /**
      * Initialize page components when user first visits page.
      */
@@ -260,6 +277,7 @@ export class Page {
     renderDailyForecast() {
         const dailyForecastContainer = document.createElement('div');
         dailyForecastContainer.classList.add('daily-forecast-container');
+        dailyForecastContainer.style.display = 'none';
         dailyForecastContainer.setAttribute('id', 'daily-forecast-container');
 
         const numberOfDays = 8
@@ -285,7 +303,8 @@ export class Page {
                 // Daily conditions.
                 dailyForecast.appendChild(this.renderDailyConditions(i));
                 dailyForecast.appendChild(this.renderDailyForecastDetails(i));
-
+                dailyForecast.appendChild(
+                    this.renderDailySunAndMoonInfo(i));
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -445,7 +464,7 @@ export class Page {
         const precipitaionChanceInfo = document.createElement('div');
         precipitaionChanceInfo.classList.add(
             'current-conditions-info-description');
-        precipitaionChanceInfo.textContent = 'Chance of Rain';
+        precipitaionChanceInfo.textContent = 'Chance of PPT';
 
         const precipitationChance = document.createElement('div');
         precipitationChance.setAttribute('id', `chance-of-rain-${index}`);
@@ -516,6 +535,67 @@ export class Page {
 
         uvIndexContainer.appendChild(uvIndexInfo);
         return uvIndexContainer;
+    }
+
+    renderDailyMoonRise(index) {
+        const moonRiseInfoContainer = document.createElement('div');
+        moonRiseInfoContainer.classList.add('daily-conditions-info');
+
+        const moonRiseIcon = new Image();
+        moonRiseIcon.classList.add('conditions-icon');
+        moonRiseIcon.src = MoonRiseIcon;
+        moonRiseInfoContainer.appendChild(moonRiseIcon);
+
+        const moonRiseInfo = document.createElement('div');
+        moonRiseInfo.classList.add('current-conditions-info-description');
+        moonRiseInfo.textContent = 'Moon Rise';
+
+        const moonRise = document.createElement('div');
+        moonRise.setAttribute('id', `daily-moon-rise-${index}`);
+        moonRiseInfo.appendChild(moonRise);
+
+        moonRiseInfoContainer.appendChild(moonRiseInfo);
+        return moonRiseInfoContainer;
+    }
+
+    renderDailySunAndMoonInfo(index) {
+        // Setup parent container
+        const sunAndMoonInfoContainer = document.createElement('div');
+        sunAndMoonInfoContainer.classList.add('daily-forecast-details');
+
+        // Setup left side content.
+        const sunRiseSunSetInfo = document.createElement('div');
+        sunRiseSunSetInfo.classList.add('daily-forecast-details-left');
+        sunRiseSunSetInfo.appendChild(this.renderDailySunRise(index));
+        sunAndMoonInfoContainer.appendChild(sunRiseSunSetInfo);
+
+        // Setup right side content.
+        const moonRiseMoonSetInfo = document.createElement('div');
+        moonRiseMoonSetInfo.classList.add('daily-forecast-details-right');
+        moonRiseMoonSetInfo.appendChild(this.renderDailyMoonRise(index));
+        sunAndMoonInfoContainer.appendChild(moonRiseMoonSetInfo);
+        return sunAndMoonInfoContainer;
+    }
+
+    renderDailySunRise(index) {
+        const sunRiseInfoContainer = document.createElement('div');
+        sunRiseInfoContainer.classList.add('daily-conditions-info');
+
+        const sunRiseIcon = new Image();
+        sunRiseIcon.classList.add('conditions-icon');
+        sunRiseIcon.src = SunRiseIcon;
+        sunRiseInfoContainer.appendChild(sunRiseIcon);
+
+        const sunRiseInfo = document.createElement('div');
+        sunRiseInfo.classList.add('current-conditions-info-description');
+        sunRiseInfo.textContent = 'Sun Rise';
+
+        const sunRise = document.createElement('div');
+        sunRise.setAttribute('id', `daily-sun-rise-${index}`);
+        sunRiseInfo.appendChild(sunRise);
+
+        sunRiseInfoContainer.appendChild(sunRiseInfo);
+        return sunRiseInfoContainer;
     }
 
     /**
@@ -666,7 +746,7 @@ export class Page {
 
         // Daily forecast
         const hideShowButton = document.createElement('button');
-        hideShowButton.textContent = 'Daily Forecast';
+        hideShowButton.textContent = 'Show/Hide Daily';
         hideShowButton.classList.add('hide-show-button');
         hideShowButton.setAttribute('id', 'hide-show-daily-forecast');
         mainContent.appendChild(hideShowButton);
@@ -691,7 +771,7 @@ export class Page {
         const precipitaionChanceInfo = document.createElement('div');
         precipitaionChanceInfo.classList.add(
             'current-conditions-info-description');
-        precipitaionChanceInfo.textContent = 'Chance of Rain';
+        precipitaionChanceInfo.textContent = 'Chance of PPT';
 
         const precipitationChance = document.createElement('div');
         precipitationChance.setAttribute('id', 'chance-of-rain');
