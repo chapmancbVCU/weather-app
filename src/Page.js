@@ -174,6 +174,9 @@ export class Page {
                 descriptiveWeatherData.timezone_offset);
             date.textContent = `${this.dateTimeUtility.getForecastDate(
                 dateTime)}`;
+
+            const time = document.querySelector(`#hourly-time-${i}`);
+            this.dateTimeUtility.getTimeInfo(dateTime, time);
         }
     }
 
@@ -776,7 +779,11 @@ export class Page {
         hourlyContent.classList.add('hourly-content');
         const hourlyForecastContainer = document.createElement('div');
         hourlyForecastContainer.classList.add('hourly-forecast-container');
-        hourlyForecastContainer.textContent = 'Hourly Forecast';
+        
+        const hourlySectionLabel = document.createElement('h2');
+        hourlySectionLabel.textContent = 'Hourly Forecast';
+        hourlySectionLabel.classList.add('hourly-section-label');
+        hourlyForecastContainer.appendChild(hourlySectionLabel);
 
         const numberOfHours = 48;
         for (let i = 0; i < numberOfHours; i++) {
@@ -787,6 +794,7 @@ export class Page {
             hourlyForecast.appendChild(
                 this.renderHourlyForecastTimestamp(i));
 
+            // Conditions and temperature.
             hourlyForecastContainer.appendChild(hourlyForecast);
         }
 
@@ -794,12 +802,33 @@ export class Page {
         return hourlyContent;
     }
 
+    renderHourlyForecastConditionsAndTemperature(index) {
+        const conditionsAndTemperature = document.createElement('div');
+        conditionsAndTemperature.classList.add(
+            'hourly-conditions-and-temperature');
+
+        
+        return conditionsAndTemperature;
+    }
+
+    /**
+     * Renders date and time for hourly section of webpage.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing date and time for the forecast.
+     */
     renderHourlyForecastTimestamp(index) {
         const hourlyForecastTimestampContainer = document.createElement('div');
+        hourlyForecastTimestampContainer.classList.add('hourly-date-time');
 
         const date = document.createElement('h3');
         date.setAttribute('id', `hourly-date-${index}`);
         hourlyForecastTimestampContainer.appendChild(date);
+
+        const time = document.createElement('h3');
+        time.setAttribute('id', `hourly-time-${index}`);
+        hourlyForecastTimestampContainer.appendChild(time);
+
         return hourlyForecastTimestampContainer;
     }
 
