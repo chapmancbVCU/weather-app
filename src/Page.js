@@ -166,8 +166,17 @@ export class Page {
     }
 
     hourlyForecastContent(descriptiveWeatherData) {
-
+        const numberOfHours = 48;
+        for (let i = 0; i < numberOfHours; i++) {
+            const date = document.querySelector(`#hourly-date-${i}`);
+            const dateTime = this.dateTimeUtility.getDateTime(
+                descriptiveWeatherData.hourly[i].dt, 
+                descriptiveWeatherData.timezone_offset);
+            date.textContent = `${this.dateTimeUtility.getForecastDate(
+                dateTime)}`;
+        }
     }
+
     /**
      * Initialize page components when user first visits page.
      */
@@ -204,6 +213,7 @@ export class Page {
                 const mainContent = document.querySelector('#main');
                 this.updateContent(cityData, descriptiveWeatherData);
                 this.dailyForecastContent(descriptiveWeatherData);
+                this.hourlyForecastContent(descriptiveWeatherData);
             } catch (error) {
                 console.log(error);
             }
@@ -525,7 +535,7 @@ export class Page {
     }
 
     /** 
-     * Renders the UV Index for each in the daily forecast section.
+     * Renders the UV Index for each day in the daily forecast section.
      * @param {Number} index The index in array containing daily forecast 
      * information from descriptive weather data JSON object.
      * @returns HTMLDivElement containing UV Index information for the daily 
@@ -552,6 +562,13 @@ export class Page {
         return uvIndexContainer;
     }
 
+    /** 
+     * Renders the moon rise information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing moon rise information.
+     */
     renderDailyMoonRise(index) {
         const moonRiseInfoContainer = document.createElement('div');
         moonRiseInfoContainer.classList.add('daily-conditions-info');
@@ -573,6 +590,13 @@ export class Page {
         return moonRiseInfoContainer;
     }
 
+    /** 
+     * Renders the moon set information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing moon set information.
+     */
     renderDailyMoonSet(index) {
         const moonSetInfoContainer = document.createElement('div');
         moonSetInfoContainer.classList.add('daily-conditions-info');
@@ -623,6 +647,13 @@ export class Page {
         return sunAndMoonInfoContainer;
     }
 
+    /** 
+     * Renders the sun rise information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing sun rise information.
+     */
     renderDailySunRise(index) {
         const sunRiseInfoContainer = document.createElement('div');
         sunRiseInfoContainer.classList.add('daily-conditions-info');
@@ -644,6 +675,13 @@ export class Page {
         return sunRiseInfoContainer;
     }
 
+    /** 
+     * Renders the sun set information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing sun set information.
+     */
     renderDailySunSet(index) {
         const sunSetInfoContainer = document.createElement('div');
         sunSetInfoContainer.classList.add('daily-conditions-info');
@@ -727,6 +765,42 @@ export class Page {
         highTemperature.setAttribute('id', 'today-high-temperature');
         highTemperature.classList.add('today-high-low-temperature');
         return highTemperature;
+    }
+
+    /**
+     * The parent container for the hourly forecast.
+     * @returns HTMLDivElement The hourly forecast section of the webpage.
+     */
+    renderHourlyForecast() {
+        const hourlyContent = document.createElement('div');
+        hourlyContent.classList.add('hourly-content');
+        const hourlyForecastContainer = document.createElement('div');
+        hourlyForecastContainer.classList.add('hourly-forecast-container');
+        hourlyForecastContainer.textContent = 'Hourly Forecast';
+
+        const numberOfHours = 48;
+        for (let i = 0; i < numberOfHours; i++) {
+            const hourlyForecast = document.createElement('div');
+            hourlyForecast.classList.add('hourly-forecast');
+            
+            // Show date and time.
+            hourlyForecast.appendChild(
+                this.renderHourlyForecastTimestamp(i));
+
+            hourlyForecastContainer.appendChild(hourlyForecast);
+        }
+
+        hourlyContent.appendChild(hourlyForecastContainer);
+        return hourlyContent;
+    }
+
+    renderHourlyForecastTimestamp(index) {
+        const hourlyForecastTimestampContainer = document.createElement('div');
+
+        const date = document.createElement('h3');
+        date.setAttribute('id', `hourly-date-${index}`);
+        hourlyForecastTimestampContainer.appendChild(date);
+        return hourlyForecastTimestampContainer;
     }
 
     /**
@@ -817,6 +891,9 @@ export class Page {
         hideShowButton.setAttribute('id', 'hide-show-daily-forecast');
         mainContent.appendChild(hideShowButton);
         mainContent.appendChild(this.renderDailyForecast());
+
+        // Hourly forecast
+        mainContent.appendChild(this.renderHourlyForecast());
 
         this.container.appendChild(mainContent);
     }
@@ -1103,6 +1180,7 @@ export class Page {
                     console.log(descriptiveWeatherData);
                     this.updateContent(cityData, descriptiveWeatherData);
                     this.dailyForecastContent(descriptiveWeatherData);
+                    this.hourlyForecastContent(descriptiveWeatherData);
                     document.forms[0].reset();
                 } catch (error) {
                     console.log(error);
@@ -1126,6 +1204,9 @@ export class Page {
 
             this.dailyForecastContent(
                 this.weather.getJSONDescriptiveWeatherData());
+            
+            this.hourlyForecastContent(
+                this.weather.getJSONDescriptiveWeatherData);
             
             toggle.textContent = `\xB0${this.setTemperatureUnitText(
                 this.weather.getUnits())}`;
