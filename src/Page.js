@@ -177,6 +177,23 @@ export class Page {
 
             const time = document.querySelector(`#hourly-time-${i}`);
             this.dateTimeUtility.getTimeInfo(dateTime, time);
+
+            const temperature = document.querySelector(
+                `#hourly-temperature-${i}`);
+            temperature.textContent = `${this.weather.getTemperature(
+                descriptiveWeatherData.hourly[i].temp)}
+                \xB0${this.setTemperatureUnitText(this.weather.getUnits())}`;
+
+            const hourlyDescription = document.querySelector(
+                `#hourly-description-${i}`);
+            hourlyDescription.textContent = `${descriptiveWeatherData.
+                hourly[i].weather[0].description}`;
+
+            const hourlyDescriptionIcon = document.querySelector(
+                `#hourly-description-icon-${i}`);
+            hourlyDescriptionIcon.src = 
+                `https://openweathermap.org/img/wn/${descriptiveWeatherData.
+                hourly[i].weather[0].icon}@2x.png`;
         }
     }
 
@@ -795,6 +812,8 @@ export class Page {
                 this.renderHourlyForecastTimestamp(i));
 
             // Conditions and temperature.
+            hourlyForecast.appendChild(
+                this.renderHourlyForecastConditionsAndTemperature(i));
             hourlyForecastContainer.appendChild(hourlyForecast);
         }
 
@@ -807,7 +826,25 @@ export class Page {
         conditionsAndTemperature.classList.add(
             'hourly-conditions-and-temperature');
 
-        
+        const temperature = document.createElement('div');
+        temperature.setAttribute('id', `hourly-temperature-${index}`);
+        temperature.classList.add('hourly-temperature');
+        conditionsAndTemperature.appendChild(temperature);
+
+        // Create parent container for conditions desciption.
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.classList.add('hourly-description-container');
+
+        const description = document.createElement('div');
+        description.setAttribute('id', `hourly-description-${index}`);
+        description.classList.add('current-conditions-description');
+        descriptionContainer.appendChild(description);
+
+        const descriptionIcon = new Image();
+        descriptionIcon.setAttribute('id', `hourly-description-icon-${index}`);
+        descriptionContainer.appendChild(descriptionIcon);
+        conditionsAndTemperature.appendChild(descriptionContainer);
+
         return conditionsAndTemperature;
     }
 
@@ -1272,8 +1309,8 @@ export class Page {
 
         const temperature = document.querySelector('#temperature');
         temperature.textContent = `${this.weather.getTemperature(
-            descriptiveWeatherData.current.temp)} \xB0${this.setTemperatureUnitText(
-            this.weather.getUnits())}`;
+            descriptiveWeatherData.current.temp)} 
+            \xB0${this.setTemperatureUnitText(this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
