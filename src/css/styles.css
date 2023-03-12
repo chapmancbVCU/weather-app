@@ -152,7 +152,7 @@ body, html {
     justify-content: center;
 }
 
-.date {
+.date, .hourly-date-time {
     margin-top: 10px;
     margin-bottom: 10px;
     text-align: center;
@@ -187,9 +187,17 @@ header {
 }
 
 .hourly-content {
+    margin-top: 25px;
+
+    color: whitesmoke;
     background-color: grey;
+    
     display: flex;
     flex-direction: column;
+}
+
+.hourly-section-label {
+    margin-bottom: 15px;
 }
 
 main {
