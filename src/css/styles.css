@@ -84,7 +84,8 @@ body, html {
     margin-bottom: 25px;
 }
 
-.current-temperature {
+.current-temperature,
+.hourly-temperature {
     font-size: 30px;
 }
 
@@ -145,7 +146,8 @@ body, html {
     flex-direction: column;
 }
 
-.description-container {
+.description-container,
+.hourly-description-container {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -186,12 +188,18 @@ header {
     margin-right: auto;
 }
 
+.hourly-conditions-and-temperature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .hourly-content {
     margin-top: 25px;
 
     color: whitesmoke;
     background-color: grey;
-    
+
     display: flex;
     flex-direction: column;
 }
@@ -310,6 +318,19 @@ main {
         height: 100px;
         justify-content: space-evenly;
         flex-direction: row;
+    }
+    
+    .hourly-conditions-and-temperature {
+        flex-direction: row;
+    }
+
+    .hourly-description-container,
+    .hourly-temperature {
+        width: 50%
+    }
+
+    .hourly-temperature {
+        text-align: center;
     }
     
     .search-bar {
