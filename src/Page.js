@@ -154,6 +154,9 @@ export class Page {
         hideShowButton.addEventListener('click', () => {
             const dailyForecastContainer = document.querySelector(
                 '#daily-forecast-container');
+
+            /* Determine if daily forecast is shown or not and set 
+            properties based on current state. */
             if (this.displayDailyForecast == 1) {
                 dailyForecastContainer.style.display = 'flex';
                 this.displayDailyForecast = 0;
@@ -162,7 +165,6 @@ export class Page {
                 this.displayDailyForecast = 1;
             }
         });
-        
     }
 
     hourlyForecastContent(descriptiveWeatherData) {
@@ -1272,7 +1274,7 @@ export class Page {
                 this.weather.getJSONDescriptiveWeatherData());
             
             this.hourlyForecastContent(
-                this.weather.getJSONDescriptiveWeatherData);
+                this.weather.getJSONDescriptiveWeatherData());
             
             toggle.textContent = `\xB0${this.setTemperatureUnitText(
                 this.weather.getUnits())}`;
