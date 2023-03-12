@@ -30,12 +30,19 @@
  * IMPORTS
  *****************************************************************************/
 import { DateTimeUtility } from "./DateTimeUtility";
+import DewPointIcon from "./icons/dew-point.png";
 import FeelsLikeIcon from "./icons/temperature-feels-like.svg";
 import HumidityIcon from "./icons/humidity.png";
-import PrecipitationChanceIcon from './icons/weather-pouring.png';
+import MoonRiseIcon from "./icons/moon-rise.png";
+import MoonSetIcon from "./icons/moon-set.png";
+import PrecipitationChanceIcon from "./icons/weather-pouring.png";
+import SunRiseIcon from "./icons/sun-rise.png";
+import SunSetIcon from "./icons/sun-set.png";
 import { Weather } from "./Weather";
 import WeatherIcon from "./icons/weather-cloudy-custom.png";
 import WindIcon from "./icons/weather-windy.png";
+import uviIcon from "./icons/UVI.png";
+import VisibilityIncon from "./icons/visibility.png";
 
 
 /**
@@ -49,6 +56,7 @@ export class Page {
     constructor() {
         this.container = document.querySelector('#content');
         this.dateTimeUtility = new DateTimeUtility();
+        this.displayDailyForecast = 1;
         this.localityInfo = '';
         this.weather = new Weather();
     }
@@ -101,25 +109,121 @@ export class Page {
                 chanceOfRain.textContent = 
                 `${(descriptiveWeatherData.daily[i].pop * 100).toFixed(0)}%`;
 
-                const currentWinds = document.querySelector(
-                    `#current-wind-speed-${i}`);
-                currentWinds.textContent = 
+                const winds = document.querySelector(
+                    `#daily-wind-speed-${i}`);
+                winds.textContent = 
                     `${this.weather.getWindSpeed(
                         descriptiveWeatherData.daily[i].wind_speed)}, 
                     ${this.weather.getWindDirection(
                         descriptiveWeatherData.daily[i].wind_deg)}`;
 
-                const currentWindGusts = document.querySelector(
-                    `#current-wind-gusts-${i}`);
+                const windGusts = document.querySelector(
+                    `#daily-wind-gusts-${i}`);
                 if (!isNaN(descriptiveWeatherData.daily[i].wind_gust)) {
-                    currentWindGusts.textContent = 
+                    windGusts.textContent = 
                         `${this.weather.getWindSpeed(
                         descriptiveWeatherData.daily[i].wind_gust)}`;
                 } else {
-                    currentWindGusts.textContent = 
+                    windGusts.textContent = 
                         `${this.weather.getWindSpeed(0)}`;
                 }
+
+                const humidity = document.querySelector(
+                    `#daily-humidity-${i}`);
+                humidity.textContent = 
+                    `${descriptiveWeatherData.daily[i].humidity}%`;
+
+                const dewPoint = document.querySelector(
+                    `#daily-dew-point-${i}`);
+                dewPoint.textContent =
+                    `${this.weather.getTemperature(
+                    descriptiveWeatherData.daily[i].dew_point)} 
+                    \xB0${this.setTemperatureUnitText(
+                    this.weather.getUnits())}`;
+
+                const uvIndex = document.querySelector(`#daily-uv-index-${i}`);
+                uvIndex.textContent = `${(descriptiveWeatherData.daily[i].uvi).
+                    toFixed(0)} out of 10`;
+
+                const dailySunRise = document.querySelector(`#daily-sun-rise-${i}`);
+                let sunRiseTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].sunrise, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(sunRiseTime, dailySunRise);
+
+                const dailySunSet = document.querySelector(`#daily-sun-set-${i}`);
+                let sunSetTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].sunset, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(sunSetTime, dailySunSet);
+
+                const dailyMoonRise = document.querySelector(`#daily-moon-rise-${i}`);
+                let moonRiseTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].moonrise, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(moonRiseTime, dailyMoonRise);
+
+                const dailyMoonSet = document.querySelector(`#daily-moon-set-${i}`);
+                let moonSetTime = this.dateTimeUtility.getDateTime(
+                    descriptiveWeatherData.daily[i].moonset, 
+                    descriptiveWeatherData.timezone_offset);
+                this.dateTimeUtility.getTimeInfo(moonSetTime, dailyMoonSet);
             }
+        }
+    }
+
+    /**
+     * This fuction contains event listener for button that hides and shows 
+     * daily forecast.
+     */
+    hideShowDailyForecast() {
+        const hideShowButton = document.querySelector(
+            '#hide-show-daily-forecast');
+        hideShowButton.addEventListener('click', () => {
+            const dailyForecastContainer = document.querySelector(
+                '#daily-forecast-container');
+
+            /* Determine if daily forecast is shown or not and set 
+            properties based on current state. */
+            if (this.displayDailyForecast == 1) {
+                dailyForecastContainer.style.display = 'flex';
+                this.displayDailyForecast = 0;
+            } else {
+                dailyForecastContainer.style.display = 'none';
+                this.displayDailyForecast = 1;
+            }
+        });
+    }
+
+    hourlyForecastContent(descriptiveWeatherData) {
+        const numberOfHours = 48;
+        for (let i = 0; i &lt; numberOfHours; i++) {
+            const date = document.querySelector(`#hourly-date-${i}`);
+            const dateTime = this.dateTimeUtility.getDateTime(
+                descriptiveWeatherData.hourly[i].dt, 
+                descriptiveWeatherData.timezone_offset);
+            date.textContent = `${this.dateTimeUtility.getForecastDate(
+                dateTime)}`;
+
+            const time = document.querySelector(`#hourly-time-${i}`);
+            this.dateTimeUtility.getTimeInfo(dateTime, time);
+
+            const temperature = document.querySelector(
+                `#hourly-temperature-${i}`);
+            temperature.textContent = `${this.weather.getTemperature(
+                descriptiveWeatherData.hourly[i].temp)}
+                \xB0${this.setTemperatureUnitText(this.weather.getUnits())}`;
+
+            const hourlyDescription = document.querySelector(
+                `#hourly-description-${i}`);
+            hourlyDescription.textContent = `${descriptiveWeatherData.
+                hourly[i].weather[0].description}`;
+
+            const hourlyDescriptionIcon = document.querySelector(
+                `#hourly-description-icon-${i}`);
+            hourlyDescriptionIcon.src = 
+                `https://openweathermap.org/img/wn/${descriptiveWeatherData.
+                hourly[i].weather[0].icon}@2x.png`;
         }
     }
 
@@ -129,6 +233,7 @@ export class Page {
     initializeComponents() {
         this.renderHeader();
         this.renderMainContent();
+        this.hideShowDailyForecast();
         document.addEventListener("DOMContentLoaded", async() => {
             try {
                 // Get locality info on page load
@@ -144,17 +249,21 @@ export class Page {
                     this.weather.getUnits())}`;
                 
                 // Get weather information.
-                let cityData = await this.weather.getCityData(this.localityInfo);
+                let cityData = await this.weather.getCityData(
+                    this.localityInfo);
                 this.weather.setJSONCityData(cityData);
                 console.log(cityData);
-                let descriptiveWeatherData = await this.weather.getWeatherData(
+                let descriptiveWeatherData = 
+                    await this.weather.getWeatherData(
                     this.weather.getLatitude(), 
                     this.weather.getLongitude());
-                this.weather.setJSONDescriptiveWeatherData(descriptiveWeatherData);
+                this.weather.setJSONDescriptiveWeatherData(
+                    descriptiveWeatherData);
                 console.log(descriptiveWeatherData);
                 const mainContent = document.querySelector('#main');
                 this.updateContent(cityData, descriptiveWeatherData);
                 this.dailyForecastContent(descriptiveWeatherData);
+                this.hourlyForecastContent(descriptiveWeatherData);
             } catch (error) {
                 console.log(error);
             }
@@ -243,6 +352,9 @@ export class Page {
     renderDailyForecast() {
         const dailyForecastContainer = document.createElement('div');
         dailyForecastContainer.classList.add('daily-forecast-container');
+        dailyForecastContainer.style.display = 'none';
+        dailyForecastContainer.setAttribute('id', 'daily-forecast-container');
+
         const numberOfDays = 8
         for (let i = 0; i &lt; numberOfDays; i++) {
             if (i > 0) {
@@ -266,7 +378,8 @@ export class Page {
                 // Daily conditions.
                 dailyForecast.appendChild(this.renderDailyConditions(i));
                 dailyForecast.appendChild(this.renderDailyForecastDetails(i));
-
+                dailyForecast.appendChild(
+                    this.renderDailySunAndMoonInfo(i));
                 dailyForecastContainer.appendChild(dailyForecast);
             }
         }
@@ -287,23 +400,67 @@ export class Page {
         return date;
     }
 
+    /**
+     * Renders information about conditions for each day of the 7 day forecast.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing details for each day of the 7 day 
+     * forecast.
+     */
     renderDailyForecastDetails(index) {
+        // Setup parent container
         const dailyForecastDetailsContainer = document.createElement('div');
         dailyForecastDetailsContainer.classList.add('daily-forecast-details');
 
+        // Setup left side content.
         const dailyForecastDetailsLeft = document.createElement('div');
         dailyForecastDetailsLeft.classList.add('daily-forecast-details-left');
         dailyForecastDetailsLeft.appendChild(
             this.renderDailyForecastPrecipitationChance(index));
+        dailyForecastDetailsLeft.appendChild(
+            this.renderDailyForecastHumidity(index));
+        dailyForecastDetailsLeft.appendChild(
+            this.renderDailyForecastDewPoint(index));
         dailyForecastDetailsContainer.appendChild(dailyForecastDetailsLeft);
 
+        // Setup right side content
         const dailyForecastDetailsRight = document.createElement('div');
         dailyForecastDetailsRight.classList.add('daily-forecast-details-right');
         dailyForecastDetailsRight.appendChild(
             this.renderDailyForecastWindConditions(index));
+        dailyForecastDetailsRight.appendChild(
+            this.renderDailyForecastUVIndex(index));
         dailyForecastDetailsContainer.appendChild(dailyForecastDetailsRight);
 
         return dailyForecastDetailsContainer;
+    }
+
+    /** 
+     * Renders the dew point for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing dew point information for the daily 
+     * forecast.
+     */
+    renderDailyForecastDewPoint(index) {
+        const dewPointContainer = document.createElement('div');
+        dewPointContainer.classList.add('daily-conditions-info');
+
+        const dewPointIcon = new Image();
+        dewPointIcon.classList.add('conditions-icon');
+        dewPointIcon.src = DewPointIcon;
+        dewPointContainer.appendChild(dewPointIcon);
+
+        const dewPointInfo = document.createElement('div');
+        dewPointInfo.classList.add('current-conditions-info-description');
+        dewPointInfo.textContent = 'Dew Point';
+
+        const dewPoint = document.createElement('div');
+        dewPoint.setAttribute('id', `daily-dew-point-${index}`);
+        dewPointInfo.appendChild(dewPoint);
+
+        dewPointContainer.appendChild(dewPointInfo);
+        return dewPointContainer;
     }
 
     /**
@@ -334,7 +491,35 @@ export class Page {
         return dailyHigh;
     }
 
-    /**
+    /** 
+     * Renders the humidity for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing humidity information for the daily 
+     * forecast.
+     */
+    renderDailyForecastHumidity(index) {
+        const humidityContainer = document.createElement('div');
+        humidityContainer.classList.add('daily-conditions-info');
+
+        const humidityIcon = new Image();
+        humidityIcon.classList.add('conditions-icon');
+        humidityIcon.src = HumidityIcon;
+        humidityContainer.appendChild(humidityIcon);
+
+        const humidityInfo = document.createElement('div');
+        humidityInfo.classList.add('current-conditions-info-description');
+        humidityInfo.textContent = 'Humidity';
+
+        const humidity = document.createElement('div');
+        humidity.setAttribute('id', `daily-humidity-${index}`);
+        humidityInfo.appendChild(humidity);
+
+        humidityContainer.appendChild(humidityInfo);
+        return humidityContainer;
+    }
+
+    /** 
      * Renders the chance of precipitation for each in the daily forecast 
      * section.
      * @param {Number} index The index in array containing daily forecast 
@@ -345,6 +530,7 @@ export class Page {
     renderDailyForecastPrecipitationChance(index) {
         const precipitaionChanceContainer = document.createElement('div');
         precipitaionChanceContainer.classList.add('daily-conditions-info');
+
         const precipitationChanceIcon = new Image();
         precipitationChanceIcon.classList.add('conditions-icon');
         precipitationChanceIcon.src = PrecipitationChanceIcon;
@@ -353,7 +539,7 @@ export class Page {
         const precipitaionChanceInfo = document.createElement('div');
         precipitaionChanceInfo.classList.add(
             'current-conditions-info-description');
-        precipitaionChanceInfo.textContent = 'Chance of Rain';
+        precipitaionChanceInfo.textContent = 'Chance of PPT';
 
         const precipitationChance = document.createElement('div');
         precipitationChance.setAttribute('id', `chance-of-rain-${index}`);
@@ -363,6 +549,13 @@ export class Page {
         return precipitaionChanceContainer;
     }
 
+    /**
+     * Renders the wind conditions for each in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing the wind conditions for the daily 
+     * forecast.
+     */
     renderDailyForecastWindConditions(index) {
         const windConditionsContainer = document.createElement('div');
         windConditionsContainer.classList.add('daily-conditions-info');
@@ -377,20 +570,188 @@ export class Page {
         windInfo.textContent = 'Winds';
 
         const currentWinds = document.createElement('div');
-        currentWinds.setAttribute('id', `current-wind-speed-${index}`);
+        currentWinds.setAttribute('id', `daily-wind-speed-${index}`);
         windInfo.appendChild(currentWinds);
 
         const windGustInfo = document.createElement('div');
         windGustInfo.textContent = 'Wind Gusts';
         windInfo.appendChild(windGustInfo);
         const windGusts = document.createElement('div');
-        windGusts.setAttribute('id', `current-wind-gusts-${index}`);
+        windGusts.setAttribute('id', `daily-wind-gusts-${index}`);
         windInfo.appendChild(windGusts);
 
         windConditionsContainer.appendChild(windInfo);
         return windConditionsContainer;
     }
 
+    /** 
+     * Renders the UV Index for each day in the daily forecast section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing UV Index information for the daily 
+     * forecast.
+     */
+    renderDailyForecastUVIndex(index) {
+        const uvIndexContainer = document.createElement('div');
+        uvIndexContainer.classList.add('daily-conditions-info');
+
+        const uvIndexIcon = new Image();
+        uvIndexIcon.classList.add('conditions-icon');
+        uvIndexIcon.src = uviIcon;
+        uvIndexContainer.appendChild(uvIndexIcon);
+
+        const uvIndexInfo = document.createElement('div');
+        uvIndexInfo.classList.add('current-conditions-info-description');
+        uvIndexInfo.textContent = 'UV Index';
+
+        const uvIndex = document.createElement('div');
+        uvIndex.setAttribute('id', `daily-uv-index-${index}`);
+        uvIndexInfo.appendChild(uvIndex);
+
+        uvIndexContainer.appendChild(uvIndexInfo);
+        return uvIndexContainer;
+    }
+
+    /** 
+     * Renders the moon rise information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing moon rise information.
+     */
+    renderDailyMoonRise(index) {
+        const moonRiseInfoContainer = document.createElement('div');
+        moonRiseInfoContainer.classList.add('daily-conditions-info');
+
+        const moonRiseIcon = new Image();
+        moonRiseIcon.classList.add('conditions-icon');
+        moonRiseIcon.src = MoonRiseIcon;
+        moonRiseInfoContainer.appendChild(moonRiseIcon);
+
+        const moonRiseInfo = document.createElement('div');
+        moonRiseInfo.classList.add('current-conditions-info-description');
+        moonRiseInfo.textContent = 'Moon Rise';
+
+        const moonRise = document.createElement('div');
+        moonRise.setAttribute('id', `daily-moon-rise-${index}`);
+        moonRiseInfo.appendChild(moonRise);
+
+        moonRiseInfoContainer.appendChild(moonRiseInfo);
+        return moonRiseInfoContainer;
+    }
+
+    /** 
+     * Renders the moon set information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing moon set information.
+     */
+    renderDailyMoonSet(index) {
+        const moonSetInfoContainer = document.createElement('div');
+        moonSetInfoContainer.classList.add('daily-conditions-info');
+
+        const moonSetIcon = new Image();
+        moonSetIcon.classList.add('conditions-icon');
+        moonSetIcon.src = MoonSetIcon;
+        moonSetInfoContainer.appendChild(moonSetIcon);
+
+        const moonSetInfo = document.createElement('div');
+        moonSetInfo.classList.add('current-conditions-info-description');
+        moonSetInfo.textContent = 'Moon Set';
+
+        const moonSet = document.createElement('div');
+        moonSet.setAttribute('id', `daily-moon-set-${index}`);
+        moonSetInfo.appendChild(moonSet);
+
+        moonSetInfoContainer.appendChild(moonSetInfo);
+        return moonSetInfoContainer;
+    }
+
+    /**
+     * Renders information about sun rise, sun set, moon rise, moon set for 
+     * each day of the 7 day forecast.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing details for sun rise, sun set, moon 
+     * rise, and moon set foreach day of the 7 day forecast.
+     */
+    renderDailySunAndMoonInfo(index) {
+        // Setup parent container
+        const sunAndMoonInfoContainer = document.createElement('div');
+        sunAndMoonInfoContainer.classList.add('daily-forecast-details');
+
+        // Setup left side content.
+        const sunRiseSunSetInfo = document.createElement('div');
+        sunRiseSunSetInfo.classList.add('daily-forecast-details-left');
+        sunRiseSunSetInfo.appendChild(this.renderDailySunRise(index));
+        sunRiseSunSetInfo.appendChild(this.renderDailySunSet(index));
+        sunAndMoonInfoContainer.appendChild(sunRiseSunSetInfo);
+
+        // Setup right side content.
+        const moonRiseMoonSetInfo = document.createElement('div');
+        moonRiseMoonSetInfo.classList.add('daily-forecast-details-right');
+        moonRiseMoonSetInfo.appendChild(this.renderDailyMoonRise(index));
+        moonRiseMoonSetInfo.appendChild(this.renderDailyMoonSet(index));
+        sunAndMoonInfoContainer.appendChild(moonRiseMoonSetInfo);
+        return sunAndMoonInfoContainer;
+    }
+
+    /** 
+     * Renders the sun rise information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing sun rise information.
+     */
+    renderDailySunRise(index) {
+        const sunRiseInfoContainer = document.createElement('div');
+        sunRiseInfoContainer.classList.add('daily-conditions-info');
+
+        const sunRiseIcon = new Image();
+        sunRiseIcon.classList.add('conditions-icon');
+        sunRiseIcon.src = SunRiseIcon;
+        sunRiseInfoContainer.appendChild(sunRiseIcon);
+
+        const sunRiseInfo = document.createElement('div');
+        sunRiseInfo.classList.add('current-conditions-info-description');
+        sunRiseInfo.textContent = 'Sun Rise';
+
+        const sunRise = document.createElement('div');
+        sunRise.setAttribute('id', `daily-sun-rise-${index}`);
+        sunRiseInfo.appendChild(sunRise);
+
+        sunRiseInfoContainer.appendChild(sunRiseInfo);
+        return sunRiseInfoContainer;
+    }
+
+    /** 
+     * Renders the sun set information for each day in the daily forecast 
+     * section.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing sun set information.
+     */
+    renderDailySunSet(index) {
+        const sunSetInfoContainer = document.createElement('div');
+        sunSetInfoContainer.classList.add('daily-conditions-info');
+
+        const sunSetIcon = new Image();
+        sunSetIcon.classList.add('conditions-icon');
+        sunSetIcon.src = SunSetIcon;
+        sunSetInfoContainer.appendChild(sunSetIcon);
+
+        const sunSetInfo = document.createElement('div');
+        sunSetInfo.classList.add('current-conditions-info-description');
+        sunSetInfo.textContent = 'Sun Set';
+
+        const sunSet = document.createElement('div');
+        sunSet.setAttribute('id', `daily-sun-set-${index}`);
+        sunSetInfo.appendChild(sunSet);
+
+        sunSetInfoContainer.appendChild(sunSetInfo);
+        return sunSetInfoContainer;
+    }
     /**
      * Creates a HTMLDivElement that renders the current date in &lt;DayOfWeek>, 
      * &lt;Month> &lt;DayOfMonth>, &lt;Year> format.
@@ -454,6 +815,88 @@ export class Page {
         highTemperature.setAttribute('id', 'today-high-temperature');
         highTemperature.classList.add('today-high-low-temperature');
         return highTemperature;
+    }
+
+    /**
+     * The parent container for the hourly forecast.
+     * @returns HTMLDivElement The hourly forecast section of the webpage.
+     */
+    renderHourlyForecast() {
+        const hourlyContent = document.createElement('div');
+        hourlyContent.classList.add('hourly-content');
+        const hourlyForecastContainer = document.createElement('div');
+        hourlyForecastContainer.classList.add('hourly-forecast-container');
+        
+        const hourlySectionLabel = document.createElement('h2');
+        hourlySectionLabel.textContent = 'Hourly Forecast';
+        hourlySectionLabel.classList.add('hourly-section-label');
+        hourlyForecastContainer.appendChild(hourlySectionLabel);
+
+        const numberOfHours = 48;
+        for (let i = 0; i &lt; numberOfHours; i++) {
+            const hourlyForecast = document.createElement('div');
+            hourlyForecast.classList.add('hourly-forecast');
+            
+            // Show date and time.
+            hourlyForecast.appendChild(
+                this.renderHourlyForecastTimestamp(i));
+
+            // Conditions and temperature.
+            hourlyForecast.appendChild(
+                this.renderHourlyForecastConditionsAndTemperature(i));
+            hourlyForecastContainer.appendChild(hourlyForecast);
+        }
+
+        hourlyContent.appendChild(hourlyForecastContainer);
+        return hourlyContent;
+    }
+
+    renderHourlyForecastConditionsAndTemperature(index) {
+        const conditionsAndTemperature = document.createElement('div');
+        conditionsAndTemperature.classList.add(
+            'hourly-conditions-and-temperature');
+
+        const temperature = document.createElement('div');
+        temperature.setAttribute('id', `hourly-temperature-${index}`);
+        temperature.classList.add('hourly-temperature');
+        conditionsAndTemperature.appendChild(temperature);
+
+        // Create parent container for conditions desciption.
+        const descriptionContainer = document.createElement('div');
+        descriptionContainer.classList.add('hourly-description-container');
+
+        const description = document.createElement('div');
+        description.setAttribute('id', `hourly-description-${index}`);
+        description.classList.add('current-conditions-description');
+        descriptionContainer.appendChild(description);
+
+        const descriptionIcon = new Image();
+        descriptionIcon.setAttribute('id', `hourly-description-icon-${index}`);
+        descriptionContainer.appendChild(descriptionIcon);
+        conditionsAndTemperature.appendChild(descriptionContainer);
+
+        return conditionsAndTemperature;
+    }
+
+    /**
+     * Renders date and time for hourly section of webpage.
+     * @param {Number} index The index in array containing daily forecast 
+     * information from descriptive weather data JSON object.
+     * @returns HTMLDivElement containing date and time for the forecast.
+     */
+    renderHourlyForecastTimestamp(index) {
+        const hourlyForecastTimestampContainer = document.createElement('div');
+        hourlyForecastTimestampContainer.classList.add('hourly-date-time');
+
+        const date = document.createElement('h3');
+        date.setAttribute('id', `hourly-date-${index}`);
+        hourlyForecastTimestampContainer.appendChild(date);
+
+        const time = document.createElement('h3');
+        time.setAttribute('id', `hourly-time-${index}`);
+        hourlyForecastTimestampContainer.appendChild(time);
+
+        return hourlyForecastTimestampContainer;
     }
 
     /**
@@ -538,7 +981,15 @@ export class Page {
         mainContent.appendChild(additionalInformation);
 
         // Daily forecast
+        const hideShowButton = document.createElement('button');
+        hideShowButton.textContent = 'Show/Hide Daily';
+        hideShowButton.classList.add('hide-show-button');
+        hideShowButton.setAttribute('id', 'hide-show-daily-forecast');
+        mainContent.appendChild(hideShowButton);
         mainContent.appendChild(this.renderDailyForecast());
+
+        // Hourly forecast
+        mainContent.appendChild(this.renderHourlyForecast());
 
         this.container.appendChild(mainContent);
     }
@@ -559,7 +1010,7 @@ export class Page {
         const precipitaionChanceInfo = document.createElement('div');
         precipitaionChanceInfo.classList.add(
             'current-conditions-info-description');
-        precipitaionChanceInfo.textContent = 'Chance of Rain';
+        precipitaionChanceInfo.textContent = 'Chance of PPT';
 
         const precipitationChance = document.createElement('div');
         precipitationChance.setAttribute('id', 'chance-of-rain');
@@ -825,6 +1276,7 @@ export class Page {
                     console.log(descriptiveWeatherData);
                     this.updateContent(cityData, descriptiveWeatherData);
                     this.dailyForecastContent(descriptiveWeatherData);
+                    this.hourlyForecastContent(descriptiveWeatherData);
                     document.forms[0].reset();
                 } catch (error) {
                     console.log(error);
@@ -847,6 +1299,9 @@ export class Page {
                 this.weather.getJSONDescriptiveWeatherData());
 
             this.dailyForecastContent(
+                this.weather.getJSONDescriptiveWeatherData());
+            
+            this.hourlyForecastContent(
                 this.weather.getJSONDescriptiveWeatherData());
             
             toggle.textContent = `\xB0${this.setTemperatureUnitText(
@@ -884,8 +1339,8 @@ export class Page {
 
         const temperature = document.querySelector('#temperature');
         temperature.textContent = `${this.weather.getTemperature(
-            descriptiveWeatherData.current.temp)} \xB0${this.setTemperatureUnitText(
-            this.weather.getUnits())}`;
+            descriptiveWeatherData.current.temp)} 
+            \xB0${this.setTemperatureUnitText(this.weather.getUnits())}`;
 
         const todayHighTemperature = document.querySelector(
             '#today-high-temperature');
@@ -967,7 +1422,7 @@ export class Page {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Fri Mar 10 2023 21:19:29 GMT-0500 (Eastern Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Mar 11 2023 21:11:43 GMT-0500 (Eastern Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
