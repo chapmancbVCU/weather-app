@@ -105,7 +105,8 @@ body, html {
     margin-right: auto;
 }
 
-.daily-forecast {
+.daily-forecast,
+.hourly-forecast {
     margin-bottom: 25px;
     border: solid whitesmoke 2px;
     border-radius: 5px;
@@ -114,7 +115,8 @@ body, html {
     flex-direction: column;
 }
 
-.daily-forecast-container {
+.daily-forecast-container,
+.hourly-forecast-container {
     margin-top: 25px;
     display: flex;
     flex-direction: column;
@@ -182,6 +184,12 @@ header {
     margin-top: 25px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.hourly-content {
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
 }
 
 main {
@@ -274,7 +282,8 @@ main {
         margin-left: 15px;
     }
     
-    .daily-forecast-container {
+    .daily-forecast-container,
+    .hourly-forecast-container {
         width: 90%;
         align-self: center;
     }
