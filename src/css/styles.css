@@ -1,0 +1,385 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.additional-information {
+    color: whitesmoke;
+    margin-top: 20px;
+    font-size: 18px;
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+}
+
+.additional-information-data {
+    margin-top: 5px;
+}
+
+.additional-information-item {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.additional-information-item:first-of-type {
+    margin-top: 20px;
+}
+
+.additional-information-item:last-of-type {
+    margin-bottom: 20px;
+}
+
+body {
+    background-color: rgb(111, 200, 230);
+}
+
+body, html {
+    overscroll-behavior: none;
+}
+
+.city-name {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.current-conditions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.current-conditions-description {
+    font-size: 20px;
+}
+
+.conditions-icon {
+    height: 33px;
+}
+
+.current-conditions-info {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.current-conditions-info-description {
+    margin-left: 10px;
+}
+
+.current-date, .current-time {
+    font-size: 18px;
+}
+
+.current-conditions-left-container {
+    text-align: center;
+}
+
+.current-time {
+    margin-bottom: 25px;
+}
+
+.current-temperature,
+.hourly-temperature {
+    font-size: 30px;
+}
+
+.daily-conditions-info {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 15px;
+    
+    font-size: 16px;
+}
+
+.daily-forecast-details-left,
+.daily-forecast-details-right {
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.daily-forecast,
+.hourly-forecast {
+    margin-bottom: 25px;
+    border: solid whitesmoke 2px;
+    border-radius: 5px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+}
+
+.daily-forecast-container,
+.hourly-forecast-container {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.daily-forecast-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.daily-high-temperature {
+    margin-bottom: 10px;
+}
+
+.daily-temperatures {
+    text-align: center;
+    width: 100%;
+}
+
+.daily-temperatures-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.description-container,
+.hourly-description-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.date, .hourly-date-time {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.logo-icon {
+    height: 40px;
+    margin-left: 10px;
+}
+
+header {
+    background-color: grey;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.hide-show-button {
+    background-color: orange;
+    height: 40px;
+    width: 150px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    border-radius: 5px;
+    
+    margin-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hourly-conditions-and-temperature {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hourly-content {
+    margin-top: 25px;
+
+    color: whitesmoke;
+    background-color: grey;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.hourly-section-label {
+    margin-bottom: 15px;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+}
+
+.search-bar {
+    background-color: #FFFFFF;
+    border: 1px solid #D6D9DC;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    font-size: 16px;
+    vertical-align: middle;
+    padding: 7px;
+}
+
+.search-bar-container {
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    min-width: 420px;
+    width: 80%;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-form {
+    width: 100%;
+    height: 35px;
+    display: flex;
+}
+
+.submit-search {
+    background-color: orange;
+    border: none;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    font-size: 16px;
+    font-weight: bold;
+    
+    vertical-align: middle;
+    height: 33px;
+    width: 100px;
+    cursor: pointer;
+}
+
+.today-high-low-temperature {
+    font-size: 18px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.title {
+    width: 175px;
+}
+
+.title-logo {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.toggle-button {
+    background-color: orange;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    height: 33px;
+    width: 100px;
+
+    vertical-align: middle;
+    border-radius: 5px;
+}
+
+@media only screen and (min-width: 900px) {
+    .daily-forecast-details {
+        flex-direction: row;
+        
+    }
+
+    .daily-conditions-info {
+        margin-left: 15px;
+    }
+    
+    .daily-forecast-container,
+    .hourly-forecast-container {
+        width: 90%;
+        align-self: center;
+    }
+
+    .daily-forecast-details-left,
+    .daily-forecast-details-right {
+        width: 50%;
+    }
+
+    .current-conditions-container {
+        width: 70%;
+        align-self: center;
+    }
+
+    header {
+        height: 100px;
+        justify-content: space-evenly;
+        flex-direction: row;
+    }
+    
+    .hourly-conditions-and-temperature {
+        flex-direction: row;
+    }
+
+    .hourly-description-container,
+    .hourly-temperature {
+        width: 50%
+    }
+
+    .hourly-temperature {
+        text-align: center;
+    }
+    
+    .search-bar {
+        flex: 1;
+        width: 400px;
+    }
+
+    .search-bar-container {
+        width: 550px;
+    }
+
+    .title-logo {
+        margin-left: 25px;
+    }
+
+    .toggle-button {
+        margin-right: 25px;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    .additional-information {
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    .additional-information-item {
+        align-items: center;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .daily-temperatures-container {
+        flex-direction: row;
+    }
+
+    .current-conditions-container {
+        flex-direction: row;
+        align-items: flex-start;
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+
+    .current-conditions-left-container {
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .current-conditions-right-container {
+        margin-left: auto;
+    }
+}

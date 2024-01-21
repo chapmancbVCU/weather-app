@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: DateTimeUtility.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: DateTimeUtility.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @class Contains functions that support the display of date and time 
+ * information.
+ * @author Chad Chapman
+ */
+export class DateTimeUtility {
+    /**
+     * Default constructor.
+     */
+    constructor() {
+
+    }
+
+    /**
+     * Determines time for locality we are getting weather forecast.  This 
+     * function takes into accout the timezone offset of the location we are 
+     * retrieving the weather forecast.
+     * @param {JSON} descriptiveWeatherData JSON string containing descriptive 
+     * weather data.
+     * @returns A string containing local timestamp.
+     */
+    /*getDateTime(descriptiveWeatherData) {
+        let dt = descriptiveWeatherData.current.dt;
+        let timezone = descriptiveWeatherData.timezone_offset;
+        const utc_seconds = parseInt(dt, 10) + parseInt(timezone, 10);
+        const utc_milliseconds = utc_seconds * 1000;
+        return new Date(utc_milliseconds).toUTCString();
+    }*/
+
+    /**
+     * Converts unix time to a UTCString and takes into account timezone 
+     * offset.
+     * @param {Number} unixTime The time as a number that we want to convert to a 
+     * string.
+     * @param {String} timezoneOffset The timezone offset.
+     * @returns A string containing a timestamp.
+     */
+    getDateTime(unixTime, timezoneOffset) {
+        return new Date((timezoneOffset + unixTime) * 1000).toUTCString();
+    }
+
+    /**
+     * This function reports the local date in the following format: 
+     * &lt;day_of_week>, &lt;month> &lt;day_of_month>, &lt;year>.
+     * @param {String} localDateTime The local timestamp.
+     */
+    getDateInfo(localDateTime) {
+        const dateInfo = document.querySelector('#date-info');
+        dateInfo.textContent = this.getDayOfWeek(localDateTime) + ', ' + 
+            this.getFullMonthName(localDateTime) + ' ' + 
+            this.getDayOfMonth(localDateTime) + ', ' + 
+            localDateTime.slice(12, 16);
+    }
+
+
+    /**
+     * Returns the day of month using the ISO string as a parameter.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns The day of month contained in ISO timestamp string.
+     */
+    getDayOfMonth(localDateTime) {
+        let dayOfMonth = localDateTime.slice(5, 7);
+        if (dayOfMonth &lt; 10) {
+            return dayOfMonth.slice(1, 2);
+        } else {
+            return dayOfMonth;
+        }
+    }
+
+    /**
+     * Returns the full day of the week using the ISO string as a parameter.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns Full day of week name.
+     */
+    getDayOfWeek(dateTimeStamp) {
+        let days = [['Sunday', 'Sun'], ['Monday', 'Mon'], ['Tuesday', 'Tue'],
+            ['Wednesday', 'Wed'], ['Thursday', 'Thu'], ['Friday', 'Fri'],
+            ['Saturday', 'Sat']];
+
+        let dayOfWeek = dateTimeStamp.slice(0, 3);
+        for (let i = 0; i &lt; days.length; i++) {
+            if (dayOfWeek.includes(days[i][1])) {
+                return dayOfWeek.replace(days[i][1], days[i][0]);
+            }
+        }
+    }
+
+    /**
+     * Returns a string containing the day of week, month, and day of month.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns String in the following format: &lt;day of week>, &lt;month> 
+     * &lt;day of month>.
+     */
+    getForecastDate(dateTimeStamp) {
+        return this.getDayOfWeek(dateTimeStamp) + ", " + 
+            this.getFullMonthName(dateTimeStamp) + " " + 
+            this.getDayOfMonth(dateTimeStamp);
+    }
+
+    /**
+     * Returns the full name of the month using the ISO string as a parameter.
+     * @param {String} dateTimeStamp Date and time information in the form of 
+     * an ISO string.
+     * @returns Full name of the month.
+     */
+    getFullMonthName(dateTimeStamp) {
+        let months = [['January', 'Jan'], ['February', 'Feb'],
+            ['March', 'Mar'], ['April', 'Apr'], ['May', 'May'],
+            ['June', 'Jun'], ['July', 'Jul'], ['August', 'Aug'],
+            ['September', 'Sep'], ['October', 'Oct'], ['November', 'Nov'],
+            ['December', 'Dec']];
+
+        let monthName = dateTimeStamp.slice(8, 11);
+        for (let i = 0; i &lt; months.length; i++) {
+            if (monthName.includes(months[i][1])) {
+                return monthName.replace(months[i][1], months[i][0]);
+            }
+        }
+    }
+
+    /**
+     * This function reports the local time.
+     * @param {String} localDateTime The local timestamp.
+     * @param {HTMLDivElement} timeContainer The element whose text we will 
+     * set with the time.
+     */
+    getTimeInfo(localDateTime, timeContainer) {
+        let hours = localDateTime.slice(17, 19);
+        let minutes = localDateTime.slice(20, 22);
+
+        if (minutes &lt; 10) {
+            minutes = minutes.slice(0, 1);
+        }
+
+        let timePeriod = '';
+        if (hours >= 12) {
+            timePeriod = 'PM';
+        } else {
+            timePeriod = 'AM';
+        }
+        
+        // When hours is greater than 12
+        if (hours > 12) {
+            hours = hours - 12;
+        }
+
+        // Handle midnight
+        if (hours == 0) {
+            hours = 12;
+        }
+
+        // Get minutes and format it correctly if the value is less than 10.
+        if (minutes &lt; 10) {
+            minutes = '0' + minutes;
+        }
+
+        //const currentTime = document.querySelector('#current-time');
+        timeContainer.textContent = hours + ':' + minutes + ' ' + timePeriod;
+    }
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="API.html">API</a></li><li><a href="DateTimeUtility.html">DateTimeUtility</a></li><li><a href="Page.html">Page</a></li><li><a href="Weather.html">Weather</a></li></ul><h3>Global</h3><ul><li><a href="global.html#page">page</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sat Mar 11 2023 21:11:43 GMT-0500 (Eastern Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
